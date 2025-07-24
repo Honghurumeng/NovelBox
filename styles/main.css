@@ -1,0 +1,679 @@
+/* NovelBox 主样式文件 */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.app-container {
+    display: none;
+}
+
+.app-container.active {
+    display: block;
+}
+
+/* ===== 主页样式 ===== */
+.homepage {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.welcome-title {
+    font-size: 3.5em;
+    font-weight: 700;
+    text-align: center;
+    margin: 60px 0 20px 0;
+    background: linear-gradient(45deg, #fff, #f0f8ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 存储设置样式 */
+.storage-settings {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 0 0 40px 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 800px;
+}
+
+.storage-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.storage-label {
+    font-weight: 600;
+    color: #555;
+    min-width: 80px;
+}
+
+.storage-path {
+    color: #666;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    background: rgba(0,0,0,0.05);
+    padding: 4px 8px;
+    border-radius: 4px;
+    word-break: break-all;
+    flex: 1;
+}
+
+.storage-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-storage {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    color: #555;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+}
+
+.btn-storage:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.btn-storage:active {
+    transform: translateY(1px);
+}
+
+.main-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    max-width: 900px;
+    width: 100%;
+}
+
+.novels-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.novels-title {
+    font-size: 1.8em;
+    color: #333;
+    font-weight: 600;
+}
+
+.btn-new-novel {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-new-novel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.novels-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.novel-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.novel-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+}
+
+.novel-cover {
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(45deg, #f0f2f5, #e8eaf0);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.novel-info {
+    flex: 1;
+    cursor: pointer;
+}
+
+.novel-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.novel-card:hover .novel-actions {
+    opacity: 1;
+}
+
+.novel-action-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.novel-action-btn:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+.novel-action-btn.delete:hover {
+    background: #ff6b6b;
+    color: white;
+}
+
+.novel-cover img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.novel-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.novel-author {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+}
+
+.novel-description {
+    color: #777;
+    font-size: 0.85em;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.empty-state-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+/* ===== 模态框样式 ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: #e74c3c;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 8px;
+    font-size: 16px;
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+    background: #f8f9fa;
+    color: #666;
+    border: 2px solid #e1e8ed;
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+}
+
+/* ===== 编辑器样式 ===== */
+.editor-container {
+    display: flex;
+    height: 100vh;
+    background: #f8f9fa;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 300px;
+    background: white;
+    border-right: 1px solid #e1e8ed;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    overflow: hidden;
+}
+
+/* 侧边栏切换按钮 */
+.sidebar-toggle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 60px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 0 10px 10px 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: white;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-toggle:hover {
+    background: linear-gradient(45deg, #5a6fd8, #683ca0);
+    color: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.left-toggle {
+    left: 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.right-toggle {
+    right: 0;
+    border-radius: 10px 0 0 8px;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #e1e8ed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-title {
+    font-weight: 600;
+    color: #333;
+}
+
+.btn-collapse {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    color: #666;
+    font-size: 18px;
+}
+
+.btn-collapse:hover {
+    background: #f0f2f5;
+}
+
+.main-editor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-header {
+    background: white;
+    padding: 20px;
+    border-bottom: 1px solid #e1e8ed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editor-header-left {
+    display: flex;
+    align-items: center;
+}
+
+.editor-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.save-btn {
+    padding: 8px 16px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.save-btn:hover {
+    background: #218838;
+}
+
+.save-btn:active {
+    transform: translateY(1px);
+}
+
+.editor-content {
+    flex: 1;
+    padding: 20px;
+    background: white;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.chapter-editor {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    line-height: 1.6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    resize: none;
+}
+
+.right-sidebar {
+    width: 300px;
+    background: white;
+    border-left: 1px solid #e1e8ed;
+    transition: width 0.3s ease;
+}
+
+.right-sidebar.collapsed {
+    width: 0;
+    overflow: hidden;
+}
+
+.ai-tools-placeholder {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.back-btn {
+    background: #f8f9fa;
+    border: 2px solid #e1e8ed;
+    color: #666;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.back-btn:hover {
+    background: #e9ecef;
+}
+
+.auto-save-indicator {
+    font-size: 12px;
+    color: #28a745;
+    margin-right: 10px;
+}
+
+.chapters-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.chapter-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f2f5;
+    transition: background-color 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chapter-item:hover {
+    background: #f8f9fa;
+}
+
+.chapter-item.active {
+    background: #e3f2fd;
+    border-right: 3px solid #667eea;
+}
+
+.chapter-content {
+    flex: 1;
+}
+
+.chapter-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.chapter-item:hover .chapter-actions {
+    opacity: 1;
+}
+
+.chapter-action-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-action-btn:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+.chapter-action-btn.delete:hover {
+    background: #ff6b6b;
+    color: white;
+}
+
+.chapter-title {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.chapter-word-count {
+    font-size: 12px;
+    color: #999;
+}
+
+.btn-add-chapter {
+    margin: 20px;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 2px dashed #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.btn-add-chapter:hover {
+    border-color: #667eea;
+    color: #667eea;
+}

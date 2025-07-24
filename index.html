@@ -1,48 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>NovelBox</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline';">
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .welcome {
-            text-align: center;
-            color: #666;
-            font-size: 18px;
-            line-height: 1.6;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovelBox - AI辅助小说创作工具</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    
+    <!-- 引入主样式文件 -->
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to NovelBox</h1>
-        <div class="welcome">
-            <p>Your Electron application is running successfully!</p>
-            <p>Start building your novel writing application here.</p>
+    <!-- 主页 -->
+    <div id="homepage" class="app-container active">
+        <div class="homepage">
+            <h1 class="welcome-title">NovelBox</h1>
+            
+            <!-- 存储设置 -->
+            <div class="storage-settings">
+                <div class="storage-info">
+                    <span class="storage-label">存储目录:</span>
+                    <span id="storage-path" class="storage-path">加载中...</span>
+                </div>
+                <div class="storage-actions">
+                    <button class="btn-storage" onclick="selectStorageDirectory()" title="选择存储目录">更改目录</button>
+                    <button class="btn-storage" onclick="resetStorageDirectory()" title="重置为默认目录">重置默认</button>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="novels-header">
+                    <h2 class="novels-title">我的小说</h2>
+                    <button class="btn-new-novel" onclick="showNewNovelModal()">新建小说</button>
+                </div>
+                
+                <div id="novels-list" class="novels-list">
+                    <!-- 小说列表将在这里动态渲染 -->
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        console.log('NovelBox renderer process loaded');
-    </script>
+    <!-- 编辑器页面 -->
+    <div id="editor-page" class="app-container">
+        <div class="editor-container">
+            <!-- 左侧栏 - 章节列表 -->
+            <div id="left-sidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">章节列表</span>
+                    <button class="btn-collapse" onclick="toggleLeftSidebar()" title="收起侧边栏">‹</button>
+                </div>
+                <div class="chapters-list" id="chapters-list">
+                    <!-- 章节列表将在这里动态渲染 -->
+                </div>
+                <div class="btn-add-chapter" onclick="addNewChapter()">
+                    + 添加新章节
+                </div>
+            </div>
+            <div id="left-sidebar-toggle" class="sidebar-toggle left-toggle" onclick="toggleLeftSidebar()" title="展开章节列表" style="display: none;">
+                ›
+            </div>
+
+            <!-- 中间编辑区域 -->
+            <div class="main-editor">
+                <div class="editor-header">
+                    <div class="editor-header-left">
+                        <button class="back-btn" onclick="goToHomepage()">← 返回主页</button>
+                        <span id="current-novel-title" style="margin-left: 20px; font-weight: 600;"></span>
+                    </div>
+                    <div class="editor-header-right">
+                        <span class="auto-save-indicator" id="auto-save-indicator" style="display: none;">已自动保存</span>
+                        <button class="save-btn" onclick="manualSave()" title="手动保存">💾 保存</button>
+                    </div>
+                </div>
+                <div class="editor-content">
+                    <textarea 
+                        id="chapter-editor" 
+                        class="chapter-editor" 
+                        placeholder="开始写作..."
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- 右侧栏 - AI工具预留 -->
+            <div id="right-sidebar-toggle" class="sidebar-toggle right-toggle" onclick="toggleRightSidebar()" title="展开AI工具" style="display: none;">
+                ‹
+            </div>
+            <div id="right-sidebar" class="right-sidebar">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">AI工具</span>
+                    <button class="btn-collapse" onclick="toggleRightSidebar()" title="收起侧边栏">›</button>
+                </div>
+                <div class="ai-tools-placeholder">
+                    <div style="font-size: 2em; margin-bottom: 20px;">🤖</div>
+                    <p>AI工具功能</p>
+                    <p style="margin-top: 10px; font-size: 0.9em;">即将推出...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新建小说模态框 -->
+    <div id="new-novel-modal" class="modal-overlay">
+        <div class="modal">
+            <h3 class="modal-title">新建小说</h3>
+            <form id="new-novel-form">
+                <div class="form-group">
+                    <label class="form-label required" for="novel-name">小说名称</label>
+                    <input 
+                        type="text" 
+                        id="novel-name" 
+                        class="form-input" 
+                        placeholder="请输入小说名称" 
+                        required
+                        maxlength="100"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required" for="novel-author">作者</label>
+                    <input 
+                        type="text" 
+                        id="novel-author" 
+                        class="form-input" 
+                        placeholder="请输入作者姓名" 
+                        required
+                        maxlength="50"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="novel-description">简介</label>
+                    <textarea 
+                        id="novel-description" 
+                        class="form-textarea" 
+                        placeholder="请输入小说简介（可选）"
+                        maxlength="500"
+                    ></textarea>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="hideNewNovelModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">创建</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 引入应用逻辑 -->
+    <script src="js/app.js"></script>
 </body>
 </html>
