@@ -9,6 +9,7 @@ class NovelBox {
         this.currentNovel = null;
         this.currentChapter = null;
         this.autoSaveTimer = null;
+        this.draggedChapterId = null;
         
         this.init();
     }
@@ -35,10 +36,42 @@ class NovelBox {
             }
         });
 
+        document.getElementById('edit-novel-form').addEventListener('submit', (e) => {
+            this.handleEditNovelSubmit(e);
+        });
+
+        document.getElementById('edit-novel-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                this.hideEditNovelModal();
+            }
+        });
+
         const editor = document.getElementById('chapter-editor');
         if (editor) {
             editor.addEventListener('input', () => {
                 this.handleEditorInput();
+            });
+        }
+
+        const chapterTitleDisplay = document.getElementById('chapter-title-display');
+        const chapterTitleInput = document.getElementById('chapter-title-input');
+        
+        if (chapterTitleDisplay && chapterTitleInput) {
+            chapterTitleDisplay.addEventListener('click', () => {
+                this.startEditingChapterTitle();
+            });
+
+            chapterTitleInput.addEventListener('blur', () => {
+                this.finishEditingChapterTitle();
+            });
+
+            chapterTitleInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    this.finishEditingChapterTitle();
+                }
+                if (e.key === 'Escape') {
+                    this.cancelEditingChapterTitle();
+                }
             });
         }
     }
@@ -92,6 +125,16 @@ class NovelBox {
         document.getElementById('new-novel-form').reset();
     }
 
+    showEditNovelModal() {
+        document.getElementById('edit-novel-modal').classList.add('active');
+        document.getElementById('edit-novel-name').focus();
+    }
+
+    hideEditNovelModal() {
+        document.getElementById('edit-novel-modal').classList.remove('active');
+        document.getElementById('edit-novel-form').reset();
+    }
+
     /**
      * 处理新建小说表单提交
      */
@@ -127,6 +170,36 @@ class NovelBox {
         
         this.hideNewNovelModal();
         this.renderNovelsList();
+    }
+
+    async handleEditNovelSubmit(e) {
+        e.preventDefault();
+        
+        const novelId = document.getElementById('edit-novel-id').value;
+        const name = document.getElementById('edit-novel-name').value.trim();
+        const author = document.getElementById('edit-novel-author').value.trim();
+        const description = document.getElementById('edit-novel-description').value.trim();
+        
+        if (!name || !author) {
+            alert('请填写必要信息');
+            return;
+        }
+        
+        const novel = this.novels.find(n => n.id === novelId);
+        if (!novel) return;
+        
+        novel.name = name;
+        novel.author = author;
+        novel.description = description;
+        
+        await this.saveNovels();
+        
+        this.hideEditNovelModal();
+        this.renderNovelsList();
+        
+        if (this.currentNovel && this.currentNovel.id === novelId) {
+            document.getElementById('current-novel-title').textContent = novel.name;
+        }
     }
 
     /**
@@ -170,8 +243,13 @@ class NovelBox {
     renderChaptersList() {
         const chaptersList = document.getElementById('chapters-list');
         chaptersList.innerHTML = this.currentNovel.chapters.map(chapter => `
-            <div class="chapter-item ${this.currentChapter && this.currentChapter.id === chapter.id ? 'active' : ''}" 
-                 onclick="app.openChapter('${chapter.id}')">
+            <div class="chapter-item ${this.currentChapter && this.currentChapter.id === chapter.id ? 'active' : ''}"
+                 onclick="app.openChapter('${chapter.id}')"
+                 draggable="true"
+                 ondragstart="app.handleDragStart(event, '${chapter.id}')"
+                 ondragover="app.handleDragOver(event)"
+                 ondrop="app.handleDrop(event, '${chapter.id}')"
+                 ondragend="app.handleDragEnd(event)">
                 <div class="chapter-content">
                     <div class="chapter-title">${this.escapeHtml(chapter.title)}</div>
                     <div class="chapter-word-count">${chapter.wordCount || 0} 字</div>
@@ -196,6 +274,7 @@ class NovelBox {
         if (!this.currentChapter) return;
         
         document.getElementById('chapter-editor').value = this.currentChapter.content || '';
+        document.getElementById('chapter-title-display').textContent = this.currentChapter.title;
         this.renderChaptersList();
         
         this.startAutoSave();
@@ -263,20 +342,12 @@ class NovelBox {
         const novel = this.novels.find(n => n.id === novelId);
         if (!novel) return;
         
-        const newName = prompt('请输入小说名称:', novel.name);
-        if (!newName || !newName.trim()) return;
+        document.getElementById('edit-novel-id').value = novel.id;
+        document.getElementById('edit-novel-name').value = novel.name;
+        document.getElementById('edit-novel-author').value = novel.author;
+        document.getElementById('edit-novel-description').value = novel.description || '';
         
-        const newAuthor = prompt('请输入作者:', novel.author);
-        if (!newAuthor || !newAuthor.trim()) return;
-        
-        const newDescription = prompt('请输入简介:', novel.description || '');
-        
-        novel.name = newName.trim();
-        novel.author = newAuthor.trim();
-        novel.description = newDescription ? newDescription.trim() : '';
-        
-        await this.saveNovels();
-        this.renderNovelsList();
+        this.showEditNovelModal();
     }
 
     async deleteNovel(novelId) {
@@ -475,7 +546,103 @@ class NovelBox {
         };
         return text.replace(/[&<>"']/g, m => map[m]);
     }
-}
+
+    startEditingChapterTitle() {
+        if (!this.currentChapter) return;
+        
+        const display = document.getElementById('chapter-title-display');
+        const input = document.getElementById('chapter-title-input');
+        
+        input.value = this.currentChapter.title;
+        display.style.display = 'none';
+        input.style.display = 'block';
+        input.focus();
+        input.select();
+    }
+
+    async finishEditingChapterTitle() {
+        if (!this.currentChapter) return;
+        
+        const display = document.getElementById('chapter-title-display');
+        const input = document.getElementById('chapter-title-input');
+        const newTitle = input.value.trim();
+        
+        if (newTitle && newTitle !== this.currentChapter.title) {
+            this.currentChapter.title = newTitle;
+            display.textContent = newTitle;
+            await this.saveNovels();
+            this.renderChaptersList();
+        }
+        
+        input.style.display = 'none';
+        display.style.display = 'inline-block';
+    }
+
+    cancelEditingChapterTitle() {
+        const display = document.getElementById('chapter-title-display');
+        const input = document.getElementById('chapter-title-input');
+        
+        input.style.display = 'none';
+        display.style.display = 'inline-block';
+        }
+    
+        handleDragStart(e, chapterId) {
+            this.draggedChapterId = chapterId;
+            e.dataTransfer.effectAllowed = 'move';
+            e.currentTarget.classList.add('dragging');
+        }
+    
+        handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            const target = e.currentTarget;
+            if (target && target.classList.contains('chapter-item')) {
+                const rect = target.getBoundingClientRect();
+                const midway = rect.top + (rect.height / 2);
+                if (e.clientY < midway) {
+                    target.classList.add('drag-over-top');
+                    target.classList.remove('drag-over-bottom');
+                } else {
+                    target.classList.add('drag-over-bottom');
+                    target.classList.remove('drag-over-top');
+                }
+            }
+        }
+    
+        async handleDrop(e, dropTargetId) {
+            e.preventDefault();
+            if (this.draggedChapterId === dropTargetId) return;
+    
+            const draggedIndex = this.currentNovel.chapters.findIndex(c => c.id === this.draggedChapterId);
+            let targetIndex = this.currentNovel.chapters.findIndex(c => c.id === dropTargetId);
+    
+            if (draggedIndex === -1 || targetIndex === -1) return;
+    
+            const [draggedItem] = this.currentNovel.chapters.splice(draggedIndex, 1);
+            
+            targetIndex = this.currentNovel.chapters.findIndex(c => c.id === dropTargetId);
+    
+            const target = e.currentTarget;
+            const rect = target.getBoundingClientRect();
+            const midway = rect.top + (rect.height / 2);
+            if (e.clientY < midway) {
+                this.currentNovel.chapters.splice(targetIndex, 0, draggedItem);
+            } else {
+                this.currentNovel.chapters.splice(targetIndex + 1, 0, draggedItem);
+            }
+    
+            await this.saveNovels();
+            this.renderChaptersList();
+        }
+    
+        handleDragEnd(e) {
+            this.draggedChapterId = null;
+            const items = document.querySelectorAll('.chapter-item');
+            items.forEach(item => {
+                item.classList.remove('dragging', 'drag-over-top', 'drag-over-bottom');
+            });
+        }
+    }
 
 // 全局应用实例
 let app;
@@ -492,6 +659,14 @@ function showNewNovelModal() {
 
 function hideNewNovelModal() {
     app.hideNewNovelModal();
+}
+
+function showEditNovelModal() {
+    app.showEditNovelModal();
+}
+
+function hideEditNovelModal() {
+    app.hideEditNovelModal();
 }
 
 function goToHomepage() {

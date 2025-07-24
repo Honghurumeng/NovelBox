@@ -67,6 +67,19 @@
                         <button class="back-btn" onclick="goToHomepage()">← 返回主页</button>
                         <span id="current-novel-title" style="margin-left: 20px; font-weight: 600;"></span>
                     </div>
+                    <div class="editor-header-center">
+                        <div class="chapter-title-editor">
+                            <div class="chapter-title-divider"></div>
+                            <input 
+                                type="text" 
+                                id="chapter-title-input" 
+                                class="chapter-title-input" 
+                                placeholder="章节标题"
+                                style="display: none;"
+                            >
+                            <span id="chapter-title-display" class="chapter-title-display"></span>
+                        </div>
+                    </div>
                     <div class="editor-header-right">
                         <span class="auto-save-indicator" id="auto-save-indicator" style="display: none;">已自动保存</span>
                         <button class="save-btn" onclick="manualSave()" title="手动保存">💾 保存</button>
@@ -141,6 +154,54 @@
                 <div class="modal-buttons">
                     <button type="button" class="btn btn-secondary" onclick="hideNewNovelModal()">取消</button>
                     <button type="submit" class="btn btn-primary">创建</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 编辑小说信息模态框 -->
+    <div id="edit-novel-modal" class="modal-overlay">
+        <div class="modal">
+            <h3 class="modal-title">编辑小说信息</h3>
+            <form id="edit-novel-form">
+                <input type="hidden" id="edit-novel-id">
+                <div class="form-group">
+                    <label class="form-label required" for="edit-novel-name">小说名称</label>
+                    <input 
+                        type="text" 
+                        id="edit-novel-name" 
+                        class="form-input" 
+                        placeholder="请输入小说名称" 
+                        required
+                        maxlength="100"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required" for="edit-novel-author">作者</label>
+                    <input 
+                        type="text" 
+                        id="edit-novel-author" 
+                        class="form-input" 
+                        placeholder="请输入作者姓名" 
+                        required
+                        maxlength="50"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit-novel-description">简介</label>
+                    <textarea 
+                        id="edit-novel-description" 
+                        class="form-textarea" 
+                        placeholder="请输入小说简介（可选）"
+                        maxlength="500"
+                    ></textarea>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="hideEditNovelModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
                 </div>
             </form>
         </div>

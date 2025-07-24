@@ -498,12 +498,69 @@ body {
 .editor-header-left {
     display: flex;
     align-items: center;
+    flex: 1;
+}
+
+.editor-header-center {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chapter-title-editor {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.chapter-title-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e1e8ed 20%, #e1e8ed 80%, transparent);
+    margin-bottom: 10px;
+}
+
+.chapter-title-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    background: transparent;
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-title-input:focus {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.chapter-title-display {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    display: inline-block;
+    min-width: 100px;
+}
+
+.chapter-title-display:hover {
+    background: rgba(102, 126, 234, 0.1);
 }
 
 .editor-header-right {
     display: flex;
     align-items: center;
     gap: 15px;
+    flex: 1;
+    justify-content: flex-end;
 }
 
 .save-btn {
