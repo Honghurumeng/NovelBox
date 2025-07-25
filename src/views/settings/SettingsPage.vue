@@ -86,6 +86,16 @@
             </button>
           </div>
         </div>
+
+        <div v-else-if="activeCategory === 'developer'" class="settings-section">
+          <h3 class="section-title">{{ $t('settings.developer.title') }}</h3>
+          <div class="setting-item">
+           <button @click="resetOOBE" class="reset-btn">
+              {{ $t('settings.developer.resetoobe') }}
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -113,7 +123,8 @@ export default {
     const categories = [
       { id: 'language', label: 'settings.language.title', icon: '🌐' },
       { id: 'appearance', label: 'settings.appearance.title', icon: '🎨' },
-      { id: 'storage', label: 'settings.storage.title', icon: '💾' }
+      { id: 'storage', label: 'settings.storage.title', icon: '💾' },
+      { id: 'developer', label: 'settings.developer.title', icon: '⚙️' }
     ]
     
     // 语言选项
@@ -145,6 +156,11 @@ export default {
       await updateStoragePath()
     })
     
+    const resetOOBE = async() => {
+      localStorage.removeItem('novelbox-oobe-completed')
+      // refresh page
+      window.location.reload()
+    }
     // 更新存储路径显示
     const updateStoragePath = async () => {
       try {
@@ -208,7 +224,8 @@ export default {
       changeTheme,
       selectStoragePath,
       resetStoragePath,
-      goToHome
+      goToHome,
+      resetOOBE
     }
   }
 }

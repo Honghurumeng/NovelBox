@@ -44,8 +44,8 @@
           </button>
           <button 
             class="action-btn delete" 
-            @click="prepareDeleteChapter(chapter.id)" 
-            :title="$t('common.delete')"
+            @click="handleDeleteClick($event, chapter.id)" 
+            :title="$t('chapters.deleteWithShortcut')"
           >
             🗑️
           </button>
@@ -224,6 +224,28 @@ export default {
       prepareDeleteChapter(chapterId)
     }
 
+    const handleDeleteClick = (event, chapterId) => {
+      // 如果按下了Ctrl键，直接删除章节，否则显示确认对话框
+      if (event.ctrlKey) {
+        directDeleteChapter(chapterId)
+      } else {
+        prepareDeleteChapter(chapterId)
+      }
+    }
+
+    const directDeleteChapter = async (chapterId) => {
+      if (chapters.value.length <= 1) {
+        alert(t('chapters.atLeastOneChapter'))
+        return
+      }
+
+      try {
+        await chaptersStore.deleteChapter(chapterId)
+      } catch (error) {
+        alert('删除章节失败: ' + error.message)
+      }
+    }
+
     const handleDragStart = (event, chapterId) => {
       chaptersStore.setDraggedChapter(chapterId)
       event.dataTransfer.effectAllowed = 'move'
@@ -291,8 +313,10 @@ export default {
 
       // 删除章节相关的返回值
       showDeleteModal,
+      prepareDeleteChapter,
       closeDeleteModal,
-      confirmDeleteChapter
+      confirmDeleteChapter,
+      handleDeleteClick
     }
   }
 }

@@ -4,6 +4,7 @@
     "cancel": "取消",
     "confirm": "确认",
     "delete": "删除",
+    "deleteWithShortcut": "删除 ({shortcut})",
     "edit": "编辑",
     "add": "添加",
     "close": "关闭",
@@ -83,7 +84,8 @@
     "created": "章节已创建",
     "deleted": "章节已删除",
     "titleUpdated": "标题已更新",
-    "reordered": "章节顺序已更新"
+    "reordered": "章节顺序已更新",
+    "deleteWithShortcut": "删除章节 (Ctrl+点击直接删除)"
   },
   "oobe": {
     "next": "下一步",

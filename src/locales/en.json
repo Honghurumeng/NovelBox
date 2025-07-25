@@ -8,7 +8,8 @@
     "add": "Add",
     "close": "Close",
     "saving": "Saving...",
-    "dragToReorder": "Drag to reorder"
+    "dragToReorder": "Drag to reorder",
+    "deleteShortcut": "Delete (Ctrl+D)"
   },
   "homepage": {
     "myNovels": "My Novels",
@@ -83,7 +84,8 @@
     "created": "Chapter created",
     "deleted": "Chapter deleted",
     "titleUpdated": "Title updated",
-    "reordered": "Chapter order updated"
+    "reordered": "Chapter order updated",
+    "deleteWithShortcut": "Delete chapter (Ctrl+click to delete directly)"
   },
   "oobe": {
     "next": "Next",
@@ -129,8 +131,13 @@
       "failed": "Failed to get path",
       "selectFailed": "Failed to select storage directory",
       "resetFailed": "Failed to reset storage directory"
+    },
+    "developer": {
+      "title": "Developer Settings",
+      "resetoobe": "Reset OOBE"
     }
   },
+  
   "wordCount": {
     "count": "{count} words",
     "kilo": "{count}k words",
