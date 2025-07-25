@@ -1,0 +1,287 @@
+/* Global styles for NovelBox Vue.js app */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #333;
+  overflow: hidden;
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Utility classes */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+.slide-left-enter-active, .slide-left-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-left-enter-from {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.slide-left-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.slide-right-enter-active, .slide-right-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-right-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.slide-right-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f3f4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f3f4;
+}
+
+/* Focus outline styles */
+*:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background: rgba(102, 126, 234, 0.2);
+  color: inherit;
+}
+
+/* Button reset */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Input and textarea reset */
+input, textarea {
+  font-family: inherit;
+}
+
+/* Text selection in inputs */
+input:focus, textarea:focus {
+  outline: none;
+}
+
+/* Prevent text selection on UI elements */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Loading animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Common button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  background: transparent;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #f1f3f4;
+  color: #5f6368;
+  border: 1px solid #dadce0;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #e8eaed;
+  border-color: #c4c7ca;
+}
+
+.btn-danger {
+  background: #ff4757;
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #ff3742;
+  transform: translateY(-1px);
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.form-label.required::after {
+  content: ' *';
+  color: #ff4757;
+}
+
+.form-input, .form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: white;
+}
+
+.form-input:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input:invalid, .form-textarea:invalid {
+  border-color: #ff4757;
+}
+
+.form-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Card styles */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+/* Responsive design helpers */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
+  /* Dark mode styles can be added here */
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn {
+    border: 2px solid;
+  }
+  
+  .card {
+    border: 1px solid #333;
+  }
+}

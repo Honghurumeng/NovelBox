@@ -13,7 +13,12 @@ const createWindow = () => {
     }
   });
 
-  mainWindow.loadFile('index.html');
+  // In development, load from Vite dev server, in production load from dist folder
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow.loadURL('http://localhost:5173');
+  } else {
+    mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
+  }
   
   // Open DevTools in development
   if (process.env.NODE_ENV === 'development') {
