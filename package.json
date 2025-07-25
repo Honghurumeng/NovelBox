@@ -25,7 +25,10 @@
     "writing",
     "ai"
   ],
-  "author": "",
+  "author": {
+    "name": "NovelBox Team",
+    "email": "novelbox@example.com"
+  },
   "license": "AGPL-3.0",
   "type": "commonjs",
   "devDependencies": {
@@ -44,6 +47,10 @@
     "vue-router": "^4.5.1"
   },
   "build": {
-    "extends": "./electron-builder.config.js"
+    "extends": "./electron-builder.config.js",
+    "maintainer": "NovelBox Team <aliyahzombie2024@gmail.com>",
+    "linux": {
+      "maintainer": "NovelBox Team <aliyahzombie2024@gmail.com>"
+    }
   }
 }

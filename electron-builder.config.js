@@ -56,7 +56,8 @@ const config = {
         arch: ['x64']
       }
     ],
-    category: 'Utility'
+    category: 'Utility',
+    maintainer: 'NovelBox Team <novelbox@example.com>'
   }
 }
 
