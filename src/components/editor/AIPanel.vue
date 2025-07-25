@@ -14,7 +14,7 @@
     <div class="panel-content">
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">続きを</div>
+          <div class="feature-icon">✏️</div>
           <h3 class="feature-title">{{ $t('editor.aiPanel.features.continueWriting') }}</h3>
           <p class="feature-description">{{ $t('editor.aiPanel.featureDescriptions.continueWriting') }}</p>
         </div>

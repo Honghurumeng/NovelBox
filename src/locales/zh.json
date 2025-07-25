@@ -119,7 +119,10 @@
       "themes": {
         "light": "浅色",
         "dark": "深色",
-        "oled": "OLED黑"
+        "oled": "OLED黑",
+        "blue": "科技蓝",
+        "green": "清新绿",
+        "purple": "优雅紫"
       }
     },
     "storage": {
@@ -131,6 +134,15 @@
       "failed": "获取路径失败",
       "selectFailed": "选择存储目录失败",
       "resetFailed": "重置存储目录失败"
+    },
+    "about": {
+      "title": "关于",
+      "appName": "NovelBox",
+      "appDescription": "使用LLM激活无限的创造力！",
+      "version": "版本 {version}",
+      "github": "Github",
+      "contact": "联系我",
+      "license": "许可证"
     },
     "wordCount": {
       "count": "{count} 字",

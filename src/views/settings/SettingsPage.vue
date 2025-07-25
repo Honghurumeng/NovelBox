@@ -96,6 +96,36 @@
           </div>
         </div>
 
+        <!-- 关于页面 -->
+        <div v-else-if="activeCategory === 'about'" class="settings-section about-section">
+          <div class="about-content">
+            <div class="app-info">
+              <h1 class="app-name">{{ $t('about.appName') }}</h1>
+              <p class="app-description">{{ $t('about.appDescription') }}</p>
+              <p class="app-version">{{ $t('about.version', { version: '1.0.0' }) }}</p>
+            </div>
+            
+            <div class="links">
+              <div class="link-item">
+                <span class="link-label">{{ $t('about.github') }}：</span>
+                <a href="https://github.com/AliyahZombie/NovelBox" target="_blank" class="link-url">
+                  https://github.com/AliyahZombie/NovelBox
+                </a>
+              </div>
+              <div class="link-item">
+                <span class="link-label">{{ $t('about.contact') }}：</span>
+                <a href="mailto:aliyahzombie2024@gmail.com" class="link-url">
+                  aliyahzombie2024@gmail.com
+                </a>
+              </div>
+              <div class="link-item">
+                <span class="link-label">{{ $t('about.license') }}: </span>
+                <span class="link-url">AGPL-3.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -124,7 +154,8 @@ export default {
       { id: 'language', label: 'settings.language.title', icon: '🌐' },
       { id: 'appearance', label: 'settings.appearance.title', icon: '🎨' },
       { id: 'storage', label: 'settings.storage.title', icon: '💾' },
-      { id: 'developer', label: 'settings.developer.title', icon: '⚙️' }
+      { id: 'developer', label: 'settings.developer.title', icon: '⚙️' },
+      { id: 'about', label: 'about.title', icon: 'ℹ️' }
     ]
     
     // 语言选项
@@ -137,7 +168,10 @@ export default {
     const themes = [
       { id: 'light', name: 'settings.appearance.themes.light' },
       { id: 'dark', name: 'settings.appearance.themes.dark' },
-      { id: 'oled', name: 'settings.appearance.themes.oled' }
+      { id: 'oled', name: 'settings.appearance.themes.oled' },
+      { id: 'blue', name: 'settings.appearance.themes.blue' },
+      { id: 'green', name: 'settings.appearance.themes.green' },
+      { id: 'purple', name: 'settings.appearance.themes.purple' }
     ]
     
     // 返回主页
@@ -453,6 +487,72 @@ export default {
   height: 60px;
 }
 
+/* 蓝色主题预览 */
+.theme-preview.theme-blue {
+  background: #e3f2fd;
+}
+
+.theme-preview.theme-blue .preview-header {
+  background: #bbdefb;
+  height: 20px;
+}
+
+.theme-preview.theme-blue .preview-sidebar {
+  background: #90caf9;
+  width: 30px;
+  height: 60px;
+}
+
+.theme-preview.theme-blue .preview-main {
+  background: #e3f2fd;
+  flex: 1;
+  height: 60px;
+}
+
+/* 绿色主题预览 */
+.theme-preview.theme-green {
+  background: #e8f5e9;
+}
+
+.theme-preview.theme-green .preview-header {
+  background: #c8e6c9;
+  height: 20px;
+}
+
+.theme-preview.theme-green .preview-sidebar {
+  background: #a5d6a7;
+  width: 30px;
+  height: 60px;
+}
+
+.theme-preview.theme-green .preview-main {
+  background: #e8f5e9;
+  flex: 1;
+  height: 60px;
+}
+
+/* 紫色主题预览 */
+.theme-preview.theme-purple {
+  background: #f3e5f5;
+}
+
+.theme-preview.theme-purple .preview-header {
+  background: #e1bee7;
+  height: 20px;
+}
+
+.theme-preview.theme-purple .preview-sidebar {
+  background: #ce93d8;
+  width: 30px;
+  height: 60px;
+}
+
+.theme-preview.theme-purple .preview-main {
+  background: #f3e5f5;
+  flex: 1;
+  height: 60px;
+}
+
 .preview-content {
   display: flex;
   height: 60px;
@@ -510,5 +610,71 @@ export default {
 
 .reset-btn:hover {
   background: var(--reset-btn-hover-bg);
+}
+
+.about-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.about-content {
+  text-align: center;
+  max-width: 600px;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+}
+
+.app-name {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  background: var(--accent-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-description {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.app-version {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.links {
+  text-align: left;
+  margin-top: 2rem;
+}
+
+.link-item {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.link-label {
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 100px;
+}
+
+.link-url {
+  color: var(--accent-color);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.link-url:hover {
+  text-decoration: underline;
 }
 </style>

@@ -96,6 +96,102 @@
   --modal-overlay: rgba(255, 255, 255, 0.1);
 }
 
+/* 蓝色主题 (科技感) */
+.theme-blue {
+  --bg-color: #e3f2fd;
+  --text-primary: #0d47a1;
+  --text-secondary: #1565c0;
+  --border-color: #90caf9;
+  --sidebar-bg: #bbdefb;
+  --content-bg: #e3f2fd;
+  --input-bg: #ffffff;
+  --accent-color: linear-gradient(135deg, #2196f3 0%, #0d47a1 100%);
+  --accent-shadow: rgba(33, 150, 243, 0.3);
+  --nav-hover-bg: #90caf9;
+  --nav-active-bg: #64b5f6;
+  --nav-active-color: #0d47a1;
+  --reset-btn-bg: #e3f2fd;
+  --reset-btn-color: #d32f2f;
+  --reset-btn-hover-bg: #bbdefb;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(33, 150, 243, 0.2);
+  --card-hover-shadow: 0 4px 6px rgba(33, 150, 243, 0.3);
+  --btn-primary-bg: linear-gradient(135deg, #2196f3 0%, #0d47a1 100%);
+  --btn-primary-color: #ffffff;
+  --btn-secondary-bg: #bbdefb;
+  --btn-secondary-color: #0d47a1;
+  --btn-danger-bg: #ffcdd2;
+  --btn-danger-color: #c62828;
+  --btn-success-bg: #c8e6c9;
+  --btn-success-color: #2e7d32;
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(13, 71, 161, 0.5);
+}
+
+/* 绿色主题 (自然清新) */
+.theme-green {
+  --bg-color: #e8f5e9;
+  --text-primary: #1b5e20;
+  --text-secondary: #2e7d32;
+  --border-color: #a5d6a7;
+  --sidebar-bg: #c8e6c9;
+  --content-bg: #e8f5e9;
+  --input-bg: #ffffff;
+  --accent-color: linear-gradient(135deg, #4caf50 0%, #1b5e20 100%);
+  --accent-shadow: rgba(76, 175, 80, 0.3);
+  --nav-hover-bg: #a5d6a7;
+  --nav-active-bg: #81c784;
+  --nav-active-color: #1b5e20;
+  --reset-btn-bg: #e8f5e9;
+  --reset-btn-color: #d32f2f;
+  --reset-btn-hover-bg: #c8e6c9;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(76, 175, 80, 0.2);
+  --card-hover-shadow: 0 4px 6px rgba(76, 175, 80, 0.3);
+  --btn-primary-bg: linear-gradient(135deg, #4caf50 0%, #1b5e20 100%);
+  --btn-primary-color: #ffffff;
+  --btn-secondary-bg: #c8e6c9;
+  --btn-secondary-color: #1b5e20;
+  --btn-danger-bg: #ffcdd2;
+  --btn-danger-color: #c62828;
+  --btn-success-bg: #c8e6c9;
+  --btn-success-color: #2e7d32;
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(27, 94, 32, 0.5);
+}
+
+/* 紫色主题 (优雅神秘) */
+.theme-purple {
+  --bg-color: #f3e5f5;
+  --text-primary: #4a148c;
+  --text-secondary: #6a1b9a;
+  --border-color: #ce93d8;
+  --sidebar-bg: #e1bee7;
+  --content-bg: #f3e5f5;
+  --input-bg: #ffffff;
+  --accent-color: linear-gradient(135deg, #9c27b0 0%, #4a148c 100%);
+  --accent-shadow: rgba(156, 39, 176, 0.3);
+  --nav-hover-bg: #ce93d8;
+  --nav-active-bg: #ba68c8;
+  --nav-active-color: #4a148c;
+  --reset-btn-bg: #f3e5f5;
+  --reset-btn-color: #d32f2f;
+  --reset-btn-hover-bg: #e1bee7;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(156, 39, 176, 0.2);
+  --card-hover-shadow: 0 4px 6px rgba(156, 39, 176, 0.3);
+  --btn-primary-bg: linear-gradient(135deg, #9c27b0 0%, #4a148c 100%);
+  --btn-primary-color: #ffffff;
+  --btn-secondary-bg: #e1bee7;
+  --btn-secondary-color: #4a148c;
+  --btn-danger-bg: #ffcdd2;
+  --btn-danger-color: #c62828;
+  --btn-success-bg: #c8e6c9;
+  --btn-success-color: #2e7d32;
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(74, 20, 140, 0.5);
+}
+
 /* 默认使用浅色主题 */
 :root {
   --bg-color: #f8f9fa;
