@@ -250,4 +250,31 @@ export default {
   background: #f8f9fa;
   color: #333;
 }
+
+.sidebar-toggle.right-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 60px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px 0 0 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle.right-toggle:hover {
+  background: #5a6fd8;
+  width: 35px;
+}
 </style>

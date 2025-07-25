@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
+const process = require('process');
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -15,7 +16,15 @@ const createWindow = () => {
 
   // In development, load from Vite dev server, in production load from dist folder
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.loadURL('http://localhost:5173');
+    // Wait for Vite dev server to be ready
+    mainWindow.loadURL('http://127.0.0.1:5173').catch(err => {
+      console.log('Failed to load URL, retrying in 1 second...');
+      setTimeout(() => {
+        mainWindow.loadURL('http://127.0.0.1:5173').catch(err => {
+          console.error('Failed to load URL after retry:', err);
+        });
+      }, 1000);
+    });
   } else {
     mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
   }

@@ -31,6 +31,7 @@
           >
             {{ chaptersStore.currentChapterTitle || '请选择章节' }}
           </span>
+          <span v-if="hasUnsavedChanges" class="unsaved-indicator">未保存</span>
         </div>
       </div>
       
@@ -53,13 +54,14 @@
         class="chapter-editor" 
         placeholder="开始写作..."
         @input="handleEditorInput"
+        @keydown.ctrl.s.prevent="manualSave"
       ></textarea>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNovelsStore, useChaptersStore, useUIStore } from '@/stores'
 
@@ -73,11 +75,14 @@ export default {
     
     const titleInput = ref(null)
     const editingTitle = ref('')
+    const hasUnsavedChanges = ref(false)
+    let lastSavedContent = ''
     
     const editorContent = computed({
       get: () => chaptersStore.currentChapterContent,
       set: (value) => {
         chaptersStore.updateChapterContent(value)
+        hasUnsavedChanges.value = value !== lastSavedContent
       }
     })
 
@@ -98,6 +103,8 @@ export default {
       
       try {
         await novelsStore.saveNovels()
+        lastSavedContent = chaptersStore.currentChapterContent
+        hasUnsavedChanges.value = false
         uiStore.showSaveMessage('手动保存成功')
       } catch (error) {
         console.error('手动保存失败:', error)
@@ -150,7 +157,30 @@ export default {
     watch(() => chaptersStore.currentChapter, (newChapter) => {
       if (newChapter) {
         // Content is automatically updated via computed property
+        lastSavedContent = newChapter.content
+        hasUnsavedChanges.value = false
       }
+    })
+
+    // 添加键盘事件监听
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === 's') {
+        event.preventDefault()
+        manualSave()
+      }
+    }
+
+    onMounted(() => {
+      document.addEventListener('keydown', handleKeyDown)
+      // 初始化自动保存定时器
+      if (chaptersStore.currentChapter) {
+        chaptersStore.startAutoSave()
+      }
+    })
+
+    onUnmounted(() => {
+      document.removeEventListener('keydown', handleKeyDown)
+      chaptersStore.clearAutoSaveTimer()
     })
 
     return {
@@ -160,6 +190,7 @@ export default {
       titleInput,
       editingTitle,
       editorContent,
+      hasUnsavedChanges,
       goToHomepage,
       manualSave,
       handleEditorInput,
@@ -273,6 +304,14 @@ export default {
 .chapter-title-display:hover {
   background: rgba(102, 126, 234, 0.1);
   color: #667eea;
+}
+
+.unsaved-indicator {
+  font-size: 0.8em;
+  color: #6c757d;
+  font-style: italic;
+  margin-left: 10px;
+  vertical-align: middle;
 }
 
 .editor-header-right {
