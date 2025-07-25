@@ -1,17 +1,10 @@
 <template>
-  <div class="chapters-sidebar" :class="{ collapsed: uiStore.leftSidebarCollapsed }">
+  <div class="chapters-list-container">
     <div class="sidebar-header">
-      <span class="sidebar-title">章节列表</span>
-      <button 
-        class="btn-collapse" 
-        @click="uiStore.toggleLeftSidebar()" 
-        title="收起侧边栏"
-      >
-        ‹
-      </button>
+      <span class="sidebar-title">{{ $t('editor.sidebar.chaptersList') }}</span>
     </div>
     
-    <div class="chapters-list">
+    <div class="chapters-list-wrapper">
       <div 
         v-for="chapter in chapters" 
         :key="chapter.id"
@@ -24,22 +17,35 @@
         @drop="handleDrop($event, chapter.id)"
         @dragend="handleDragEnd"
       >
-        <div class="chapter-content">
+        <div class="chapter-info">
           <div class="chapter-title">{{ chapter.title }}</div>
-          <div class="chapter-word-count">{{ formatWordCount(chapter.wordCount) }}</div>
+          <div class="chapter-meta">
+            <span>{{ formatWordCount(chapter.wordCount) }}</span>
+          </div>
         </div>
         <div class="chapter-actions" @click.stop>
           <button 
-            class="chapter-action-btn" 
+            class="action-btn drag-handle" 
+            :title="$t('common.dragToReorder')"
+            draggable="true"
+            @dragstart="handleDragStart($event, chapter.id)"
+            @dragover="handleDragOver"
+            @drop="handleDrop($event, chapter.id)"
+            @dragend="handleDragEnd"
+          >
+            🔄
+          </button>
+          <button 
+            class="action-btn" 
             @click="editChapterTitle(chapter.id)" 
-            title="重命名"
+            :title="$t('common.edit')"
           >
             ✏️
           </button>
           <button 
-            class="chapter-action-btn delete" 
-            @click="deleteChapter(chapter.id)" 
-            title="删除"
+            class="action-btn delete" 
+            @click="prepareDeleteChapter(chapter.id)" 
+            :title="$t('common.delete')"
           >
             🗑️
           </button>
@@ -48,31 +54,82 @@
     </div>
     
     <div class="btn-add-chapter" @click="addNewChapter">
-      + 添加新章节
+      {{ $t('editor.sidebar.addNewChapter') }}
     </div>
-  </div>
-  
-  <!-- 收起状态的切换按钮 -->
-  <div 
-    v-show="uiStore.leftSidebarCollapsed"
-    class="sidebar-toggle left-toggle" 
-    @click="uiStore.toggleLeftSidebar()" 
-    title="展开章节列表"
-  >
-    ›
+    
+    <!-- 编辑章节标题模态框 -->
+    <div v-if="showEditModal" class="modal-overlay" @click="closeEditModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>{{ $t('common.edit') }} {{ $t('editor.sidebar.chaptersList') }}</h3>
+          <button class="close-btn" @click="closeEditModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <input 
+            v-model="editingTitle" 
+            type="text" 
+            class="title-input"
+            :placeholder="$t('editor.chapterTitlePlaceholder')"
+            @keyup.enter="confirmEditTitle"
+            ref="titleInput"
+          >
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" @click="closeEditModal">
+            {{ $t('common.cancel') }}
+          </button>
+          <button class="btn btn-primary" @click="confirmEditTitle">
+            {{ $t('common.save') }}
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 删除确认模态框 -->
+    <div v-if="showDeleteModal" class="modal-overlay" @click="closeDeleteModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>{{ $t('common.delete') }} {{ $t('editor.sidebar.chaptersList') }}</h3>
+          <button class="close-btn" @click="closeDeleteModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>{{ $t('chapters.deleteConfirmation') }}</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" @click="closeDeleteModal">
+            {{ $t('common.cancel') }}
+          </button>
+          <button class="btn btn-danger" @click="confirmDeleteChapter">
+            {{ $t('common.delete') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { computed } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import { useChaptersStore, useUIStore } from '@/stores'
 import { UtilsService } from '@/services'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ChaptersList',
   setup() {
+    const { t } = useI18n()
     const chaptersStore = useChaptersStore()
     const uiStore = useUIStore()
+    
+    // 编辑章节标题相关的状态
+    const showEditModal = ref(false)
+    const editingChapterId = ref(null)
+    const editingTitle = ref('')
+    const titleInput = ref(null)
+
+    // 删除章节相关的状态
+    const showDeleteModal = ref(false)
+    const deletingChapterId = ref(null)
 
     const chapters = computed(() => chaptersStore.chapters)
     const currentChapter = computed(() => chaptersStore.currentChapter)
@@ -100,79 +157,118 @@ export default {
       const chapter = chapters.value.find(c => c.id === chapterId)
       if (!chapter) return
 
-      const newTitle = prompt('请输入新的章节标题:', chapter.title)
-      if (newTitle && newTitle.trim() && newTitle.trim() !== chapter.title) {
+      // 设置编辑状态
+      editingChapterId.value = chapterId
+      editingTitle.value = chapter.title
+      showEditModal.value = true
+      
+      // 等待DOM更新后聚焦输入框
+      await nextTick()
+      titleInput.value?.focus()
+      titleInput.value?.select()
+    }
+    
+    const closeEditModal = () => {
+      showEditModal.value = false
+      editingChapterId.value = null
+      editingTitle.value = ''
+    }
+    
+    const confirmEditTitle = async () => {
+      if (!editingChapterId.value) return
+      
+      const newTitle = editingTitle.value.trim()
+      if (newTitle && newTitle !== '') {
         try {
-          await chaptersStore.updateChapterTitle(chapterId, newTitle.trim())
+          await chaptersStore.updateChapterTitle(editingChapterId.value, newTitle)
         } catch (error) {
-          alert('重命名失败: ' + error.message)
+          alert('更新章节标题失败: ' + error.message)
         }
       }
+      
+      closeEditModal()
     }
 
-    const deleteChapter = async (chapterId) => {
-      if (!confirm('确定要删除这个章节吗？此操作不可撤销。')) {
+    const prepareDeleteChapter = (chapterId) => {
+      deletingChapterId.value = chapterId
+      showDeleteModal.value = true
+    }
+
+    const closeDeleteModal = () => {
+      showDeleteModal.value = false
+      deletingChapterId.value = null
+    }
+
+    const confirmDeleteChapter = async () => {
+      if (chapters.value.length <= 1) {
+        alert(t('chapters.atLeastOneChapter'))
         return
       }
+
+      const chapterId = deletingChapterId.value
+      if (!chapterId) return
+
+      const chapter = chapters.value.find(c => c.id === chapterId)
+      if (!chapter) return
 
       try {
         await chaptersStore.deleteChapter(chapterId)
       } catch (error) {
-        alert(error.message)
+        alert('删除章节失败: ' + error.message)
+      } finally {
+        closeDeleteModal()
       }
     }
 
-    // Drag and drop handlers
-    const handleDragStart = (e, chapterId) => {
+    const deleteChapter = async (chapterId) => {
+      prepareDeleteChapter(chapterId)
+    }
+
+    const handleDragStart = (event, chapterId) => {
       chaptersStore.setDraggedChapter(chapterId)
-      e.dataTransfer.effectAllowed = 'move'
-      e.currentTarget.classList.add('dragging')
+      event.dataTransfer.effectAllowed = 'move'
     }
 
-    const handleDragOver = (e) => {
-      e.preventDefault()
-      e.dataTransfer.dropEffect = 'move'
-      const target = e.currentTarget
-      if (target && target.classList.contains('chapter-item')) {
-        const rect = target.getBoundingClientRect()
-        const midway = rect.top + (rect.height / 2)
-        if (e.clientY < midway) {
-          target.classList.add('drag-over-top')
-          target.classList.remove('drag-over-bottom')
-        } else {
-          target.classList.add('drag-over-bottom')
-          target.classList.remove('drag-over-top')
-        }
-      }
+    const handleDragOver = (event) => {
+      event.preventDefault()
+      event.dataTransfer.dropEffect = 'move'
     }
 
-    const handleDrop = async (e, targetChapterId) => {
-      e.preventDefault()
-      const draggedChapterId = chaptersStore.draggedChapterId
+    const handleDrop = async (event, targetChapterId) => {
+      event.preventDefault()
       
-      if (draggedChapterId === targetChapterId) return
+      const draggedChapterId = chaptersStore.draggedChapterId
+      if (!draggedChapterId || draggedChapterId === targetChapterId) {
+        chaptersStore.clearDraggedChapter()
+        return
+      }
 
-      const target = e.currentTarget
-      const rect = target.getBoundingClientRect()
-      const midway = rect.top + (rect.height / 2)
-      const position = e.clientY < midway ? 'before' : 'after'
+      // Determine drop position (before or after target)
+      const targetElement = event.target.closest('.chapter-item')
+      if (!targetElement) {
+        chaptersStore.clearDraggedChapter()
+        return
+      }
+
+      const rect = targetElement.getBoundingClientRect()
+      const midpoint = rect.top + rect.height / 2
+      const position = event.clientY <= midpoint ? 'before' : 'after'
 
       try {
         await chaptersStore.reorderChapters(draggedChapterId, targetChapterId, position)
       } catch (error) {
-        alert('重排序失败: ' + error.message)
+        alert('重新排序章节失败: ' + error.message)
+      } finally {
+        chaptersStore.clearDraggedChapter()
       }
     }
 
-    const handleDragEnd = (e) => {
+    const handleDragEnd = () => {
       chaptersStore.clearDraggedChapter()
-      const items = document.querySelectorAll('.chapter-item')
-      items.forEach(item => {
-        item.classList.remove('dragging', 'drag-over-top', 'drag-over-bottom')
-      })
     }
 
     return {
+      chaptersStore,
       uiStore,
       chapters,
       currentChapter,
@@ -184,131 +280,103 @@ export default {
       handleDragStart,
       handleDragOver,
       handleDrop,
-      handleDragEnd
+      handleDragEnd,
+      
+      // 编辑标题相关的返回值
+      showEditModal,
+      editingTitle,
+      titleInput,
+      closeEditModal,
+      confirmEditTitle,
+
+      // 删除章节相关的返回值
+      showDeleteModal,
+      closeDeleteModal,
+      confirmDeleteChapter
     }
   }
 }
 </script>
 
 <style scoped>
-.chapters-sidebar {
-  width: 280px;
-  background: white;
-  border-right: 1px solid #e1e8ed;
+.chapters-list-container {
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.chapters-sidebar.collapsed {
-  width: 0;
-  min-width: 0;
+  height: 100%;
 }
 
 .sidebar-header {
   padding: 20px;
-  border-bottom: 1px solid #e1e8ed;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8f9fa;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .sidebar-title {
-  font-weight: 600;
-  color: #333;
-  font-size: 1.1em;
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text-primary);
 }
 
-.btn-collapse {
-  background: none;
-  border: none;
-  font-size: 1.2em;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  color: #666;
-  transition: all 0.2s;
-}
-
-.btn-collapse:hover {
-  background: #e9ecef;
-  color: #333;
-}
-
-.chapters-list {
+.chapters-list-wrapper {
   flex: 1;
   overflow-y: auto;
-  padding: 10px 0;
+  padding: 8px 0;
 }
 
 .chapter-item {
   padding: 12px 20px;
+  border-bottom: 1px solid var(--border-color);
   cursor: pointer;
-  border-bottom: 1px solid #f1f3f4;
   transition: all 0.2s;
-  position: relative;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 10px;
 }
 
 .chapter-item:hover {
-  background: #f8f9fa;
+  background: var(--nav-hover-bg);
+}
+
+.chapter-item.drag-over-before {
+  border-top: 2px solid var(--accent-color);
+}
+
+.chapter-item.drag-over-after {
+  border-bottom: 2px solid var(--accent-color);
 }
 
 .chapter-item.active {
-  background: #e3f2fd;
-  border-left: 4px solid #2196f3;
+  background: var(--nav-active-bg);
+  color: var(--nav-active-color);
 }
 
-.chapter-item.dragging {
+.chapter-item.dragged {
   opacity: 0.5;
 }
 
-.chapter-item.drag-over-top::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #2196f3;
-}
-
-.chapter-item.drag-over-bottom::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #2196f3;
-}
-
-.chapter-content {
+.chapter-info {
   flex: 1;
   min-width: 0;
 }
 
 .chapter-title {
   font-weight: 500;
-  color: #333;
-  margin-bottom: 4px;
+  margin: 0 0 4px 0;
+  color: var(--text-primary);
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.chapter-word-count {
-  font-size: 0.85em;
-  color: #666;
+.chapter-meta {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 12px;
 }
 
 .chapter-actions {
   display: flex;
-  gap: 4px;
+  gap: 8px;
   opacity: 0;
   transition: opacity 0.2s;
 }
@@ -317,96 +385,173 @@ export default {
   opacity: 1;
 }
 
-.chapter-action-btn {
+.action-btn {
+  background: none;
+  border: none;
   width: 24px;
   height: 24px;
-  border: none;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 
-.chapter-action-btn:hover {
-  background: white;
-  transform: scale(1.1);
+.action-btn:hover {
+  background: var(--nav-hover-bg);
+  color: var(--text-primary);
 }
 
-.chapter-action-btn.delete:hover {
-  background: #ff4757;
-  color: white;
+.drag-handle {
+  cursor: move;
+  color: var(--text-secondary);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.chapter-item:hover .drag-handle {
+  opacity: 1;
 }
 
 .btn-add-chapter {
-  padding: 15px 20px;
+  padding: 16px 20px;
   text-align: center;
   cursor: pointer;
-  color: #667eea;
+  color: var(--text-primary);
   font-weight: 500;
-  border-top: 1px solid #e1e8ed;
-  background: #f8f9fa;
+  border-top: 1px solid var(--border-color);
   transition: all 0.2s;
 }
 
 .btn-add-chapter:hover {
-  background: #e9ecef;
-  color: #5a67d8;
+  background: var(--nav-hover-bg);
 }
 
-.sidebar-toggle {
+.modal-overlay {
   position: fixed;
+  top: 0;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 60px;
-  background: white;
-  border: 1px solid #e1e8ed;
-  border-left: none;
-  border-radius: 0 12px 12px 0;
+  right: 0;
+  bottom: 0;
+  background: var(--modal-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  font-size: 1.2em;
-  color: #666;
-  transition: all 0.2s;
-  z-index: 100;
+  z-index: 1000;
 }
 
-.sidebar-toggle:hover {
-  background: #f8f9fa;
-  color: #333;
+.modal-content {
+  background: var(--modal-bg);
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-.sidebar-toggle.left-toggle {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 60px;
-  background: #667eea;
-  color: white;
+.modal-header {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.close-btn {
+  background: none;
   border: none;
-  border-radius: 0 8px 8px 0;
+  font-size: 1.5rem;
   cursor: pointer;
+  color: var(--text-secondary);
+  padding: 0;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  font-weight: bold;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 100;
-  transition: all 0.3s ease;
+  border-radius: 50%;
+  transition: all 0.2s;
 }
 
-.sidebar-toggle.left-toggle:hover {
-  background: #5a6fd8;
-  width: 35px;
+.close-btn:hover {
+  background: var(--nav-hover-bg);
+  color: var(--text-primary);
+}
+
+.modal-body {
+  margin-bottom: 24px;
+}
+
+.modal-body p {
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.title-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.title-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px var(--accent-shadow);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+}
+
+.btn-secondary:hover {
+  background: var(--nav-hover-bg);
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-danger {
+  background: var(--btn-danger-bg);
+  color: var(--btn-danger-color);
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
 }
 </style>

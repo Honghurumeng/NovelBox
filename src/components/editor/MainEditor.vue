@@ -3,7 +3,7 @@
     <div class="editor-header">
       <div class="editor-header-left">
         <button class="back-btn" @click="goToHomepage">
-          ← 返回主页
+          {{ $t('editor.backToHomepage') }}
         </button>
         <span class="current-novel-title">
           {{ novelsStore.currentNovelTitle }}
@@ -18,7 +18,7 @@
             type="text" 
             v-model="editingTitle"
             class="chapter-title-input"
-            placeholder="章节标题"
+            :placeholder="$t('editor.chapterTitlePlaceholder')"
             @blur="finishEditingTitle"
             @keydown.enter="finishEditingTitle"
             @keydown.esc="cancelEditingTitle"
@@ -29,9 +29,9 @@
             class="chapter-title-display"
             @click="startEditingTitle"
           >
-            {{ chaptersStore.currentChapterTitle || '请选择章节' }}
+            {{ chaptersStore.currentChapterTitle || $t('chapters.untitled') }}
           </span>
-          <span v-if="hasUnsavedChanges" class="unsaved-indicator">未保存</span>
+          <span v-if="hasUnsavedChanges" class="unsaved-indicator">{{ $t('editor.unsavedChanges') }}</span>
         </div>
       </div>
       
@@ -42,8 +42,8 @@
         >
           {{ uiStore.saveIndicatorMessage }}
         </span>
-        <button class="save-btn" @click="manualSave" title="手动保存">
-          💾 保存
+        <button class="save-btn" @click="manualSave" :title="$t('common.save')">
+          💾 {{ $t('common.save') }}
         </button>
       </div>
     </div>
@@ -52,7 +52,7 @@
       <textarea 
         v-model="editorContent"
         class="chapter-editor" 
-        placeholder="开始写作..."
+        :placeholder="$t('editor.startWriting')"
         @input="handleEditorInput"
         @keydown.ctrl.s.prevent="manualSave"
       ></textarea>
@@ -64,10 +64,12 @@
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNovelsStore, useChaptersStore, useUIStore } from '@/stores'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'MainEditor',
   setup() {
+    const { t } = useI18n()
     const router = useRouter()
     const novelsStore = useNovelsStore()
     const chaptersStore = useChaptersStore()
@@ -105,7 +107,7 @@ export default {
         await novelsStore.saveNovels()
         lastSavedContent = chaptersStore.currentChapterContent
         hasUnsavedChanges.value = false
-        uiStore.showSaveMessage('手动保存成功')
+        uiStore.showSaveMessage(t('editor.manualSaveSuccess'))
       } catch (error) {
         console.error('手动保存失败:', error)
         alert('保存失败: ' + error.message)
@@ -139,6 +141,9 @@ export default {
       if (newTitle && newTitle !== chaptersStore.currentChapter.title) {
         try {
           await chaptersStore.updateChapterTitle(chaptersStore.currentChapter.id, newTitle)
+          // 更新保存状态
+          lastSavedContent = chaptersStore.currentChapter.content
+          hasUnsavedChanges.value = false
         } catch (error) {
           alert('更新标题失败: ' + error.message)
         }
@@ -161,6 +166,21 @@ export default {
         hasUnsavedChanges.value = false
       }
     })
+    
+    // 监听自动保存事件，更新保存状态
+    const handleAutoSave = () => {
+      if (chaptersStore.currentChapter) {
+        lastSavedContent = chaptersStore.currentChapter.content
+        hasUnsavedChanges.value = false
+      }
+    }
+    
+    // 监听章节内容变化
+    watch(() => chaptersStore.currentChapterContent, (newContent) => {
+      if (newContent !== undefined && newContent !== lastSavedContent) {
+        hasUnsavedChanges.value = true
+      }
+    })
 
     // 添加键盘事件监听
     const handleKeyDown = (event) => {
@@ -170,12 +190,29 @@ export default {
       }
     }
 
-    onMounted(() => {
-      document.addEventListener('keydown', handleKeyDown)
-      // 初始化自动保存定时器
+    // 初始化自动保存定时器
+    const initAutoSave = () => {
       if (chaptersStore.currentChapter) {
         chaptersStore.startAutoSave()
       }
+    }
+
+    const autoSaveCallback = async () => {
+      hasUnsavedChanges.value = false
+    }
+
+    onMounted(() => {
+      document.addEventListener('keydown', handleKeyDown)
+      chaptersStore.addAutoSaveCallback(autoSaveCallback)
+      // 监听自动保存完成事件
+      chaptersStore.$subscribe((mutation, state) => {
+        // 当章节内容发生变化时，检查是否需要更新保存状态
+        if (mutation.type === 'chapters' && mutation.payload?.type === 'AUTO_SAVE_COMPLETED') {
+          handleAutoSave()
+        }
+      })
+      // 初始化自动保存定时器
+      initAutoSave()
     })
 
     onUnmounted(() => {
@@ -207,15 +244,15 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: white;
+  background: var(--content-bg);
 }
 
 .editor-header {
   display: flex;
   align-items: center;
   padding: 16px 24px;
-  border-bottom: 1px solid #e1e8ed;
-  background: #f8f9fa;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--sidebar-bg);
   min-height: 70px;
 }
 
@@ -227,13 +264,13 @@ export default {
 }
 
 .back-btn {
-  background: none;
-  border: 1px solid #d0d7de;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+  border: 1px solid var(--border-color);
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9em;
-  color: #586069;
   transition: all 0.2s;
   display: flex;
   align-items: center;
@@ -241,14 +278,13 @@ export default {
 }
 
 .back-btn:hover {
-  background: #f6f8fa;
-  border-color: #c4c9ce;
-  color: #24292f;
+  background: var(--nav-hover-bg);
+  color: var(--text-primary);
 }
 
 .current-novel-title {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.1em;
 }
 
@@ -269,31 +305,32 @@ export default {
 .chapter-title-divider {
   width: 40px;
   height: 2px;
-  background: #667eea;
+  background: var(--accent-color);
   border-radius: 1px;
 }
 
 .chapter-title-input {
   flex: 1;
   padding: 8px 12px;
-  border: 2px solid #667eea;
+  border: 2px solid var(--accent-color);
   border-radius: 6px;
   font-size: 1.1em;
   font-weight: 500;
   text-align: center;
-  background: white;
+  background: var(--input-bg);
+  color: var(--text-primary);
 }
 
 .chapter-title-input:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px var(--accent-shadow);
 }
 
 .chapter-title-display {
   flex: 1;
   font-size: 1.2em;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   text-align: center;
   cursor: pointer;
   padding: 8px 12px;
@@ -302,13 +339,13 @@ export default {
 }
 
 .chapter-title-display:hover {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: var(--nav-hover-bg);
+  color: var(--accent-color);
 }
 
 .unsaved-indicator {
   font-size: 0.8em;
-  color: #6c757d;
+  color: var(--text-secondary);
   font-style: italic;
   margin-left: 10px;
   vertical-align: middle;
@@ -335,8 +372,8 @@ export default {
 }
 
 .save-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
@@ -351,7 +388,7 @@ export default {
 
 .save-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px var(--accent-shadow);
 }
 
 .editor-content {
@@ -368,14 +405,14 @@ export default {
   font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   line-height: 1.8;
-  color: #333;
+  color: var(--text-primary);
   background: transparent;
   resize: none;
   padding: 0;
 }
 
 .chapter-editor::placeholder {
-  color: #999;
+  color: var(--text-secondary);
   font-style: italic;
 }
 
@@ -385,16 +422,31 @@ export default {
 }
 
 .chapter-editor::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .chapter-editor::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 }
 
 .chapter-editor::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* 在深色和OLED主题中调整滚动条样式 */
+.theme-dark .chapter-editor::-webkit-scrollbar-track,
+.theme-oled .chapter-editor::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.theme-dark .chapter-editor::-webkit-scrollbar-thumb,
+.theme-oled .chapter-editor::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.theme-dark .chapter-editor::-webkit-scrollbar-thumb:hover,
+.theme-oled .chapter-editor::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 </style>

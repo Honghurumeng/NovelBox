@@ -1,0 +1,139 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "close": "关闭",
+    "saving": "保存中...",
+    "dragToReorder": "拖拽排序"
+  },
+  "homepage": {
+    "myNovels": "我的小说",
+    "createNewNovel": "创建新小说",
+    "noNovelsYet": "还没有小说，点击\"创建新小说\"开始创作吧！",
+    "searchPlaceholder": "搜索小说...",
+    "editNovel": "编辑小说",
+    "deleteNovel": "删除小说",
+    "openNovel": "打开小说"
+  },
+  "editor": {
+    "backToHomepage": "← 返回主页",
+    "chapterTitlePlaceholder": "章节标题",
+    "autoSaveIndicator": "已自动保存",
+    "manualSaveSuccess": "手动保存成功",
+    "wordCount": "{count} 字",
+    "unsavedChanges": "未保存",
+    "startWriting": "开始写作...",
+    "sidebar": {
+      "chaptersList": "章节列表",
+      "collapseSidebar": "收起侧边栏",
+      "expandChaptersList": "展开章节列表",
+      "addNewChapter": "+ 添加新章节"
+    },
+    "aiPanel": {
+      "title": "AI工具",
+      "collapsePanel": "收起侧边栏",
+      "expandPanel": "展开AI工具",
+      "placeholderTitle": "AI创作助手",
+      "placeholderDescription": "智能写作功能即将推出",
+      "status": "开发中...",
+      "features": {
+        "continueWriting": "智能续写",
+        "plotSuggestions": "情节建议",
+        "textOptimization": "文本优化",
+        "contentAnalysis": "内容分析"
+      },
+      "featureDescriptions": {
+        "continueWriting": "根据已有内容自动续写",
+        "plotSuggestions": "提供情节发展和故事走向建议",
+        "textOptimization": "通过语法和风格优化改进文本",
+        "contentAnalysis": "分析内容的主题、人物和故事结构"
+      }
+    }
+  },
+  "modals": {
+    "newNovel": {
+      "title": "创建新小说",
+      "nameLabel": "小说名称",
+      "namePlaceholder": "请输入小说名称",
+      "authorLabel": "作者",
+      "authorPlaceholder": "请输入作者名",
+      "descriptionLabel": "简介",
+      "descriptionPlaceholder": "请输入小说简介"
+    },
+    "editNovel": {
+      "title": "编辑小说",
+      "nameLabel": "小说名称",
+      "namePlaceholder": "请输入小说名称",
+      "authorLabel": "作者",
+      "authorPlaceholder": "请输入作者名",
+      "descriptionLabel": "简介",
+      "descriptionPlaceholder": "请输入小说简介"
+    }
+  },
+  "chapters": {
+    "chapter": "章",
+    "untitled": "未命名章节",
+    "deleteConfirmation": "确定要删除这个章节吗？此操作无法撤销。",
+    "atLeastOneChapter": "至少需要保留一个章节",
+    "newChapterTitle": "第{number}章",
+    "created": "章节已创建",
+    "deleted": "章节已删除",
+    "titleUpdated": "标题已更新",
+    "reordered": "章节顺序已更新"
+  },
+  "oobe": {
+    "next": "下一步",
+    "previous": "上一步",
+    "finish": "完成",
+    "page1": {
+      "subtitle": "AI时代的小说创作工具",
+      "language": "语言选择"
+    },
+    "page2": {
+      "title": "跨平台支持",
+      "description": "基于Electron + Vuejs 现代技术"
+    },
+    "page3": {
+      "title": "开源可控",
+      "description": "自由配置你自己的模型提供商",
+      "feature1": "完全开源，可自由定制",
+      "feature2": "支持多种AI模型提供商"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "backToHome": "返回主页",
+    "language": {
+      "title": "语言",
+      "interface": "界面语言"
+    },
+    "appearance": {
+      "title": "外观",
+      "theme": "主题",
+      "themes": {
+        "light": "浅色",
+        "dark": "深色",
+        "oled": "OLED黑"
+      }
+    },
+    "storage": {
+      "title": "存储",
+      "path": "数据存储路径",
+      "change": "更改",
+      "reset": "重置为默认",
+      "loading": "加载中...",
+      "failed": "获取路径失败",
+      "selectFailed": "选择存储目录失败",
+      "resetFailed": "重置存储目录失败"
+    },
+    "wordCount": {
+      "count": "{count} 字",
+      "kilo": "{count}k 字",
+      "tenThousand": "{count}万 字"
+    }
+  }
+}

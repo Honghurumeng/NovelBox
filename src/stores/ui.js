@@ -16,7 +16,7 @@ export const useUIStore = defineStore('ui', {
     
     // Save indicator
     showSaveIndicator: false,
-    saveIndicatorMessage: '已自动保存',
+    saveIndicatorMessage: '',
     
     // Storage path
     storagePath: '加载中...'
@@ -75,8 +75,9 @@ export const useUIStore = defineStore('ui', {
     },
 
     // Save indicator
-    showSaveMessage(message = '已自动保存') {
-      this.saveIndicatorMessage = message
+    showSaveMessage(message = '') {
+      // 如果没有传入消息，则使用默认的自动保存消息
+      this.saveIndicatorMessage = message || '已自动保存'
       this.showSaveIndicator = true
       
       setTimeout(() => {
@@ -89,9 +90,11 @@ export const useUIStore = defineStore('ui', {
       try {
         const currentPath = await window.electronAPI.storage.getCurrentPath()
         this.storagePath = currentPath
+        return currentPath
       } catch (error) {
         console.error('获取存储路径失败:', error)
         this.storagePath = '获取失败'
+        throw error
       }
     },
 
@@ -99,11 +102,12 @@ export const useUIStore = defineStore('ui', {
       try {
         const selectedPath = await window.electronAPI.storage.selectDirectory()
         if (selectedPath) {
-          await this.updateStoragePath()
+          this.storagePath = selectedPath
           return selectedPath
         }
       } catch (error) {
         console.error('选择存储目录失败:', error)
+        this.storagePath = '获取失败'
         throw error
       }
     },
@@ -111,10 +115,11 @@ export const useUIStore = defineStore('ui', {
     async resetStorageDirectory() {
       try {
         const defaultPath = await window.electronAPI.storage.resetToDefault()
-        await this.updateStoragePath()
+        this.storagePath = defaultPath
         return defaultPath
       } catch (error) {
         console.error('重置存储目录失败:', error)
+        this.storagePath = '获取失败'
         throw error
       }
     }

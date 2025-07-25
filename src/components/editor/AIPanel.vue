@@ -1,70 +1,59 @@
 <template>
-  <div class="ai-panel" :class="{ collapsed: uiStore.rightSidebarCollapsed }">
-    <div class="sidebar-header">
-      <span class="sidebar-title">AI工具</span>
-      <button 
-        class="btn-collapse" 
-        @click="uiStore.toggleRightSidebar()" 
-        title="收起侧边栏"
-      >
-        ›
-      </button>
+  <div class="ai-panel">
+    <div class="panel-header">
+      <h2 class="panel-title">
+        <span class="ai-icon">🤖</span>
+        {{ $t('editor.aiPanel.title') }}
+      </h2>
+      <p class="panel-description">
+        {{ $t('editor.aiPanel.placeholderDescription') }}
+      </p>
+      <span class="status-badge">{{ $t('editor.aiPanel.status') }}</span>
     </div>
     
-    <div class="ai-tools-content">
-      <div class="ai-tools-placeholder">
-        <div class="ai-icon">🤖</div>
-        <h3>AI创作助手</h3>
-        <p class="ai-description">智能写作功能即将推出</p>
-        
-        <div class="coming-features">
-          <div class="feature-item">
-            <span class="feature-icon">✨</span>
-            <span class="feature-text">智能续写</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">🎯</span>
-            <span class="feature-text">情节建议</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">📝</span>
-            <span class="feature-text">文本优化</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">🔍</span>
-            <span class="feature-text">内容分析</span>
-          </div>
+    <div class="panel-content">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">続きを</div>
+          <h3 class="feature-title">{{ $t('editor.aiPanel.features.continueWriting') }}</h3>
+          <p class="feature-description">{{ $t('editor.aiPanel.featureDescriptions.continueWriting') }}</p>
         </div>
         
-        <div class="ai-status">
-          <div class="status-indicator"></div>
-          <span class="status-text">开发中...</span>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3 class="feature-title">{{ $t('editor.aiPanel.features.plotSuggestions') }}</h3>
+          <p class="feature-description">{{ $t('editor.aiPanel.featureDescriptions.plotSuggestions') }}</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3 class="feature-title">{{ $t('editor.aiPanel.features.textOptimization') }}</h3>
+          <p class="feature-description">{{ $t('editor.aiPanel.featureDescriptions.textOptimization') }}</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3 class="feature-title">{{ $t('editor.aiPanel.features.contentAnalysis') }}</h3>
+          <p class="feature-description">{{ $t('editor.aiPanel.featureDescriptions.contentAnalysis') }}</p>
         </div>
       </div>
     </div>
-  </div>
-  
-  <!-- 收起状态的切换按钮 -->
-  <div 
-    v-show="uiStore.rightSidebarCollapsed"
-    class="sidebar-toggle right-toggle" 
-    @click="uiStore.toggleRightSidebar()" 
-    title="展开AI工具"
-  >
-    ‹
   </div>
 </template>
 
 <script>
 import { useUIStore } from '@/stores'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'AIPanel',
   setup() {
+    const { t } = useI18n()
     const uiStore = useUIStore()
 
     return {
-      uiStore
+      uiStore,
+      t
     }
   }
 }
@@ -72,209 +61,112 @@ export default {
 
 <style scoped>
 .ai-panel {
-  width: 320px;
-  background: white;
-  border-left: 1px solid #e1e8ed;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.ai-panel.collapsed {
-  width: 0;
-  min-width: 0;
-}
-
-.sidebar-header {
-  padding: 20px;
-  border-bottom: 1px solid #e1e8ed;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8f9fa;
-}
-
-.sidebar-title {
-  font-weight: 600;
-  color: #333;
-  font-size: 1.1em;
-}
-
-.btn-collapse {
-  background: none;
-  border: none;
-  font-size: 1.2em;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  color: #666;
-  transition: all 0.2s;
-}
-
-.btn-collapse:hover {
-  background: #e9ecef;
-  color: #333;
-}
-
-.ai-tools-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0;
-}
-
-.ai-tools-placeholder {
-  padding: 40px 30px;
-  text-align: center;
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: var(--sidebar-bg);
+}
+
+.panel-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.panel-title {
+  margin: 0 0 16px 0;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 10px;
 }
 
 .ai-icon {
-  font-size: 4em;
-  margin-bottom: 20px;
-  animation: pulse 2s infinite;
+  font-size: 1.5rem;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-.ai-tools-placeholder h3 {
-  color: #333;
-  margin-bottom: 12px;
-  font-size: 1.3em;
-  font-weight: 600;
-}
-
-.ai-description {
-  color: #666;
-  margin-bottom: 30px;
-  font-size: 0.95em;
+.panel-description {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
-.coming-features {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 40px;
-  width: 100%;
-  max-width: 220px;
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+  margin-top: 8px;
 }
 
-.feature-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: #f8f9fa;
+.panel-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.feature-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  border: 1px solid #e9ecef;
+  padding: 16px;
+  text-align: center;
   transition: all 0.2s;
 }
 
-.feature-item:hover {
-  background: #e9ecef;
-  transform: translateX(4px);
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow);
 }
 
 .feature-icon {
-  font-size: 1.2em;
-  width: 20px;
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.feature-title {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.feature-description {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.placeholder-section {
   text-align: center;
+  padding: 40px 20px;
 }
 
-.feature-text {
-  font-size: 0.9em;
-  color: #555;
-  font-weight: 500;
+.placeholder-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
 }
 
-.ai-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: rgba(102, 126, 234, 0.1);
-  border-radius: 20px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
+.placeholder-title {
+  margin: 0 0 12px 0;
+  font-size: 1.2rem;
+  color: var(--text-primary);
 }
 
-.status-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #667eea;
-  animation: blink 1.5s infinite;
-}
-
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0.3; }
-}
-
-.status-text {
-  font-size: 0.85em;
-  color: #667eea;
-  font-weight: 500;
-}
-
-.sidebar-toggle {
-  position: fixed;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 60px;
-  background: white;
-  border: 1px solid #e1e8ed;
-  border-right: none;
-  border-radius: 12px 0 0 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1.2em;
-  color: #666;
-  transition: all 0.2s;
-  z-index: 100;
-}
-
-.sidebar-toggle:hover {
-  background: #f8f9fa;
-  color: #333;
-}
-
-.sidebar-toggle.right-toggle {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 60px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px 0 0 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: bold;
-  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 100;
-  transition: all 0.3s ease;
-}
-
-.sidebar-toggle.right-toggle:hover {
-  background: #5a6fd8;
-  width: 35px;
+.placeholder-description {
+  margin: 0 0 20px 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 </style>

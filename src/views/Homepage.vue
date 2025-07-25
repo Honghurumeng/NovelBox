@@ -1,433 +1,384 @@
 <template>
   <div class="homepage">
-    <h1 class="welcome-title">NovelBox</h1>
+    <header class="header">
+      <h1>{{ $t('homepage.myNovels') }}</h1>
+      <div class="header-actions">
+        <LanguageSwitcher />
+        <button class="settings-btn" @click="goToSettings">
+          {{ $t('settings.title') }}
+        </button>
+        <button class="new-novel-btn" @click="showNewNovelModal">
+          {{ $t('homepage.createNewNovel') }}
+        </button>
+      </div>
+    </header>
     
-    <!-- 存储设置 -->
-    <div class="storage-settings">
-      <div class="storage-info">
-        <span class="storage-label">存储目录:</span>
-        <span class="storage-path">{{ uiStore.storagePath }}</span>
-      </div>
-      <div class="storage-actions">
-        <button class="btn-storage" @click="selectStorageDirectory" title="选择存储目录">
-          更改目录
-        </button>
-        <button class="btn-storage" @click="resetStorageDirectory" title="重置为默认目录">
-          重置默认
-        </button>
-      </div>
+    <div class="search-bar">
+      <input 
+        type="text" 
+        v-model="searchQuery" 
+        :placeholder="$t('homepage.searchPlaceholder')"
+        class="search-input"
+      >
     </div>
     
-    <div class="main-content">
-      <div class="novels-header">
-        <h2 class="novels-title">我的小说</h2>
-        <button class="btn-new-novel" @click="uiStore.openNewNovelModal()">
-          新建小说
-        </button>
+    <div class="novels-grid">
+      <div 
+        v-for="novel in filteredNovels" 
+        :key="novel.id"
+        class="novel-card"
+      >
+        <div class="novel-info">
+          <h3 class="novel-title">{{ novel.name }}</h3>
+          <p class="novel-author">by {{ novel.author }}</p>
+          <p class="novel-description">{{ novel.description }}</p>
+          <div class="novel-meta">
+            <span class="chapter-count">{{ novel.chapters.length }} {{ $t('chapters.chapter') }}</span>
+            <span class="word-count">{{ formatTotalWordCount(novel) }} {{ $t('editor.wordCount', { count: '' }) }}</span>
+          </div>
+        </div>
+        
+        <div class="novel-actions">
+          <button class="btn edit-btn" @click="editNovel(novel)">
+            {{ $t('common.edit') }}
+          </button>
+          <button class="btn delete-btn" @click="deleteNovel(novel)">
+            {{ $t('common.delete') }}
+          </button>
+          <button class="btn open-btn" @click="openNovel(novel)">
+            {{ $t('homepage.openNovel') }}
+          </button>
+        </div>
       </div>
       
-      <div class="novels-list">
-        <!-- 空状态 -->
-        <div v-if="!novelsStore.hasNovels && !novelsStore.loading" class="empty-state">
-          <div class="empty-state-icon">📚</div>
-          <p>还没有小说，点击上方按钮创建第一部作品吧！</p>
-        </div>
-        
-        <!-- 加载状态 -->
-        <div v-if="novelsStore.loading" class="loading-state">
-          <div class="loading-spinner"></div>
-          <p>加载中...</p>
-        </div>
-        
-        <!-- 小说列表 -->
-        <div v-for="novel in novelsStore.novels" :key="novel.id" class="novel-card">
-          <div class="novel-cover" @click="openNovel(novel.id)">
-            <img v-if="novel.cover" :src="novel.cover" alt="封面" />
-            <span v-else>暂无封面</span>
-          </div>
-          <div class="novel-info" @click="openNovel(novel.id)">
-            <div class="novel-title">{{ novel.name }}</div>
-            <div class="novel-author">作者：{{ novel.author }}</div>
-            <div class="novel-description">
-              {{ novel.description || '暂无简介' }}
-            </div>
-          </div>
-          <div class="novel-actions" @click.stop>
-            <button 
-              class="novel-action-btn" 
-              @click="editNovelInfo(novel.id)" 
-              title="编辑信息"
-            >
-              ✏️
-            </button>
-            <button 
-              class="novel-action-btn delete" 
-              @click="deleteNovel(novel.id)" 
-              title="删除小说"
-            >
-              🗑️
-            </button>
-          </div>
-        </div>
+      <div v-if="filteredNovels.length === 0" class="no-novels">
+        <p>{{ $t('homepage.noNovelsYet') }}</p>
       </div>
     </div>
-
-    <!-- 模态框组件 -->
-    <NewNovelModal />
-    <EditNovelModal />
+    
+    <!-- Modals -->
+    <NewNovelModal 
+      v-if="uiStore.showNewNovelModal"
+      @close="uiStore.closeNewNovelModal"
+      @create="createNovel"
+    />
+    
+    <EditNovelModal 
+      v-if="uiStore.showEditNovelModal"
+      :novel="uiStore.editNovelData"
+      @close="uiStore.closeEditNovelModal"
+      @update="updateNovel"
+    />
   </div>
 </template>
 
 <script>
-import { useNovelsStore, useUIStore } from '@/stores'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useNovelsStore, useUIStore } from '@/stores'
+import { UtilsService } from '@/services'
 import NewNovelModal from '@/components/modals/NewNovelModal.vue'
 import EditNovelModal from '@/components/modals/EditNovelModal.vue'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 export default {
   name: 'Homepage',
   components: {
     NewNovelModal,
-    EditNovelModal
+    EditNovelModal,
+    LanguageSwitcher
   },
   setup() {
+    const router = useRouter()
     const novelsStore = useNovelsStore()
     const uiStore = useUIStore()
-    const router = useRouter()
-
-    // 初始化数据
-    const init = async () => {
-      await novelsStore.loadNovels()
-      await uiStore.updateStoragePath()
+    
+    const searchQuery = ref('')
+    
+    const filteredNovels = computed(() => {
+      if (!searchQuery.value) {
+        return novelsStore.novels
+      }
+      
+      const query = searchQuery.value.toLowerCase()
+      return novelsStore.novels.filter(novel => 
+        novel.name.toLowerCase().includes(query) ||
+        novel.author.toLowerCase().includes(query) ||
+        novel.description.toLowerCase().includes(query)
+      )
+    })
+    
+    const formatTotalWordCount = (novel) => {
+      const total = novel.chapters.reduce((sum, chapter) => sum + chapter.wordCount, 0)
+      return UtilsService.formatWordCount(total)
     }
-
-    // 页面生命周期
-    const onMounted = () => {
-      init()
+    
+    const showNewNovelModal = () => {
+      uiStore.openNewNovelModal()
     }
-
-    // 打开小说
-    const openNovel = (novelId) => {
-      novelsStore.setCurrentNovel(novelId)
-      router.push(`/editor/${novelId}`)
-    }
-
-    // 编辑小说信息
-    const editNovelInfo = (novelId) => {
-      const novel = novelsStore.novels.find(n => n.id === novelId)
-      if (novel) {
-        // Set edit modal data
-        uiStore.editNovelData = { ...novel }
-        uiStore.openEditNovelModal()
+    
+    const createNovel = async (novelData) => {
+      try {
+        const novel = await novelsStore.createNovel(novelData)
+        uiStore.closeNewNovelModal()
+        router.push(`/editor/${novel.id}`)
+      } catch (error) {
+        console.error('创建小说失败:', error)
+        alert('创建小说失败: ' + error.message)
       }
     }
-
-    // 删除小说
-    const deleteNovel = async (novelId) => {
-      if (confirm('确定要删除这部小说吗？此操作不可撤销。')) {
+    
+    const editNovel = (novel) => {
+      uiStore.editNovelData = novel
+      uiStore.openEditNovelModal()
+    }
+    
+    const updateNovel = async (novelId, novelData) => {
+      try {
+        await novelsStore.updateNovel(novelId, novelData)
+        uiStore.closeEditNovelModal()
+      } catch (error) {
+        console.error('更新小说失败:', error)
+        alert('更新小说失败: ' + error.message)
+      }
+    }
+    
+    const deleteNovel = async (novel) => {
+      if (confirm(`确定要删除小说 "${novel.name}" 吗？此操作无法撤销。`)) {
         try {
-          await novelsStore.deleteNovel(novelId)
+          await novelsStore.deleteNovel(novel.id)
         } catch (error) {
-          alert('删除失败: ' + error.message)
+          console.error('删除小说失败:', error)
+          alert('删除小说失败: ' + error.message)
         }
       }
     }
-
-    // 存储目录操作
-    const selectStorageDirectory = async () => {
-      try {
-        const selectedPath = await uiStore.selectStorageDirectory()
-        if (selectedPath) {
-          alert('存储目录已更改为: ' + selectedPath)
-        }
-      } catch (error) {
-        alert('选择目录失败: ' + error.message)
-      }
+    
+    const openNovel = (novel) => {
+      router.push(`/editor/${novel.id}`)
     }
-
-    const resetStorageDirectory = async () => {
-      try {
-        const defaultPath = await uiStore.resetStorageDirectory()
-        alert('已重置为默认存储目录: ' + defaultPath)
-      } catch (error) {
-        alert('重置失败: ' + error.message)
-      }
+    
+    const goToSettings = () => {
+      router.push('/settings')
     }
-
+    
+    // 在组件挂载时加载小说数据
+    onMounted(async () => {
+      if (!novelsStore.hasNovels) {
+        await novelsStore.loadNovels()
+      }
+    })
+    
     return {
       novelsStore,
       uiStore,
-      onMounted,
-      openNovel,
-      editNovelInfo,
+      searchQuery,
+      filteredNovels,
+      formatTotalWordCount,
+      showNewNovelModal,
+      createNovel,
+      editNovel,
+      updateNovel,
       deleteNovel,
-      selectStorageDirectory,
-      resetStorageDirectory
+      openNovel,
+      goToSettings
     }
-  },
-  async mounted() {
-    this.onMounted()
   }
 }
 </script>
 
 <style scoped>
 .homepage {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.welcome-title {
-  font-size: 3.5em;
-  font-weight: 700;
-  text-align: center;
-  margin: 60px 0 20px 0;
-  background: linear-gradient(45deg, #fff, #f0f8ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* 存储设置样式 */
-.storage-settings {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 0 0 40px 0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.storage-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.storage-label {
-  font-weight: 500;
-  color: #555;
-}
-
-.storage-path {
-  font-family: 'Courier New', monospace;
-  background: #f5f5f5;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  color: #333;
-}
-
-.storage-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-storage {
-  padding: 6px 12px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: background-color 0.2s;
-}
-
-.btn-storage:hover {
-  background: #5a6fd8;
-}
-
-.main-content {
-  width: 100%;
+  padding: 24px;
   max-width: 1200px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
-.novels-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-  gap: 15px;
+  margin-bottom: 32px;
 }
 
-.novels-title {
-  font-size: 1.8em;
-  font-weight: 600;
-  color: #333;
+.header h1 {
   margin: 0;
+  color: var(--text-primary);
+  font-size: 2rem;
 }
 
-.btn-new-novel {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+.header-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.settings-btn {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.settings-btn:hover {
+  background: var(--nav-hover-bg);
+}
+
+.new-novel-btn {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
   border: none;
   padding: 12px 24px;
-  border-radius: 25px;
-  font-size: 1em;
-  font-weight: 500;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
-.btn-new-novel:hover {
+.new-novel-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  box-shadow: 0 4px 12px var(--accent-shadow);
 }
 
-/* 小说列表样式 */
-.novels-list {
+.search-bar {
+  margin-bottom: 32px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s;
+  background: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-shadow);
+  border-color: var(--accent-color);
+}
+
+.novels-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.empty-state {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 20px;
-  color: #666;
-}
-
-.empty-state-icon {
-  font-size: 4em;
-  margin-bottom: 20px;
-}
-
-.loading-state {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 20px;
-  color: #666;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 20px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  gap: 24px;
 }
 
 .novel-card {
-  background: white;
-  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  position: relative;
-  cursor: pointer;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s;
 }
 
 .novel-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.novel-cover {
-  width: 100%;
-  height: 120px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 15px;
-  color: #666;
-  font-size: 0.9em;
-}
-
-.novel-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.novel-info {
-  flex: 1;
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-2px);
 }
 
 .novel-title {
-  font-size: 1.2em;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
 }
 
 .novel-author {
-  font-size: 0.9em;
-  color: #666;
-  margin-bottom: 8px;
+  margin: 0 0 12px 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
 .novel-description {
-  font-size: 0.9em;
-  color: #777;
-  line-height: 1.4;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  margin: 0 0 16px 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.novel-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
 }
 
 .novel-actions {
-  position: absolute;
-  top: 15px;
-  right: 15px;
   display: flex;
   gap: 8px;
-  opacity: 0;
-  transition: opacity 0.2s;
 }
 
-.novel-card:hover .novel-actions {
-  opacity: 1;
-}
-
-.novel-action-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
+.btn {
+  padding: 8px 12px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
   transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
 }
 
-.novel-action-btn:hover {
-  background: white;
-  transform: scale(1.1);
+.edit-btn {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
 }
 
-.novel-action-btn.delete:hover {
-  background: #ff4757;
-  color: white;
+.edit-btn:hover {
+  background: var(--nav-hover-bg);
+}
+
+.delete-btn {
+  background: var(--btn-danger-bg);
+  color: var(--btn-danger-color);
+}
+
+.delete-btn:hover {
+  background: var(--reset-btn-hover-bg);
+}
+
+.open-btn {
+  background: var(--btn-success-bg);
+  color: var(--btn-success-color);
+  flex: 1;
+}
+
+.open-btn:hover {
+  opacity: 0.9;
+}
+
+.no-novels {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 64px 0;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .novels-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

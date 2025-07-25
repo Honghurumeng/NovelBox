@@ -1,21 +1,182 @@
-/* Global styles for NovelBox Vue.js app */
+/* 全局样式和主题变量 */
 
+/* 浅色主题 */
+.theme-light {
+  --bg-color: #f8f9fa;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+  --sidebar-bg: #ffffff;
+  --content-bg: #f8f9fa;
+  --input-bg: #ffffff;
+  --accent-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --accent-shadow: rgba(102, 126, 234, 0.2);
+  --nav-hover-bg: #f1f3f5;
+  --nav-active-bg: #e9ecef;
+  --nav-active-color: #212529;
+  --reset-btn-bg: #f8f9fa;
+  --reset-btn-color: #dc3545;
+  --reset-btn-hover-bg: #e9ecef;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-color: #ffffff;
+  --btn-secondary-bg: #f3f4f6;
+  --btn-secondary-color: #374151;
+  --btn-danger-bg: #fee2e2;
+  --btn-danger-color: #b91c1c;
+  --btn-success-bg: #dbeafe;
+  --btn-success-color: #1d4ed8;
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(0, 0, 0, 0.5);
+}
+
+/* 深色主题 */
+.theme-dark {
+  --bg-color: #1e1e1e;
+  --text-primary: #ffffff;
+  --text-secondary: #adb5bd;
+  --border-color: #495057;
+  --sidebar-bg: #2d2d2d;
+  --content-bg: #1e1e1e;
+  --input-bg: #2d2d2d;
+  --accent-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --accent-shadow: rgba(102, 126, 234, 0.3);
+  --nav-hover-bg: #3d3d3d;
+  --nav-active-bg: #4d4d4d;
+  --nav-active-color: #ffffff;
+  --reset-btn-bg: #2d2d2d;
+  --reset-btn-color: #ff6b6b;
+  --reset-btn-hover-bg: #3d3d3d;
+  --card-bg: #2d2d2d;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --card-hover-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-color: #ffffff;
+  --btn-secondary-bg: #3d3d3d;
+  --btn-secondary-color: #ffffff;
+  --btn-danger-bg: #4d2c2c;
+  --btn-danger-color: #ff6b6b;
+  --btn-success-bg: #2c3d4d;
+  --btn-success-color: #6bafff;
+  --modal-bg: #2d2d2d;
+  --modal-overlay: rgba(0, 0, 0, 0.7);
+}
+
+/* OLED黑主题 */
+.theme-oled {
+  --bg-color: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: #adb5bd;
+  --border-color: #333333;
+  --sidebar-bg: #000000;
+  --content-bg: #000000;
+  --input-bg: #000000;
+  --accent-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --accent-shadow: rgba(102, 126, 234, 0.4);
+  --nav-hover-bg: #1a1a1a;
+  --nav-active-bg: #333333;
+  --nav-active-color: #ffffff;
+  --reset-btn-bg: #000000;
+  --reset-btn-color: #ff6b6b;
+  --reset-btn-hover-bg: #1a1a1a;
+  --card-bg: #000000;
+  --card-shadow: 0 1px 3px rgba(255, 255, 255, 0.05);
+  --card-hover-shadow: 0 4px 6px rgba(255, 255, 255, 0.05);
+  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-color: #ffffff;
+  --btn-secondary-bg: #1a1a1a;
+  --btn-secondary-color: #ffffff;
+  --btn-danger-bg: #2c0000;
+  --btn-danger-color: #ff6b6b;
+  --btn-success-bg: #001a33;
+  --btn-success-color: #6bafff;
+  --modal-bg: #000000;
+  --modal-overlay: rgba(255, 255, 255, 0.1);
+}
+
+/* 默认使用浅色主题 */
+:root {
+  --bg-color: #f8f9fa;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+  --sidebar-bg: #ffffff;
+  --content-bg: #f8f9fa;
+  --input-bg: #ffffff;
+  --accent-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --accent-shadow: rgba(102, 126, 234, 0.2);
+  --nav-hover-bg: #f1f3f5;
+  --nav-active-bg: #e9ecef;
+  --nav-active-color: #212529;
+  --reset-btn-bg: #f8f9fa;
+  --reset-btn-color: #dc3545;
+  --reset-btn-hover-bg: #e9ecef;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-color: #ffffff;
+  --btn-secondary-bg: #f3f4f6;
+  --btn-secondary-color: #374151;
+  --btn-danger-bg: #fee2e2;
+  --btn-danger-color: #b91c1c;
+  --btn-success-bg: #dbeafe;
+  --btn-success-color: #1d4ed8;
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(0, 0, 0, 0.5);
+}
+
+/* 全局样式 */
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  color: #333;
-  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-color);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
 }
 
-#app {
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* 在深色和OLED主题中调整滚动条样式 */
+.theme-dark ::-webkit-scrollbar-track,
+.theme-oled ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.theme-dark ::-webkit-scrollbar-thumb,
+.theme-oled ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.theme-dark ::-webkit-scrollbar-thumb:hover,
+.theme-oled ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Utility classes */
@@ -53,32 +214,6 @@ body {
 .slide-right-leave-to {
   transform: translateX(100%);
   opacity: 0;
-}
-
-/* Custom scrollbar styles */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f3f4;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-/* Firefox scrollbar */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #c1c1c1 #f1f3f4;
 }
 
 /* Focus outline styles */

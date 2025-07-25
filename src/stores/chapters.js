@@ -1,12 +1,15 @@
 import { defineStore } from 'pinia'
 import { useNovelsStore } from './novels'
 import { useUIStore } from './ui'
+import i18n from '@/locales/i18n'
 
+const t = i18n.global.t
 export const useChaptersStore = defineStore('chapters', {
   state: () => ({
     currentChapter: null,
     autoSaveTimer: null,
-    draggedChapterId: null
+    draggedChapterId: null,
+    autoSaveCallback: null
   }),
 
   getters: {
@@ -25,6 +28,12 @@ export const useChaptersStore = defineStore('chapters', {
   },
 
   actions: {
+
+    async addAutoSaveCallback(callback) {
+      this.autoSaveCallback = callback
+    },
+
+
     async openChapter(chapterId) {
       const novelsStore = useNovelsStore()
       const uiStore = useUIStore()
@@ -32,7 +41,8 @@ export const useChaptersStore = defineStore('chapters', {
       // Save current chapter before switching
       if (this.currentChapter) {
         await novelsStore.saveNovels()
-        uiStore.showSaveMessage('已自动保存')
+
+        uiStore.showSaveMessage(t('editor.autoSaveIndicator'))
       }
 
       const chapter = this.chapters.find(c => c.id === chapterId)
@@ -50,14 +60,14 @@ export const useChaptersStore = defineStore('chapters', {
       const chapterNumber = novelsStore.currentNovel.chapters.length + 1
       const newChapter = {
         id: Date.now().toString(),
-        title: `第${chapterNumber}章`,
+        title: t('chapters.newChapterTitle', { number: chapterNumber }),
         content: '',
         wordCount: 0
       }
 
       novelsStore.currentNovel.chapters.push(newChapter)
       await novelsStore.saveNovels()
-      uiStore.showSaveMessage('章节已创建')
+      uiStore.showSaveMessage(t('chapters.created'))
       
       return newChapter
     },
@@ -68,7 +78,7 @@ export const useChaptersStore = defineStore('chapters', {
       if (!novelsStore.currentNovel) return false
 
       if (novelsStore.currentNovel.chapters.length <= 1) {
-        throw new Error('至少需要保留一个章节')
+        throw new Error(t('chapters.atLeastOneChapter'))
       }
 
       const chapterIndex = novelsStore.currentNovel.chapters.findIndex(c => c.id === chapterId)
@@ -82,7 +92,7 @@ export const useChaptersStore = defineStore('chapters', {
       }
 
       await novelsStore.saveNovels()
-      uiStore.showSaveMessage('章节已删除')
+      uiStore.showSaveMessage(t('chapters.deleted'))
       return true
     },
 
@@ -95,7 +105,7 @@ export const useChaptersStore = defineStore('chapters', {
 
       chapter.title = newTitle.trim()
       await novelsStore.saveNovels()
-      uiStore.showSaveMessage('标题已更新')
+      uiStore.showSaveMessage(t('chapters.titleUpdated'))
       return true
     },
 
@@ -129,7 +139,7 @@ export const useChaptersStore = defineStore('chapters', {
       }
 
       await novelsStore.saveNovels()
-      uiStore.showSaveMessage('章节顺序已更新')
+      uiStore.showSaveMessage(t('chapters.reordered'))
       return true
     },
 
@@ -140,9 +150,12 @@ export const useChaptersStore = defineStore('chapters', {
         if (this.currentChapter) {
           const novelsStore = useNovelsStore()
           await novelsStore.saveNovels()
-          uiStore.showSaveMessage('已自动保存')
+          uiStore.showSaveMessage(t('editor.autoSaveIndicator'))
+          if(this.autoSaveCallback) {
+            await this.autoSaveCallback()
+          }
         }
-      }, 5000)
+      }, 5000) // 5秒自动保存一次
     },
 
     clearAutoSaveTimer() {

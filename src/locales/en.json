@@ -1,0 +1,139 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "saving": "Saving...",
+    "dragToReorder": "Drag to reorder"
+  },
+  "homepage": {
+    "myNovels": "My Novels",
+    "createNewNovel": "Create New Novel",
+    "noNovelsYet": "No novels yet. Click \"Create New Novel\" to start writing!",
+    "searchPlaceholder": "Search novels...",
+    "editNovel": "Edit Novel",
+    "deleteNovel": "Delete Novel",
+    "openNovel": "Open Novel"
+  },
+  "editor": {
+    "backToHomepage": "← Back to Homepage",
+    "chapterTitlePlaceholder": "Chapter Title",
+    "autoSaveIndicator": "Auto-saved",
+    "manualSaveSuccess": "Manual save successful",
+    "wordCount": "{count}",
+    "unsavedChanges": "Unsaved",
+    "startWriting": "Start writing...",
+    "sidebar": {
+      "chaptersList": "Chapters List",
+      "collapseSidebar": "Collapse Sidebar",
+      "expandChaptersList": "Expand Chapters List",
+      "addNewChapter": "+ Add New Chapter"
+    },
+    "aiPanel": {
+      "title": "AI Tools",
+      "collapsePanel": "Collapse Sidebar",
+      "expandPanel": "Expand AI Tools",
+      "placeholderTitle": "AI Writing Assistant",
+      "placeholderDescription": "Intelligent writing features coming soon",
+      "status": "In Development...",
+      "features": {
+        "continueWriting": "Smart Continue",
+        "plotSuggestions": "Plot Suggestions",
+        "textOptimization": "Text Optimization",
+        "contentAnalysis": "Content Analysis"
+      },
+      "featureDescriptions": {
+        "continueWriting": "Automatically continue writing based on your existing content",
+        "plotSuggestions": "Get suggestions for plot development and story direction",
+        "textOptimization": "Improve your text with grammar and style enhancements",
+        "contentAnalysis": "Analyze your content for themes, characters, and story structure"
+      }
+    }
+  },
+  "modals": {
+    "newNovel": {
+      "title": "Create New Novel",
+      "nameLabel": "Novel Name",
+      "namePlaceholder": "Enter novel name",
+      "authorLabel": "Author",
+      "authorPlaceholder": "Enter author name",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter novel description"
+    },
+    "editNovel": {
+      "title": "Edit Novel",
+      "nameLabel": "Novel Name",
+      "namePlaceholder": "Enter novel name",
+      "authorLabel": "Author",
+      "authorPlaceholder": "Enter author name",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter novel description"
+    }
+  },
+  "chapters": {
+    "chapter": "Chapter(s)",
+    "untitled": "Untitled Chapter",
+    "deleteConfirmation": "Are you sure you want to delete this chapter? This action cannot be undone.",
+    "atLeastOneChapter": "At least one chapter must be retained",
+    "newChapterTitle": "Chapter {number}",
+    "created": "Chapter created",
+    "deleted": "Chapter deleted",
+    "titleUpdated": "Title updated",
+    "reordered": "Chapter order updated"
+  },
+  "oobe": {
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "page1": {
+      "subtitle": "AI-powered novel writing tool",
+      "language": "Language Selection"
+    },
+    "page2": {
+      "title": "Cross-platform Support",
+      "description": "Built with modern technologies: Electron + Vue.js"
+    },
+    "page3": {
+      "title": "Free and Open Source",
+      "description": "Configure your own model providers",
+      "feature1": "Fully open source and customizable",
+      "feature2": "Supports multiple AI model providers"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "backToHome": "Back to Home",
+    "language": {
+      "title": "Language",
+      "interface": "Interface Language"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "theme": "Theme",
+      "themes": {
+        "light": "Light",
+        "dark": "Dark",
+        "oled": "OLED Black"
+      }
+    },
+    "storage": {
+      "title": "Storage",
+      "path": "Data Storage Path",
+      "change": "Change",
+      "reset": "Reset to Default",
+      "loading": "Loading...",
+      "failed": "Failed to get path",
+      "selectFailed": "Failed to select storage directory",
+      "resetFailed": "Failed to reset storage directory"
+    }
+  },
+  "wordCount": {
+    "count": "{count} words",
+    "kilo": "{count}k words",
+    "million": "{count}m words"
+  }
+}

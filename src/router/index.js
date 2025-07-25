@@ -1,24 +1,24 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Homepage from '@/views/Homepage.vue'
 import EditorPage from '@/views/EditorPage.vue'
+import SettingsPage from '@/views/settings/SettingsPage.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'homepage',
-    component: Homepage,
-    meta: {
-      title: 'NovelBox - AI辅助小说创作工具'
-    }
+    name: 'Homepage',
+    component: Homepage
   },
   {
     path: '/editor/:novelId',
-    name: 'editor',
+    name: 'Editor',
     component: EditorPage,
-    props: true,
-    meta: {
-      title: 'NovelBox - 编辑器'
-    }
+    props: true
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: SettingsPage
   },
   {
     path: '/:pathMatch(.*)*',
@@ -27,18 +27,9 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 
-// Navigation guards
-router.beforeEach((to, from, next) => {
-  // Update document title
-  if (to.meta.title) {
-    document.title = to.meta.title
-  }
-  
-  next()
-})
 
 export default router
