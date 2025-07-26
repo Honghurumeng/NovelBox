@@ -1,3 +1,31 @@
+.fetch-models-btn {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+
+.fetch-models-btn:hover {
+  opacity: 0.9;
+}
+
+.fetch-models-btn:active {
+  transform: translateY(1px);
+}
+
+.models-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.models-actions {
+  flex-shrink: 0;
+}
 <template>
   <div class="provider-settings">
     <h3 class="section-title">{{ $t('settings.provider.title') }}</h3>
@@ -283,16 +311,6 @@ const saveProvider = () => {
 
 // 从上游获取模型列表
 const fetchModels = async () => {
-  // 调试代码：检查electronAPI对象
-  console.log('electronAPI:', window.electronAPI);
-  console.log('electronAPI.ai:', window.electronAPI?.ai);
-  
-  if (!window.electronAPI || !window.electronAPI.ai) {
-    console.error('electronAPI.ai is not available');
-    alert('系统API不可用，请重启应用后再试');
-    return;
-  }
-  
   if (!selectedProvider.value || !selectedProvider.value.api_key) {
     alert(t('settings.provider.apiKeyRequired'));
     return;
@@ -303,34 +321,60 @@ const fetchModels = async () => {
     const originalModels = [...selectedProvider.value.models];
     selectedProvider.value.models = [];
     
-    // 通过主进程获取模型列表
-    const result = await window.electronAPI.ai.fetchModels(
-      selectedProvider.value.type,
-      selectedProvider.value.base_url,
-      selectedProvider.value.api_key
-    );
-    
-    if (result.success) {
-      if (selectedProvider.value.type === 'OpenAI') {
-        selectedProvider.value.models = result.data.data.map(model => ({
-          id: model.id,
-          owned_by: model.owned_by,
-          created: model.created
-        }));
-      } else if (selectedProvider.value.type === 'Gemini') {
-        selectedProvider.value.models = result.data.models.map(model => ({
-          name: model.name,
-          displayName: model.displayName,
-          description: model.description
-        }));
-      }
-      saveProviders();
+    // 构建请求URL和headers
+    let url, headers;
+    if (selectedProvider.value.type === 'OpenAI') {
+      url = selectedProvider.value.base_url || 'https://api.openai.com/v1';
+      url += '/models';
+      headers = {
+        'Authorization': `Bearer ${selectedProvider.value.api_key}`,
+        'Content-Type': 'application/json'
+      };
+    } else if (selectedProvider.value.type === 'Gemini') {
+      url = selectedProvider.value.base_url || 'https://generativelanguage.googleapis.com/v1beta';
+      url += `/models?key=${selectedProvider.value.api_key}`;
+      headers = {
+        'Content-Type': 'application/json'
+      };
     } else {
-      throw new Error(result.error);
+      throw new Error('Unsupported provider type');
     }
+    
+    // 发起请求
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: headers
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`API Error: ${response.status} ${response.statusText} - ${errorData.error?.message || 'Unknown error'}`);
+    }
+    
+    const result = await response.json();
+    
+    if (selectedProvider.value.type === 'OpenAI') {
+      selectedProvider.value.models = result.data.map(model => ({
+        id: model.id,
+        owned_by: model.owned_by,
+        created: model.created
+      }));
+    } else if (selectedProvider.value.type === 'Gemini') {
+      selectedProvider.value.models = result.models.map(model => ({
+        name: model.name,
+        displayName: model.displayName,
+        description: model.description
+      }));
+    }
+    
+    saveProviders();
   } catch (error) {
-    console.error('获取模型列表失败:', error)
-    alert(t('settings.provider.fetchModelsFailed') + ': ' + error.message)
+    console.error('获取模型列表失败:', error);
+    alert(t('settings.provider.fetchModelsFailed') + ': ' + error.message);
+    // 恢复原始模型列表
+    if (selectedProvider.value) {
+      selectedProvider.value.models = originalModels;
+    }
   }
 }
 

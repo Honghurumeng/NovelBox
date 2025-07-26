@@ -28,6 +28,22 @@
     "wordCount": "{count} 字",
     "unsavedChanges": "未保存",
     "startWriting": "开始写作...",
+    "rewriteTooltip": {
+      "title": "文本重写",
+      "expand": "扩写",
+      "contract": "缩写",
+      "beautify": "美化文笔",
+      "custom": "自定义",
+      "customPromptPlaceholder": "输入自定义提示...",
+      "apply": "应用",
+      "cancel": "取消",
+      "processing": "处理中...",
+      "error": "重写失败：{error}",
+      "noModelConfigured": "请先在设置中配置重写模型"
+    },
+    "contextMenu": {
+      "customRewrite": "自定义重写..."
+    },
     "sidebar": {
       "chaptersList": "章节列表",
       "collapseSidebar": "收起侧边栏",
@@ -124,21 +140,32 @@
       "baseUrl": "代理地址",
       "apiKey": "API密钥",
       "models": "可用模型",
-      "modelName": "模型名称",
-      "fetchModels": "获取模型列表",
-      "addModelPlaceholder": "输入模型名称并按回车添加",
-      "noModels": "暂无模型，请手动添加或通过API密钥获取",
+      "noModels": "暂无模型，请输入API密钥获取模型列表",
       "selectProvider": "请从左侧选择一个提供商",
       "untitled": "未命名提供商",
       "namePlaceholder": "请输入提供商名称",
       "baseUrlPlaceholder": "例如: https://api.openai.com/v1",
       "apiKeyPlaceholder": "请输入API密钥",
       "nameRequired": "请输入提供商名称",
-      "apiKeyRequired": "请输入API密钥",
       "deleteConfirm": "确定要删除这个提供商吗？",
       "saved": "提供商已保存",
+      "fetchModels": "获取模型",
       "fetchModelsFailed": "获取模型列表失败",
-      "modelsFetched": "模型列表获取成功"
+      "modelName": "模型名称",
+      "addModelPlaceholder": "输入模型名称添加"
+    },
+    "aiFeatures": {
+      "title": "AI功能",
+      "rewriteModel": "文本重写模型",
+      "selectProvider": "选择提供商",
+      "selectModel": "选择模型",
+      "noProvidersConfigured": "未配置提供商。请先在提供商设置中配置。",
+      "rewriteOptions": {
+        "expand": "扩写",
+        "contract": "缩写",
+        "beautify": "美化文笔",
+        "custom": "自定义提示"
+      }
     },
     "developer": {
       "title": "开发者选项",

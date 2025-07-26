@@ -4,12 +4,12 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "delete": "Delete",
-    "deleteWithShortcut": "Delete ({shortcut})",
     "edit": "Edit",
     "add": "Add",
     "close": "Close",
     "saving": "Saving...",
-    "dragToReorder": "Drag to reorder"
+    "dragToReorder": "Drag to reorder",
+    "deleteShortcut": "Delete (Ctrl+D)"
   },
   "homepage": {
     "myNovels": "My Novels",
@@ -25,9 +25,25 @@
     "chapterTitlePlaceholder": "Chapter Title",
     "autoSaveIndicator": "Auto-saved",
     "manualSaveSuccess": "Manual save successful",
-    "wordCount": "{count} characters",
+    "wordCount": "{count}",
     "unsavedChanges": "Unsaved",
     "startWriting": "Start writing...",
+    "rewriteTooltip": {
+      "title": "Text Rewrite",
+      "expand": "Expand",
+      "contract": "Contract", 
+      "beautify": "Beautify",
+      "custom": "Custom",
+      "customPromptPlaceholder": "Enter your custom prompt...",
+      "apply": "Apply",
+      "cancel": "Cancel",
+      "processing": "Processing...",
+      "error": "Rewrite failed: {error}",
+      "noModelConfigured": "Please configure rewrite model in settings first"
+    },
+    "contextMenu": {
+      "customRewrite": "Custom Rewrite..."
+    },
     "sidebar": {
       "chaptersList": "Chapters List",
       "collapseSidebar": "Collapse Sidebar",
@@ -36,22 +52,22 @@
     },
     "aiPanel": {
       "title": "AI Tools",
-      "collapsePanel": "Collapse Panel",
+      "collapsePanel": "Collapse Sidebar",
       "expandPanel": "Expand AI Tools",
       "placeholderTitle": "AI Writing Assistant",
-      "placeholderDescription": "Smart writing features coming soon",
+      "placeholderDescription": "Intelligent writing features coming soon",
       "status": "In Development...",
       "features": {
-        "continueWriting": "Continue Writing",
+        "continueWriting": "Smart Continue",
         "plotSuggestions": "Plot Suggestions",
         "textOptimization": "Text Optimization",
         "contentAnalysis": "Content Analysis"
       },
       "featureDescriptions": {
-        "continueWriting": "Automatically continue writing based on existing content",
-        "plotSuggestions": "Provide suggestions for plot development and story direction",
-        "textOptimization": "Improve text through grammar and style optimization",
-        "contentAnalysis": "Analyze themes, characters, and story structure of content"
+        "continueWriting": "Automatically continue writing based on your existing content",
+        "plotSuggestions": "Get suggestions for plot development and story direction",
+        "textOptimization": "Improve your text with grammar and style enhancements",
+        "contentAnalysis": "Analyze your content for themes, characters, and story structure"
       }
     }
   },
@@ -76,7 +92,7 @@
     }
   },
   "chapters": {
-    "chapter": "Chapter",
+    "chapter": "Chapter(s)",
     "untitled": "Untitled Chapter",
     "deleteConfirmation": "Are you sure you want to delete this chapter? This action cannot be undone.",
     "atLeastOneChapter": "At least one chapter must be retained",
@@ -84,36 +100,69 @@
     "created": "Chapter created",
     "deleted": "Chapter deleted",
     "titleUpdated": "Title updated",
-    "reordered": "Chapter order updated"
+    "reordered": "Chapter order updated",
+    "deleteWithShortcut": "Delete chapter (Ctrl+click to delete directly)"
+  },
+  "oobe": {
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "page1": {
+      "subtitle": "AI-powered novel writing tool",
+      "language": "Language Selection"
+    },
+    "page2": {
+      "title": "Cross-platform Support",
+      "description": "Built with modern technologies: Electron + Vue.js"
+    },
+    "page3": {
+      "title": "Free and Open Source",
+      "description": "Configure your own model providers",
+      "feature1": "Fully open source and customizable",
+      "feature2": "Supports multiple AI model providers"
+    }
   },
   "settings": {
     "title": "Settings",
     "backToHome": "Back to Home",
     "language": {
-      "title": "Language Settings",
+      "title": "Language",
       "interface": "Interface Language"
     },
     "appearance": {
-      "title": "Appearance Settings",
+      "title": "Appearance",
       "theme": "Theme",
       "themes": {
         "light": "Light",
         "dark": "Dark",
         "oled": "OLED Black",
-        "blue": "Blue",
-        "green": "Green",
-        "purple": "Purple"
+        "blue": "Tech Blue",
+        "green": "Fresh Green",
+        "purple": "Elegant Purple"
       }
     },
     "storage": {
-      "title": "Storage Settings",
-      "path": "Storage Path",
+      "title": "Storage",
+      "path": "Data Storage Path",
       "change": "Change",
       "reset": "Reset to Default",
       "loading": "Loading...",
-      "failed": "Failed to load",
+      "failed": "Failed to get path",
       "selectFailed": "Failed to select storage directory",
       "resetFailed": "Failed to reset storage directory"
+    },
+    "aiFeatures": {
+      "title": "AI Features",
+      "rewriteModel": "Text Rewrite Model",
+      "selectProvider": "Select Provider",
+      "selectModel": "Select Model",
+      "noProvidersConfigured": "No providers configured. Please configure them in Provider Settings first.",
+      "rewriteOptions": {
+        "expand": "Expand",
+        "contract": "Contract",
+        "beautify": "Beautify",
+        "custom": "Custom Prompt"
+      }
     },
     "provider": {
       "title": "Provider Settings",
@@ -124,34 +173,39 @@
       "baseUrl": "Base URL",
       "apiKey": "API Key",
       "models": "Available Models",
-      "modelName": "Model Name",
-      "fetchModels": "Fetch Models",
-      "addModelPlaceholder": "Enter model name and press Enter to add",
-      "noModels": "No models available. Please add manually or fetch via API key",
+      "noModels": "No models available. Please enter an API key to fetch model list",
       "selectProvider": "Please select a provider from the left",
       "untitled": "Untitled Provider",
       "namePlaceholder": "Enter provider name",
       "baseUrlPlaceholder": "e.g. https://api.openai.com/v1",
       "apiKeyPlaceholder": "Enter API key",
       "nameRequired": "Please enter a provider name",
-      "apiKeyRequired": "Please enter an API key",
       "deleteConfirm": "Are you sure you want to delete this provider?",
       "saved": "Provider saved",
+      "fetchModels": "Fetch Models",
       "fetchModelsFailed": "Failed to fetch model list",
-      "modelsFetched": "Model list fetched successfully"
+      "modelName": "Model name",
+      "addModelPlaceholder": "Enter model name to add"
     },
     "developer": {
-      "title": "Developer Options",
-      "resetoobe": "Reset Onboarding"
-    },
-    "about": {
-      "title": "About",
-      "appName": "NovelBox",
-      "appDescription": "AI-powered novel writing tool",
-      "version": "Version {version}",
-      "github": "GitHub",
-      "contact": "Contact Author",
-      "license": "License"
+      "title": "Developer Settings",
+      "resetoobe": "Reset OOBE"
     }
+  },
+
+  "about": {
+    "title": "About",
+    "appName": "NovelBox",
+    "appDescription": "Unleash unlimited creativity with LLM!",
+    "version": "Version {version}",
+    "github": "Github",
+    "contact": "Contact Me",
+    "license": "License"
+  },
+
+  "wordCount": {
+    "count": "{count} words",
+    "kilo": "{count}k words",
+    "million": "{count}m words"
   }
 }

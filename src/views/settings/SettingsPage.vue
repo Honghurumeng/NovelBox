@@ -48,6 +48,11 @@
           v-else-if="activeCategory === 'provider'" 
         />
         
+        <!-- AI功能设置 -->
+        <ModelConfigSettings 
+          v-else-if="activeCategory === 'aiFeatures'" 
+        />
+        
         <!-- 开发者设置 -->
         <DeveloperSettings 
           v-else-if="activeCategory === 'developer'" 
@@ -70,6 +75,7 @@ import LanguageSettings from '@/components/settings/LanguageSettings.vue'
 import AppearanceSettings from '@/components/settings/AppearanceSettings.vue'
 import StorageSettings from '@/components/settings/StorageSettings.vue'
 import ProviderSettings from '@/components/settings/ProviderSettings.vue'
+import ModelConfigSettings from '@/components/settings/ModelConfigSettings.vue'
 import DeveloperSettings from '@/components/settings/DeveloperSettings.vue'
 import AboutSection from '@/components/settings/AboutSection.vue'
 
@@ -88,6 +94,7 @@ const categories = [
   { id: 'appearance', label: 'settings.appearance.title', icon: '🎨' },
   { id: 'storage', label: 'settings.storage.title', icon: '💾' },
   { id: 'provider', label: 'settings.provider.title', icon: '🔌' },
+  { id: 'aiFeatures', label: 'settings.aiFeatures.title', icon: '🤖' },
   { id: 'developer', label: 'settings.developer.title', icon: '⚙️' },
   { id: 'about', label: 'about.title', icon: 'ℹ️' }
 ]
