@@ -29,14 +29,14 @@ export class UtilsService {
     const locale = i18n.global.locale.value
 
     if (locale === 'zh') {
-      if (count === 0) return t('wordCount.count', { count: 0 })
-      if (count < 1000) return t('wordCount.count', { count })
+      if (count === 0) return t('editor.wordCount', { count: 0 })
+      if (count < 1000) return t('editor.wordCount', { count })
       if (count < 10000) return t('wordCount.kilo', { count: (count / 1000).toFixed(1) })
       return t('wordCount.tenThousand', { count: (count / 10000).toFixed(1) })
     } else {
       // English formatting
-      if (count === 0) return t('wordCount.count', { count: 0 })
-      if (count < 1000) return t('wordCount.count', { count })
+      if (count === 0) return t('editor.wordCount', { count: 0 })
+      if (count < 1000) return t('editor.wordCount', { count })
       if (count < 1000000) return t('wordCount.kilo', { count: (count / 1000).toFixed(1) })
       return t('wordCount.million', { count: (count / 1000000).toFixed(1) })
     }

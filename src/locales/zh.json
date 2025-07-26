@@ -84,70 +84,74 @@
     "created": "章节已创建",
     "deleted": "章节已删除",
     "titleUpdated": "标题已更新",
-    "reordered": "章节顺序已更新",
-    "deleteWithShortcut": "删除章节 (Ctrl+点击直接删除)"
-  },
-  "oobe": {
-    "next": "下一步",
-    "previous": "上一步",
-    "finish": "完成",
-    "page1": {
-      "subtitle": "AI时代的小说创作工具",
-      "language": "语言选择"
-    },
-    "page2": {
-      "title": "跨平台支持",
-      "description": "基于Electron + Vuejs 现代技术"
-    },
-    "page3": {
-      "title": "开源可控",
-      "description": "自由配置你自己的模型提供商",
-      "feature1": "完全开源，可自由定制",
-      "feature2": "支持多种AI模型提供商"
-    }
+    "reordered": "章节顺序已更新"
   },
   "settings": {
     "title": "设置",
     "backToHome": "返回主页",
     "language": {
-      "title": "语言",
+      "title": "语言设置",
       "interface": "界面语言"
     },
     "appearance": {
-      "title": "外观",
+      "title": "外观设置",
       "theme": "主题",
       "themes": {
-        "light": "浅色",
-        "dark": "深色",
+        "light": "明亮",
+        "dark": "暗黑",
         "oled": "OLED黑",
-        "blue": "科技蓝",
-        "green": "清新绿",
-        "purple": "优雅紫"
+        "blue": "蓝色",
+        "green": "绿色",
+        "purple": "紫色"
       }
     },
     "storage": {
-      "title": "存储",
-      "path": "数据存储路径",
+      "title": "存储设置",
+      "path": "存储路径",
       "change": "更改",
       "reset": "重置为默认",
       "loading": "加载中...",
-      "failed": "获取路径失败",
+      "failed": "获取失败",
       "selectFailed": "选择存储目录失败",
       "resetFailed": "重置存储目录失败"
     },
-    "about": {
-      "title": "关于",
-      "appName": "NovelBox",
-      "appDescription": "使用LLM激活无限的创造力！",
-      "version": "版本 {version}",
-      "github": "Github",
-      "contact": "联系我",
-      "license": "许可证"
+    "provider": {
+      "title": "提供商设置",
+      "listTitle": "提供商列表",
+      "add": "添加提供商",
+      "name": "名称",
+      "type": "类型",
+      "baseUrl": "代理地址",
+      "apiKey": "API密钥",
+      "models": "可用模型",
+      "modelName": "模型名称",
+      "fetchModels": "获取模型列表",
+      "addModelPlaceholder": "输入模型名称并按回车添加",
+      "noModels": "暂无模型，请手动添加或通过API密钥获取",
+      "selectProvider": "请从左侧选择一个提供商",
+      "untitled": "未命名提供商",
+      "namePlaceholder": "请输入提供商名称",
+      "baseUrlPlaceholder": "例如: https://api.openai.com/v1",
+      "apiKeyPlaceholder": "请输入API密钥",
+      "nameRequired": "请输入提供商名称",
+      "apiKeyRequired": "请输入API密钥",
+      "deleteConfirm": "确定要删除这个提供商吗？",
+      "saved": "提供商已保存",
+      "fetchModelsFailed": "获取模型列表失败",
+      "modelsFetched": "模型列表获取成功"
     },
-    "wordCount": {
-      "count": "{count} 字",
-      "kilo": "{count}k 字",
-      "tenThousand": "{count}万 字"
+    "developer": {
+      "title": "开发者选项",
+      "resetoobe": "重置新手引导"
     }
+  },
+  "about": {
+    "title": "关于",
+    "appName": "NovelBox",
+    "appDescription": "AI驱动的小说创作工具",
+    "version": "版本 {version}",
+    "github": "GitHub",
+    "contact": "联系作者",
+    "license": "开源协议"
   }
 }

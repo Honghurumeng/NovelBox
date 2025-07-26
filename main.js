@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
 const process = require('process');
+const { net } = require('electron');
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -118,6 +119,78 @@ ipcMain.handle('storage:loadNovels', async () => {
       return { success: true, data: [] };
     }
     console.error('加载小说数据失败:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// AI Provider model fetching
+ipcMain.handle('ai:fetchModels', async (event, providerType, baseUrl, apiKey) => {
+  try {
+    let url;
+    let headers;
+
+    if (providerType === 'OpenAI') {
+      const baseURL = baseUrl || 'https://api.openai.com/v1';
+      url = `${baseURL}/models`;
+      headers = {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      };
+    } else if (providerType === 'Gemini') {
+      const baseURL = baseUrl || 'https://generativelanguage.googleapis.com/v1beta';
+      url = `${baseURL}/models?key=${apiKey}`;
+      headers = {
+        'Content-Type': 'application/json'
+      };
+    } else {
+      throw new Error('Unsupported provider type');
+    }
+
+    // Use Electron's net module for network requests
+    const response = await new Promise((resolve, reject) => {
+      const request = net.request({
+        method: 'GET',
+        url: url
+      });
+
+      // Set headers
+      for (const [key, value] of Object.entries(headers)) {
+        request.setHeader(key, value);
+      }
+
+      request.on('response', (response) => {
+        let data = '';
+        response.on('data', (chunk) => {
+          data += chunk;
+        });
+        response.on('end', () => {
+          try {
+            const jsonData = JSON.parse(data);
+            resolve({
+              statusCode: response.statusCode,
+              headers: response.headers,
+              data: jsonData
+            });
+          } catch (error) {
+            reject(new Error(`Failed to parse response: ${error.message}`));
+          }
+        });
+      });
+
+      request.on('error', (error) => {
+        reject(error);
+      });
+
+      request.end();
+    });
+
+    if (response.statusCode >= 400) {
+      throw new Error(`HTTP error! status: ${response.statusCode}`);
+    }
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('获取模型列表失败:', error);
     return { success: false, error: error.message };
   }
 });

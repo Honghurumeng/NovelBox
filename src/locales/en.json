@@ -4,12 +4,12 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "delete": "Delete",
+    "deleteWithShortcut": "Delete ({shortcut})",
     "edit": "Edit",
     "add": "Add",
     "close": "Close",
     "saving": "Saving...",
-    "dragToReorder": "Drag to reorder",
-    "deleteShortcut": "Delete (Ctrl+D)"
+    "dragToReorder": "Drag to reorder"
   },
   "homepage": {
     "myNovels": "My Novels",
@@ -25,7 +25,7 @@
     "chapterTitlePlaceholder": "Chapter Title",
     "autoSaveIndicator": "Auto-saved",
     "manualSaveSuccess": "Manual save successful",
-    "wordCount": "{count}",
+    "wordCount": "{count} characters",
     "unsavedChanges": "Unsaved",
     "startWriting": "Start writing...",
     "sidebar": {
@@ -36,22 +36,22 @@
     },
     "aiPanel": {
       "title": "AI Tools",
-      "collapsePanel": "Collapse Sidebar",
+      "collapsePanel": "Collapse Panel",
       "expandPanel": "Expand AI Tools",
       "placeholderTitle": "AI Writing Assistant",
-      "placeholderDescription": "Intelligent writing features coming soon",
+      "placeholderDescription": "Smart writing features coming soon",
       "status": "In Development...",
       "features": {
-        "continueWriting": "Smart Continue",
+        "continueWriting": "Continue Writing",
         "plotSuggestions": "Plot Suggestions",
         "textOptimization": "Text Optimization",
         "contentAnalysis": "Content Analysis"
       },
       "featureDescriptions": {
-        "continueWriting": "Automatically continue writing based on your existing content",
-        "plotSuggestions": "Get suggestions for plot development and story direction",
-        "textOptimization": "Improve your text with grammar and style enhancements",
-        "contentAnalysis": "Analyze your content for themes, characters, and story structure"
+        "continueWriting": "Automatically continue writing based on existing content",
+        "plotSuggestions": "Provide suggestions for plot development and story direction",
+        "textOptimization": "Improve text through grammar and style optimization",
+        "contentAnalysis": "Analyze themes, characters, and story structure of content"
       }
     }
   },
@@ -76,7 +76,7 @@
     }
   },
   "chapters": {
-    "chapter": "Chapter(s)",
+    "chapter": "Chapter",
     "untitled": "Untitled Chapter",
     "deleteConfirmation": "Are you sure you want to delete this chapter? This action cannot be undone.",
     "atLeastOneChapter": "At least one chapter must be retained",
@@ -84,76 +84,74 @@
     "created": "Chapter created",
     "deleted": "Chapter deleted",
     "titleUpdated": "Title updated",
-    "reordered": "Chapter order updated",
-    "deleteWithShortcut": "Delete chapter (Ctrl+click to delete directly)"
-  },
-  "oobe": {
-    "next": "Next",
-    "previous": "Previous",
-    "finish": "Finish",
-    "page1": {
-      "subtitle": "AI-powered novel writing tool",
-      "language": "Language Selection"
-    },
-    "page2": {
-      "title": "Cross-platform Support",
-      "description": "Built with modern technologies: Electron + Vue.js"
-    },
-    "page3": {
-      "title": "Free and Open Source",
-      "description": "Configure your own model providers",
-      "feature1": "Fully open source and customizable",
-      "feature2": "Supports multiple AI model providers"
-    }
+    "reordered": "Chapter order updated"
   },
   "settings": {
     "title": "Settings",
     "backToHome": "Back to Home",
     "language": {
-      "title": "Language",
+      "title": "Language Settings",
       "interface": "Interface Language"
     },
     "appearance": {
-      "title": "Appearance",
+      "title": "Appearance Settings",
       "theme": "Theme",
       "themes": {
         "light": "Light",
         "dark": "Dark",
         "oled": "OLED Black",
-        "blue": "Tech Blue",
-        "green": "Fresh Green",
-        "purple": "Elegant Purple"
+        "blue": "Blue",
+        "green": "Green",
+        "purple": "Purple"
       }
     },
     "storage": {
-      "title": "Storage",
-      "path": "Data Storage Path",
+      "title": "Storage Settings",
+      "path": "Storage Path",
       "change": "Change",
       "reset": "Reset to Default",
       "loading": "Loading...",
-      "failed": "Failed to get path",
+      "failed": "Failed to load",
       "selectFailed": "Failed to select storage directory",
       "resetFailed": "Failed to reset storage directory"
     },
+    "provider": {
+      "title": "Provider Settings",
+      "listTitle": "Provider List",
+      "add": "Add Provider",
+      "name": "Name",
+      "type": "Type",
+      "baseUrl": "Base URL",
+      "apiKey": "API Key",
+      "models": "Available Models",
+      "modelName": "Model Name",
+      "fetchModels": "Fetch Models",
+      "addModelPlaceholder": "Enter model name and press Enter to add",
+      "noModels": "No models available. Please add manually or fetch via API key",
+      "selectProvider": "Please select a provider from the left",
+      "untitled": "Untitled Provider",
+      "namePlaceholder": "Enter provider name",
+      "baseUrlPlaceholder": "e.g. https://api.openai.com/v1",
+      "apiKeyPlaceholder": "Enter API key",
+      "nameRequired": "Please enter a provider name",
+      "apiKeyRequired": "Please enter an API key",
+      "deleteConfirm": "Are you sure you want to delete this provider?",
+      "saved": "Provider saved",
+      "fetchModelsFailed": "Failed to fetch model list",
+      "modelsFetched": "Model list fetched successfully"
+    },
     "developer": {
-      "title": "Developer Settings",
-      "resetoobe": "Reset OOBE"
+      "title": "Developer Options",
+      "resetoobe": "Reset Onboarding"
+    },
+    "about": {
+      "title": "About",
+      "appName": "NovelBox",
+      "appDescription": "AI-powered novel writing tool",
+      "version": "Version {version}",
+      "github": "GitHub",
+      "contact": "Contact Author",
+      "license": "License"
     }
-  },
-  
-  "about": {
-    "title": "About",
-    "appName": "NovelBox",
-    "appDescription": "Unleash unlimited creativity with LLM!",
-    "version": "Version {version}",
-    "github": "Github",
-    "contact": "Contact Me",
-    "license": "License"
-  },
-
-  "wordCount": {
-    "count": "{count} words",
-    "kilo": "{count}k words",
-    "million": "{count}m words"
   }
 }

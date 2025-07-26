@@ -26,242 +26,110 @@
       <!-- 右侧内容 -->
       <div class="settings-content">
         <!-- 语言设置 -->
-        <div v-if="activeCategory === 'language'" class="settings-section">
-          <h3 class="section-title">{{ $t('settings.language.title') }}</h3>
-          <div class="setting-item">
-            <label class="setting-label">{{ $t('settings.language.interface') }}</label>
-            <select 
-              v-model="selectedLocale" 
-              @change="changeLocale" 
-              class="setting-select"
-            >
-              <option v-for="locale in availableLocales" :key="locale.code" :value="locale.code">
-                {{ locale.name }}
-              </option>
-            </select>
-          </div>
-        </div>
+        <LanguageSettings 
+          v-if="activeCategory === 'language'" 
+          @locale-changed="handleLocaleChange"
+        />
         
         <!-- 主题设置 -->
-        <div v-else-if="activeCategory === 'appearance'" class="settings-section">
-          <h3 class="section-title">{{ $t('settings.appearance.title') }}</h3>
-          <div class="setting-item">
-            <label class="setting-label">{{ $t('settings.appearance.theme') }}</label>
-            <div class="theme-options">
-              <div 
-                v-for="theme in themes" 
-                :key="theme.id"
-                class="theme-option"
-                :class="{ active: selectedTheme === theme.id }"
-                @click="changeTheme(theme.id)"
-              >
-                <div class="theme-preview" :class="`theme-${theme.id}`">
-                  <div class="preview-header"></div>
-                  <div class="preview-content">
-                    <div class="preview-sidebar"></div>
-                    <div class="preview-main"></div>
-                  </div>
-                </div>
-                <span class="theme-name">{{ $t(theme.name) }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AppearanceSettings 
+          v-else-if="activeCategory === 'appearance'" 
+          @theme-changed="handleThemeChange"
+        />
         
         <!-- 存储设置 -->
-        <div v-else-if="activeCategory === 'storage'" class="settings-section">
-          <h3 class="section-title">{{ $t('settings.storage.title') }}</h3>
-          <div class="setting-item">
-            <label class="setting-label">{{ $t('settings.storage.path') }}</label>
-            <div class="storage-path">
-              <span class="path-text">{{ storagePath || $t('settings.storage.loading') }}</span>
-              <button @click="selectStoragePath" class="path-btn">
-                {{ $t('settings.storage.change') }}
-              </button>
-            </div>
-          </div>
-          <div class="setting-item">
-            <button @click="resetStoragePath" class="reset-btn">
-              {{ $t('settings.storage.reset') }}
-            </button>
-          </div>
-        </div>
-
-        <div v-else-if="activeCategory === 'developer'" class="settings-section">
-          <h3 class="section-title">{{ $t('settings.developer.title') }}</h3>
-          <div class="setting-item">
-           <button @click="resetOOBE" class="reset-btn">
-              {{ $t('settings.developer.resetoobe') }}
-            </button>
-          </div>
-        </div>
+        <StorageSettings 
+          v-else-if="activeCategory === 'storage'" 
+          @path-changed="handlePathChange"
+        />
+        
+        <!-- 提供商设置 -->
+        <ProviderSettings 
+          v-else-if="activeCategory === 'provider'" 
+        />
+        
+        <!-- 开发者设置 -->
+        <DeveloperSettings 
+          v-else-if="activeCategory === 'developer'" 
+          @reset-o-o-b-e="resetOOBE"
+        />
 
         <!-- 关于页面 -->
-        <div v-else-if="activeCategory === 'about'" class="settings-section about-section">
-          <div class="about-content">
-            <div class="app-info">
-              <h1 class="app-name">{{ $t('about.appName') }}</h1>
-              <p class="app-description">{{ $t('about.appDescription') }}</p>
-              <p class="app-version">{{ $t('about.version', { version: '1.0.0' }) }}</p>
-            </div>
-            
-            <div class="links">
-              <div class="link-item">
-                <span class="link-label">{{ $t('about.github') }}：</span>
-                <a href="https://github.com/AliyahZombie/NovelBox" target="_blank" class="link-url">
-                  https://github.com/AliyahZombie/NovelBox
-                </a>
-              </div>
-              <div class="link-item">
-                <span class="link-label">{{ $t('about.contact') }}：</span>
-                <a href="mailto:aliyahzombie2024@gmail.com" class="link-url">
-                  aliyahzombie2024@gmail.com
-                </a>
-              </div>
-              <div class="link-item">
-                <span class="link-label">{{ $t('about.license') }}: </span>
-                <span class="link-url">AGPL-3.0</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <AboutSection v-else-if="activeCategory === 'about'" />
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUIStore } from '@/stores'
 import { useRouter } from 'vue-router'
+import LanguageSettings from '@/components/settings/LanguageSettings.vue'
+import AppearanceSettings from '@/components/settings/AppearanceSettings.vue'
+import StorageSettings from '@/components/settings/StorageSettings.vue'
+import ProviderSettings from '@/components/settings/ProviderSettings.vue'
+import DeveloperSettings from '@/components/settings/DeveloperSettings.vue'
+import AboutSection from '@/components/settings/AboutSection.vue'
 
-export default {
-  name: 'SettingsPage',
-  setup() {
-    const { t, locale } = useI18n()
-    const uiStore = useUIStore()
-    const router = useRouter()
-    
-    const activeCategory = ref('language')
-    const selectedLocale = ref(locale.value)
-    const selectedTheme = ref('light')
-    const storagePath = ref('')
-    
-    // 设置分类
-    const categories = [
-      { id: 'language', label: 'settings.language.title', icon: '🌐' },
-      { id: 'appearance', label: 'settings.appearance.title', icon: '🎨' },
-      { id: 'storage', label: 'settings.storage.title', icon: '💾' },
-      { id: 'developer', label: 'settings.developer.title', icon: '⚙️' },
-      { id: 'about', label: 'about.title', icon: 'ℹ️' }
-    ]
-    
-    // 语言选项
-    const availableLocales = [
-      { code: 'zh', name: '中文' },
-      { code: 'en', name: 'English' }
-    ]
-    
-    // 主题选项
-    const themes = [
-      { id: 'light', name: 'settings.appearance.themes.light' },
-      { id: 'dark', name: 'settings.appearance.themes.dark' },
-      { id: 'oled', name: 'settings.appearance.themes.oled' },
-      { id: 'blue', name: 'settings.appearance.themes.blue' },
-      { id: 'green', name: 'settings.appearance.themes.green' },
-      { id: 'purple', name: 'settings.appearance.themes.purple' }
-    ]
-    
-    // 返回主页
-    const goToHome = () => {
-      router.push('/')
-    }
-    
-    // 初始化设置
-    onMounted(async () => {
-      // 获取当前主题
-      const savedTheme = localStorage.getItem('novelbox-theme') || 'light'
-      selectedTheme.value = savedTheme
-      applyTheme(savedTheme)
-      
-      // 获取存储路径
-      await updateStoragePath()
-    })
-    
-    const resetOOBE = async() => {
-      localStorage.removeItem('novelbox-oobe-completed')
-      // refresh page
-      window.location.reload()
-    }
-    // 更新存储路径显示
-    const updateStoragePath = async () => {
-      try {
-        await uiStore.updateStoragePath()
-        storagePath.value = uiStore.storagePath
-      } catch (error) {
-        console.error('获取存储路径失败:', error)
-        storagePath.value = t('settings.storage.failed')
-      }
-    }
-    
-    // 更改语言
-    const changeLocale = () => {
-      locale.value = selectedLocale.value
-      localStorage.setItem('novelbox-locale', selectedLocale.value)
-    }
-    
-    // 更改主题
-    const changeTheme = (themeId) => {
-      selectedTheme.value = themeId
-      localStorage.setItem('novelbox-theme', themeId)
-      applyTheme(themeId)
-    }
-    
-    // 应用主题
-    const applyTheme = (themeId) => {
-      document.body.className = `theme-${themeId}`
-    }
-    
-    // 选择存储路径
-    const selectStoragePath = async () => {
-      try {
-        await uiStore.selectStorageDirectory()
-        storagePath.value = uiStore.storagePath
-      } catch (error) {
-        console.error('选择存储目录失败:', error)
-        alert(t('settings.storage.selectFailed'))
-      }
-    }
-    
-    // 重置存储路径
-    const resetStoragePath = async () => {
-      try {
-        await uiStore.resetStorageDirectory()
-        storagePath.value = uiStore.storagePath
-      } catch (error) {
-        console.error('重置存储目录失败:', error)
-        alert(t('settings.storage.resetFailed'))
-      }
-    }
-    
-    return {
-      activeCategory,
-      selectedLocale,
-      selectedTheme,
-      storagePath,
-      categories,
-      availableLocales,
-      themes,
-      changeLocale,
-      changeTheme,
-      selectStoragePath,
-      resetStoragePath,
-      goToHome,
-      resetOOBE
-    }
-  }
+const { t, locale } = useI18n()
+const uiStore = useUIStore()
+const router = useRouter()
+
+const activeCategory = ref('language')
+const selectedLocale = ref(locale.value)
+const selectedTheme = ref('light')
+const storagePath = ref('')
+
+// 设置分类
+const categories = [
+  { id: 'language', label: 'settings.language.title', icon: '🌐' },
+  { id: 'appearance', label: 'settings.appearance.title', icon: '🎨' },
+  { id: 'storage', label: 'settings.storage.title', icon: '💾' },
+  { id: 'provider', label: 'settings.provider.title', icon: '🔌' },
+  { id: 'developer', label: 'settings.developer.title', icon: '⚙️' },
+  { id: 'about', label: 'about.title', icon: 'ℹ️' }
+]
+
+// 返回主页
+const goToHome = () => {
+  router.push('/')
+}
+
+// 初始化设置
+onMounted(async () => {
+  // 获取当前主题
+  const savedTheme = localStorage.getItem('novelbox-theme') || 'light'
+  selectedTheme.value = savedTheme
+  applyTheme(savedTheme)
+})
+
+const resetOOBE = () => {
+  localStorage.removeItem('novelbox-oobe-completed')
+  // refresh page
+  window.location.reload()
+}
+
+// 应用主题
+const applyTheme = (themeId) => {
+  document.body.className = `theme-${themeId}`
+}
+
+// 处理语言变更
+const handleLocaleChange = (newLocale) => {
+  selectedLocale.value = newLocale
+}
+
+// 处理主题变更
+const handleThemeChange = (themeId) => {
+  selectedTheme.value = themeId
+  applyTheme(themeId)
+}
+
+// 处理路径变更
+const handlePathChange = (newPath) => {
+  storagePath.value = newPath
 }
 </script>
 
