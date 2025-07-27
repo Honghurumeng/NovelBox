@@ -9,7 +9,8 @@
     "add": "添加",
     "close": "关闭",
     "saving": "保存中...",
-    "dragToReorder": "拖拽排序"
+    "dragToReorder": "拖拽排序",
+    "deleteShortcut": "删除（ctrl+d）"
   },
   "homepage": {
     "myNovels": "我的小说",
@@ -18,7 +19,10 @@
     "searchPlaceholder": "搜索小说...",
     "editNovel": "编辑小说",
     "deleteNovel": "删除小说",
-    "openNovel": "打开小说"
+    "openNovel": "打开小说",
+    "exportNovel": "导出小说",
+    "exportSuccess": "小说导出成功",
+    "exportError": "导出失败：{error}"
   },
   "editor": {
     "backToHomepage": "← 返回主页",
@@ -42,6 +46,10 @@
       "noModelConfigured": "请先在设置中配置重写模型"
     },
     "contextMenu": {
+      "copy": "复制",
+      "cut": "剪切",
+      "paste": "粘贴",
+      "aiRewrite": "AI重写",
       "customRewrite": "自定义重写..."
     },
     "sidebar": {
@@ -54,6 +62,20 @@
       "title": "AI工具",
       "collapsePanel": "收起侧边栏",
       "expandPanel": "展开AI工具",
+      "originalText": "原文",
+      "rewriteResult": "重写结果",
+      "generating": "生成中",
+      "replace": "替换",
+      "retry": "重试",
+      "furtherRequest": "进一步要求",
+      "furtherPromptPlaceholder": "输入进一步的要求或修改建议...",
+      "applyFurther": "应用",
+      "welcomeTitle": "AI写作助手",
+      "welcomeDescription": "选择文本并右键使用AI重写功能",
+      "tips": "使用提示",
+      "tip1": "选中文本后右键查看重写选项",
+      "tip2": "支持扩写、缩写、美化和自定义重写",
+      "tip3": "可以基于重写结果进行进一步优化",
       "placeholderTitle": "AI创作助手",
       "placeholderDescription": "智能写作功能即将推出",
       "status": "开发中...",
@@ -100,7 +122,8 @@
     "created": "章节已创建",
     "deleted": "章节已删除",
     "titleUpdated": "标题已更新",
-    "reordered": "章节顺序已更新"
+    "reordered": "章节顺序已更新",
+    "deleteWithShortcut": "删除章节（CTRL单击以直接删除）"
   },
   "settings": {
     "title": "设置",
@@ -180,5 +203,29 @@
     "github": "GitHub",
     "contact": "联系作者",
     "license": "开源协议"
+  },
+  "wordCount": {
+    "million": "{count} m字",
+    "count": "{count}字",
+    "kilo": "{count} 千字"
+  },
+  "oobe": {
+    "finish": "结束",
+    "next": "下一个",
+    "page1": {
+      "language": "语言选择",
+      "subtitle": "AI驱动的小说写作工具"
+    },
+    "page2": {
+      "description": "基于现代技术：Electron + Vuejs",
+      "title": "跨平台支持"
+    },
+    "page3": {
+      "description": "配置您自己的模型提供商",
+      "feature1": "完全开源且可客制化的",
+      "feature2": "支持多个AI模型提供商",
+      "title": "自由且开源"
+    },
+    "previous": "上一个"
   }
 }

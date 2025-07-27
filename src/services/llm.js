@@ -13,7 +13,8 @@ export class LLMRequest {
     temperature = 0.7,
     topP = 0.95,
     topK = 40,
-    stopSequences = []
+    stopSequences = [],
+    stream = false
   } = {}) {
     this.prompt = prompt
     this.maxTokens = maxTokens
@@ -21,6 +22,7 @@ export class LLMRequest {
     this.topP = topP
     this.topK = topK
     this.stopSequences = stopSequences
+    this.stream = stream
   }
 }
 
@@ -32,13 +34,17 @@ export class LLMResponse {
     content = '',
     tokensUsed = 0,
     finishReason = '',
-    error = null
+    error = null,
+    delta = '',
+    isStream = false
   } = {}) {
     this.content = content
     this.tokensUsed = tokensUsed
     this.finishReason = finishReason
     this.error = error
     this.success = !error
+    this.delta = delta
+    this.isStream = isStream
   }
 }
 
@@ -63,6 +69,17 @@ export class LLMProvider {
    */
   async generateContent(modelName, request) {
     throw new Error('generateContent method must be implemented by subclass')
+  }
+
+  /**
+   * 生成流式内容 - 子类需要实现
+   * @param {string} modelName - 模型名称
+   * @param {LLMRequest} request - 请求参数
+   * @param {function} onChunk - 接收流式数据的回调函数
+   * @returns {Promise<LLMResponse>} 最终响应结果
+   */
+  async generateStreamContent(modelName, request, onChunk) {
+    throw new Error('generateStreamContent method must be implemented by subclass')
   }
 
   /**
@@ -132,6 +149,104 @@ export class OpenAIProvider extends LLMProvider {
         content: choice.message?.content || '',
         tokensUsed: data.usage?.total_tokens || 0,
         finishReason: choice.finish_reason || 'unknown'
+      })
+
+    } catch (error) {
+      return new LLMResponse({
+        error: error.message
+      })
+    }
+  }
+
+  async generateStreamContent(modelName, request, onChunk) {
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiKey}`
+      }
+
+      const body = {
+        model: modelName,
+        messages: [{ role: 'user', content: request.prompt }],
+        max_tokens: request.maxTokens,
+        temperature: request.temperature,
+        top_p: request.topP,
+        stop: request.stopSequences.length > 0 ? request.stopSequences : undefined,
+        stream: true
+      }
+
+      const response = await fetch(`${this.baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(`OpenAI API Error: ${response.status} ${response.statusText} - ${errorData.error?.message || 'Unknown error'}`)
+      }
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let fullContent = ''
+      let totalTokens = 0
+      let finishReason = ''
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          const chunk = decoder.decode(value, { stream: true })
+          const lines = chunk.split('\n').filter(line => line.trim() !== '')
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6)
+              if (data === '[DONE]') {
+                return new LLMResponse({
+                  content: fullContent,
+                  tokensUsed: totalTokens,
+                  finishReason: finishReason || 'stop'
+                })
+              }
+
+              try {
+                const parsed = JSON.parse(data)
+                const choice = parsed.choices?.[0]
+                if (choice) {
+                  const delta = choice.delta?.content || ''
+                  if (delta) {
+                    fullContent += delta
+                    if (onChunk) {
+                      onChunk(new LLMResponse({
+                        delta,
+                        content: fullContent,
+                        isStream: true
+                      }))
+                    }
+                  }
+                  if (choice.finish_reason) {
+                    finishReason = choice.finish_reason
+                  }
+                }
+                if (parsed.usage?.total_tokens) {
+                  totalTokens = parsed.usage.total_tokens
+                }
+              } catch (parseError) {
+                console.warn('Failed to parse SSE data:', parseError)
+              }
+            }
+          }
+        }
+      } finally {
+        reader.releaseLock()
+      }
+
+      return new LLMResponse({
+        content: fullContent,
+        tokensUsed: totalTokens,
+        finishReason: finishReason || 'stop'
       })
 
     } catch (error) {
@@ -213,6 +328,120 @@ export class GeminiProvider extends LLMProvider {
         content,
         tokensUsed: data.usageMetadata?.totalTokenCount || 0,
         finishReason: candidate.finishReason || 'unknown'
+      })
+
+    } catch (error) {
+      return new LLMResponse({
+        error: error.message
+      })
+    }
+  }
+
+  async generateStreamContent(modelName, request, onChunk) {
+    try {
+      const headers = {
+        'Content-Type': 'application/json'
+      }
+
+      const safetySettings = [
+        {
+          category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+          threshold: 'BLOCK_MEDIUM_AND_ABOVE'
+        },
+        {
+          category: 'HARM_CATEGORY_HARASSMENT',
+          threshold: 'BLOCK_NONE'
+        }
+      ]
+
+      const body = {
+        contents: [{
+          parts: [{ text: request.prompt }]
+        }],
+        generationConfig: {
+          maxOutputTokens: request.maxTokens,
+          temperature: request.temperature,
+          topP: request.topP,
+          topK: request.topK,
+          stopSequences: request.stopSequences.length > 0 ? request.stopSequences : undefined
+        },
+        safetySettings
+      }
+
+      const url = `${this.baseUrl}/v1beta/models/${modelName}:streamGenerateContent?key=${this.apiKey}`
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(`Gemini API Error: ${response.status} ${response.statusText} - ${errorData.error?.message || 'Unknown error'}`)
+      }
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let fullContent = ''
+      let totalTokens = 0
+      let finishReason = ''
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+
+          const chunk = decoder.decode(value, { stream: true })
+          const lines = chunk.split('\n').filter(line => line.trim() !== '')
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6)
+              
+              try {
+                const parsed = JSON.parse(data)
+                const candidate = parsed.candidates?.[0]
+                
+                if (candidate) {
+                  if (candidate.finishReason === 'SAFETY') {
+                    throw new Error('Response was blocked by safety filters')
+                  }
+
+                  const delta = candidate.content?.parts?.[0]?.text || ''
+                  if (delta) {
+                    fullContent += delta
+                    if (onChunk) {
+                      onChunk(new LLMResponse({
+                        delta,
+                        content: fullContent,
+                        isStream: true
+                      }))
+                    }
+                  }
+                  
+                  if (candidate.finishReason) {
+                    finishReason = candidate.finishReason
+                  }
+                }
+                
+                if (parsed.usageMetadata?.totalTokenCount) {
+                  totalTokens = parsed.usageMetadata.totalTokenCount
+                }
+              } catch (parseError) {
+                console.warn('Failed to parse Gemini stream data:', parseError)
+              }
+            }
+          }
+        }
+      } finally {
+        reader.releaseLock()
+      }
+
+      return new LLMResponse({
+        content: fullContent,
+        tokensUsed: totalTokens,
+        finishReason: finishReason || 'stop'
       })
 
     } catch (error) {
@@ -304,6 +533,56 @@ export class LLMService {
       }
 
       return await provider.generateContent(modelName, llmRequest)
+
+    } catch (error) {
+      return new LLMResponse({
+        error: error.message
+      })
+    }
+  }
+
+  /**
+   * 生成流式内容
+   * @param {string} providerName - 提供商名称
+   * @param {string} modelName - 模型名称
+   * @param {LLMRequest|string} request - 请求参数或提示文本
+   * @param {function} onChunk - 接收流式数据的回调函数
+   * @returns {Promise<LLMResponse>} 最终响应结果
+   */
+  async generateStreamContent(providerName, modelName, request, onChunk) {
+    try {
+      // 查找匹配的提供商
+      const provider = this.findProvider(providerName)
+      if (!provider) {
+        return new LLMResponse({
+          error: `Provider not found: ${providerName}`
+        })
+      }
+
+      // 确保request是LLMRequest对象
+      const llmRequest = request instanceof LLMRequest 
+        ? request 
+        : new LLMRequest({ prompt: request, stream: true })
+
+      // 强制启用流式模式
+      llmRequest.stream = true
+
+      // 验证模型是否存在
+      const availableModels = provider.getAvailableModels()
+      const modelExists = availableModels.some(model => {
+        return model.id === modelName || 
+               model.name === modelName || 
+               model.name === `models/${modelName}` ||
+               model.displayName === modelName
+      })
+
+      if (!modelExists) {
+        return new LLMResponse({
+          error: `Model not found: ${modelName} in provider: ${providerName}`
+        })
+      }
+
+      return await provider.generateStreamContent(modelName, llmRequest, onChunk)
 
     } catch (error) {
       return new LLMResponse({

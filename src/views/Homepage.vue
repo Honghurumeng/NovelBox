@@ -45,6 +45,9 @@
           <button class="btn delete-btn" @click="deleteNovel(novel)">
             {{ $t('common.delete') }}
           </button>
+          <button class="btn export-btn" @click="exportNovel(novel)">
+            {{ $t('homepage.exportNovel') }}
+          </button>
           <button class="btn open-btn" @click="openNovel(novel)">
             {{ $t('homepage.openNovel') }}
           </button>
@@ -75,6 +78,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useNovelsStore, useUIStore } from '@/stores'
 import { UtilsService } from '@/services'
 import NewNovelModal from '@/components/modals/NewNovelModal.vue'
@@ -90,9 +94,10 @@ export default {
   },
   setup() {
     const router = useRouter()
+    const { t } = useI18n()
     const novelsStore = useNovelsStore()
     const uiStore = useUIStore()
-    
+
     const searchQuery = ref('')
     
     const filteredNovels = computed(() => {
@@ -157,7 +162,44 @@ export default {
     const openNovel = (novel) => {
       router.push(`/editor/${novel.id}`)
     }
-    
+
+    const exportNovel = (novel) => {
+      try {
+        // 生成txt格式的内容
+        let content = `Author: ${novel.author}\n`
+        content += `Desc: ${novel.description}\n\n`
+
+        // 添加每个章节
+        novel.chapters.forEach((chapter, index) => {
+          content += `第${index + 1}章 ${chapter.title}\n`
+          content += `${chapter.content}\n\n`
+        })
+
+        // 创建Blob对象
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+
+        // 创建下载链接
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `${novel.name}.txt`
+
+        // 触发下载
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+
+        // 清理URL对象
+        URL.revokeObjectURL(url)
+
+        // 显示成功消息
+        uiStore.showSaveMessage(t('homepage.exportSuccess'))
+      } catch (error) {
+        console.error('导出小说失败:', error)
+        alert(t('homepage.exportError', { error: error.message }))
+      }
+    }
+
     const goToSettings = () => {
       router.push('/settings')
     }
@@ -181,6 +223,7 @@ export default {
       updateNovel,
       deleteNovel,
       openNovel,
+      exportNovel,
       goToSettings
     }
   }
@@ -346,6 +389,15 @@ export default {
 
 .delete-btn:hover {
   background: var(--reset-btn-hover-bg);
+}
+
+.export-btn {
+  background: var(--btn-info-bg, #17a2b8);
+  color: var(--btn-info-color, #fff);
+}
+
+.export-btn:hover {
+  background: var(--btn-info-hover-bg, #138496);
 }
 
 .open-btn {

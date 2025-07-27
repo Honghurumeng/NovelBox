@@ -9,7 +9,8 @@
     "close": "Close",
     "saving": "Saving...",
     "dragToReorder": "Drag to reorder",
-    "deleteShortcut": "Delete (Ctrl+D)"
+    "deleteShortcut": "Delete (Ctrl+D)",
+    "deleteWithShortcut": "Ctrl + 单击快速删除"
   },
   "homepage": {
     "myNovels": "My Novels",
@@ -18,7 +19,10 @@
     "searchPlaceholder": "Search novels...",
     "editNovel": "Edit Novel",
     "deleteNovel": "Delete Novel",
-    "openNovel": "Open Novel"
+    "openNovel": "Open Novel",
+    "exportNovel": "Export Novel",
+    "exportSuccess": "Novel exported successfully",
+    "exportError": "Export failed: {error}"
   },
   "editor": {
     "backToHomepage": "← Back to Homepage",
@@ -31,7 +35,7 @@
     "rewriteTooltip": {
       "title": "Text Rewrite",
       "expand": "Expand",
-      "contract": "Contract", 
+      "contract": "Contract",
       "beautify": "Beautify",
       "custom": "Custom",
       "customPromptPlaceholder": "Enter your custom prompt...",
@@ -42,6 +46,10 @@
       "noModelConfigured": "Please configure rewrite model in settings first"
     },
     "contextMenu": {
+      "copy": "Copy",
+      "cut": "Cut",
+      "paste": "Paste",
+      "aiRewrite": "AI Rewrite",
       "customRewrite": "Custom Rewrite..."
     },
     "sidebar": {
@@ -54,6 +62,20 @@
       "title": "AI Tools",
       "collapsePanel": "Collapse Sidebar",
       "expandPanel": "Expand AI Tools",
+      "originalText": "Original Text",
+      "rewriteResult": "Rewrite Result",
+      "generating": "Generating",
+      "replace": "Replace",
+      "retry": "Retry",
+      "furtherRequest": "Further Request",
+      "furtherPromptPlaceholder": "Enter further requirements or modification suggestions...",
+      "applyFurther": "Apply",
+      "welcomeTitle": "AI Writing Assistant",
+      "welcomeDescription": "Select text and right-click to use AI rewrite features",
+      "tips": "Usage Tips",
+      "tip1": "Right-click selected text to see rewrite options",
+      "tip2": "Supports expand, contract, beautify and custom rewrites",
+      "tip3": "Can further optimize based on rewrite results",
       "placeholderTitle": "AI Writing Assistant",
       "placeholderDescription": "Intelligent writing features coming soon",
       "status": "In Development...",
@@ -192,7 +214,6 @@
       "resetoobe": "Reset OOBE"
     }
   },
-
   "about": {
     "title": "About",
     "appName": "NovelBox",
@@ -202,7 +223,6 @@
     "contact": "Contact Me",
     "license": "License"
   },
-
   "wordCount": {
     "count": "{count} words",
     "kilo": "{count}k words",

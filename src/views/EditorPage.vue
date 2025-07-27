@@ -39,7 +39,7 @@ export const useUIStore = defineStore('ui', {
         'right-collapsed': uiStore.rightSidebarCollapsed
       }"
     >
-      <MainEditor />
+      <MainEditor @start-rewrite="handleStartRewrite" />
     </div>
     
     <!-- 右侧栏 - AI工具 -->
@@ -54,13 +54,18 @@ export const useUIStore = defineStore('ui', {
         {{ uiStore.rightSidebarCollapsed ? '‹' : '›' }}
       </button>
       
-      <AIPanel v-show="!uiStore.rightSidebarCollapsed" />
+      <AIPanel 
+        v-show="!uiStore.rightSidebarCollapsed" 
+        :rewrite-session="rewriteSession"
+        @replace-text="handleReplaceText"
+        @close-session="handleCloseSession"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useNovelsStore, useChaptersStore, useUIStore } from '@/stores'
 import ChaptersList from '@/components/editor/ChaptersList.vue'
@@ -86,6 +91,9 @@ export default {
     const novelsStore = useNovelsStore()
     const chaptersStore = useChaptersStore()
     const uiStore = useUIStore()
+    
+    // AI重写会话管理
+    const rewriteSession = ref(null)
 
     const init = async () => {
       // Load novels if not already loaded
@@ -120,6 +128,29 @@ export default {
       novelsStore.clearCurrentNovel()
     }
 
+    // 处理开始重写事件
+    const handleStartRewrite = (session) => {
+      rewriteSession.value = session
+    }
+
+    // 处理替换文本事件
+    const handleReplaceText = (replaceData) => {
+      if (chaptersStore.currentChapter) {
+        const currentContent = chaptersStore.currentChapter.content
+        const newContent = 
+          currentContent.substring(0, replaceData.selectionStart) +
+          replaceData.newText +
+          currentContent.substring(replaceData.selectionEnd)
+        
+        chaptersStore.updateChapterContent(newContent)
+      }
+    }
+
+    // 处理关闭重写会话事件
+    const handleCloseSession = () => {
+      rewriteSession.value = null
+    }
+
     onMounted(() => {
       init()
     })
@@ -129,7 +160,11 @@ export default {
     })
 
     return {
-      uiStore
+      uiStore,
+      rewriteSession,
+      handleStartRewrite,
+      handleReplaceText,
+      handleCloseSession
     }
   }
 }
