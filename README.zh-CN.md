@@ -2,7 +2,6 @@
 
 [English](./README.md) | [中文](./README.zh-CN.md)
 
-![NovelBox](https://user-images.githubusercontent.com/13445973/232198498-82c43126-c537-4d86-9f5c-da47a7924f3a.png)
 
 **NovelBox - AI 驱动的小说写作助手**
 
