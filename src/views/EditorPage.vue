@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+<!-- import { defineStore } from 'pinia'
 
 export const useUIStore = defineStore('ui', {
   state: () => ({
@@ -13,7 +13,7 @@ export const useUIStore = defineStore('ui', {
       this.rightSidebarCollapsed = !this.rightSidebarCollapsed
     }
   }
-})
+}) -->
 <template>
   <div class="editor-page">
     <!-- 左侧栏 - 章节列表 -->

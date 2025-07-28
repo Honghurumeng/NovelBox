@@ -12,7 +12,7 @@
       
       <div class="editor-header-center">
         <div class="chapter-title-editor">
-          <div class="chapter-title-divider"></div>
+          <!-- <div class="chapter-title-divider"></div> -->
           <input 
             v-if="uiStore.editingChapterTitle"
             type="text" 

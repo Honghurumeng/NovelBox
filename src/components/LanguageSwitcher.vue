@@ -2,26 +2,14 @@
   <div class="language-switcher">
     <button class="toggle-btn" @click="toggleDropdown">
       {{ currentLocaleName }}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="w-4 h-4"
-      >
+      <svg style="width: 24px;height: 24px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
         <polyline points="6 9 12 15 18 9"></polyline>
       </svg>
     </button>
     <div v-if="isDropdownOpen" class="dropdown-menu">
-      <div
-        v-for="locale in availableLocales"
-        :key="locale.code"
-        class="dropdown-item"
-        @click="selectLocale(locale.code)"
-      >
+      <div v-for="locale in availableLocales" :key="locale.code" class="dropdown-item"
+        @click="selectLocale(locale.code)">
         {{ locale.name }}
       </div>
     </div>
@@ -36,12 +24,12 @@ export default {
   name: 'LanguageSwitcher',
   setup() {
     const { locale } = useI18n()
-    
+
     const availableLocales = [
       { code: 'zh', name: '中文' },
       { code: 'en', name: 'English' }
     ]
-    
+
     const currentLocale = ref(locale.value)
     const isDropdownOpen = ref(false)
 
@@ -60,7 +48,7 @@ export default {
       localStorage.setItem('novelbox-locale', code)
       isDropdownOpen.value = false
     }
-    
+
     return {
       currentLocale,
       availableLocales,
@@ -86,11 +74,13 @@ export default {
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
   display: flex;
-  align-items: center;
   gap: 6px;
   transition: all 0.2s;
+  width: fit-content;
+  height: 46.5px;
+  align-items: center;
 }
 
 .toggle-btn:hover {
