@@ -41,7 +41,8 @@ export default {
       { id: 'oled', name: 'settings.appearance.themes.oled' },
       { id: 'blue', name: 'settings.appearance.themes.blue' },
       { id: 'green', name: 'settings.appearance.themes.green' },
-      { id: 'purple', name: 'settings.appearance.themes.purple' }
+      { id: 'purple', name: 'settings.appearance.themes.purple' },
+      { id: 'cream', name: 'settings.appearance.themes.cream' }
     ]
     
     onMounted(() => {
@@ -247,6 +248,28 @@ export default {
 
 .theme-preview.theme-purple .preview-main {
   background: #f3e5f5;
+  flex: 1;
+  height: 60px;
+}
+
+/* 护眼浅黄主题预览 */
+.theme-preview.theme-cream {
+  background: #fdf6e3;
+}
+
+.theme-preview.theme-cream .preview-header {
+  background: #eee8d5;
+  height: 20px;
+}
+
+.theme-preview.theme-cream .preview-sidebar {
+  background: #e9e2d0;
+  width: 30px;
+  height: 60px;
+}
+
+.theme-preview.theme-cream .preview-main {
+  background: #fdf6e3;
   flex: 1;
   height: 60px;
 }

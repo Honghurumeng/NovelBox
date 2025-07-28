@@ -141,7 +141,8 @@
         "oled": "OLED黑",
         "blue": "蓝色",
         "green": "绿色",
-        "purple": "紫色"
+        "purple": "紫色",
+        "cream": "护眼浅黄"
       }
     },
     "storage": {
