@@ -45,14 +45,20 @@
           
           <!-- 错误信息 -->
           <div v-if="rewriteError" class="error-message">
-            <span class="error-icon">⚠️</span>
-            {{ rewriteError }}
+            <div class="error-content">
+              <span class="error-icon">⚠️</span>
+              <span class="error-text">{{ rewriteError }}</span>
+            </div>
+            <button class="retry-btn error-retry-btn" @click="retryRewrite">
+              <span class="btn-icon">🔄</span>
+              {{ $t('editor.aiPanel.retry') }}
+            </button>
           </div>
         </div>
         
         <!-- 操作按钮 -->
-        <div v-if="!isStreaming && displayText && !rewriteError" class="action-buttons">
-          <button class="action-btn replace-btn" @click="replaceText">
+        <div v-if="!isStreaming && (displayText || rewriteError)" class="action-buttons">
+          <button v-if="displayText && !rewriteError" class="action-btn replace-btn" @click="replaceText">
             <span class="btn-icon">✅</span>
             {{ $t('editor.aiPanel.replace') }}
           </button>
@@ -465,9 +471,9 @@ export default {
 
 .error-message {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
   background: var(--btn-danger-bg);
   color: var(--btn-danger-color);
   border-radius: 6px;
@@ -475,8 +481,42 @@ export default {
   margin-top: 8px;
 }
 
+.error-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.error-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
 .error-icon {
   font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.error-retry-btn {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.error-retry-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 /* 操作按钮 */
