@@ -34,7 +34,7 @@
           <p class="novel-description">{{ novel.description }}</p>
           <div class="novel-meta">
             <span class="chapter-count">{{ novel.chapters.length }} {{ $t('chapters.chapter') }}</span>
-            <span class="word-count">{{ formatTotalWordCount(novel) }} {{ $t('editor.wordCount', { count: '' }) }}</span>
+            <span class="word-count">{{ formatTotalWordCount(novel) }}</span>
           </div>
         </div>
         
