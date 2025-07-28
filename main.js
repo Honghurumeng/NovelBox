@@ -30,8 +30,8 @@ const createWindow = () => {
     mainWindow.loadFile(path.join(__dirname, 'dist/index.html'));
   }
   
-  // Open DevTools in development
-  if (process.env.NODE_ENV === 'development') {
+  // Open DevTools in development only if explicitly requested
+  if (process.env.NODE_ENV === 'development' && process.env.OPEN_DEVTOOLS === 'true') {
     mainWindow.webContents.openDevTools();
   }
 };
