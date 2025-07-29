@@ -393,14 +393,14 @@ export default {
 .edit-btn {
   background: var(--btn-secondary-bg);
   color: var(--btn-secondary-color);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--btn-secondary-color);
 }
 
 .edit-btn:hover {
-  background: var(--nav-hover-bg);
-  border-color: var(--text-secondary);
+  background: var(--btn-secondary-color);
+  color: white;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(107,114,128,0.3);
 }
 
 .delete-btn {
