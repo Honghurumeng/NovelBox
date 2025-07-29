@@ -67,6 +67,7 @@
       "rewriteResult": "Rewrite Result",
       "generating": "Generating",
       "replace": "Replace",
+      "insert": "Insert",
       "retry": "Retry",
       "furtherRequest": "Further Request",
       "furtherPromptPlaceholder": "Enter further requirements or modification suggestions...",

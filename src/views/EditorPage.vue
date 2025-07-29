@@ -76,6 +76,7 @@
         <AIPanel 
           :rewrite-session="rewriteSession"
           @replace-text="handleReplaceText"
+          @insert-text="handleInsertText"
           @close-session="handleCloseSession"
         />
       </div>
@@ -168,6 +169,19 @@ export default {
           currentContent.substring(0, replaceData.selectionStart) +
           replaceData.newText +
           currentContent.substring(replaceData.selectionEnd)
+        
+        chaptersStore.updateChapterContent(newContent)
+      }
+    }
+
+    // 处理插入文本事件
+    const handleInsertText = (insertData) => {
+      if (chaptersStore.currentChapter) {
+        const currentContent = chaptersStore.currentChapter.content
+        const newContent = 
+          currentContent.substring(0, insertData.selectionEnd) +
+          insertData.newText +
+          currentContent.substring(insertData.selectionEnd)
         
         chaptersStore.updateChapterContent(newContent)
       }
@@ -293,6 +307,7 @@ export default {
       cancelEditingTitle,
       handleStartRewrite,
       handleReplaceText,
+      handleInsertText,
       handleCloseSession
     }
   }

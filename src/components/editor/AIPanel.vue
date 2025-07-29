@@ -66,11 +66,12 @@
         <!-- 操作按钮 -->
         <div v-if="!isStreaming && (displayText || rewriteError)" class="action-buttons">
           <button v-if="displayText && !rewriteError" class="action-btn replace-btn" @click="replaceText">
-            <span class="btn-icon">✅</span>
             {{ $t('editor.aiPanel.replace') }}
           </button>
+          <button v-if="displayText && !rewriteError" class="action-btn insert-btn" @click="insertText">
+            {{ $t('editor.aiPanel.insert') }}
+          </button>
           <button class="action-btn retry-btn" @click="retryRewrite">
-            <span class="btn-icon">🔄</span>
             {{ $t('editor.aiPanel.retry') }}
           </button>
         </div>
@@ -139,7 +140,7 @@ export default {
       default: null
     }
   },
-  emits: ['replace-text', 'close-session'],
+  emits: ['replace-text', 'insert-text', 'close-session'],
   setup(props, { emit }) {
     const { t } = useI18n()
     const uiStore = useUIStore()
@@ -254,6 +255,18 @@ export default {
       }
     }
     
+    const insertText = () => {
+      if (displayText.value && props.rewriteSession) {
+        emit('insert-text', {
+          originalText: props.rewriteSession.originalText,
+          newText: displayText.value.trim(),
+          selectionStart: props.rewriteSession.selectionStart,
+          selectionEnd: props.rewriteSession.selectionEnd
+        })
+        closeRewriteSession()
+      }
+    }
+    
     const retryRewrite = () => {
       startRewrite()
     }
@@ -299,6 +312,7 @@ export default {
       getRewriteTypeLabel,
       formatRewriteText,
       replaceText,
+      insertText,
       retryRewrite,
       applyFurtherRequest,
       closeRewriteSession
@@ -576,51 +590,90 @@ export default {
 .action-buttons {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .action-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
+  padding: 10px 16px;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text-primary);
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   flex: 1;
-  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.action-btn:hover:not(:disabled)::before {
+  opacity: 1;
 }
 
 .action-btn:hover:not(:disabled) {
-  background: var(--nav-hover-bg);
-  color: var(--text-primary);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-color);
+}
+
+.action-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .action-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: none;
+}
+
+.replace-btn {
+  background: linear-gradient(135deg, var(--btn-primary-bg), var(--accent-color));
+  color: white;
+  border: none;
 }
 
 .replace-btn:hover:not(:disabled) {
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-color);
-  border-color: transparent;
+  background: linear-gradient(135deg, var(--btn-primary-bg), var(--accent-color));
+  box-shadow: 0 4px 12px rgba(var(--accent-color-rgb), 0.3);
+}
+
+.insert-btn {
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: white;
+  border: none;
+}
+
+.insert-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+  color: white;
+  border: none;
 }
 
 .retry-btn:hover:not(:disabled) {
-  background: #ff9800;
-  color: white;
-  border-color: #ff9800;
-}
-
-.btn-icon {
-  font-size: 0.9rem;
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
 }
 
 /* 进一步要求 */

@@ -67,6 +67,7 @@
       "rewriteResult": "重写结果",
       "generating": "生成中",
       "replace": "替换",
+      "insert": "插入",
       "retry": "重试",
       "furtherRequest": "进一步要求",
       "furtherPromptPlaceholder": "输入进一步的要求或修改建议...",
