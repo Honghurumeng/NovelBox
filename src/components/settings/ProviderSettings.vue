@@ -608,8 +608,7 @@ onMounted(() => {
 .models-list {
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  /* max-height is removed, scrolling is handled by .details-form-body */
-  overflow-y: visible; /* Changed from auto */
+  overflow-y: visible;
   background: var(--content-bg);
 }
 

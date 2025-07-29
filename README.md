@@ -3,68 +3,79 @@
 [English](./README.md) | [中文](./README.zh-CN.md)
 
 
-**NovelBox - AI-powered Novel Writing Assistant**
+**NovelBox - AI 驱动的小说写作助手**
 
-NovelBox aims to assist in novel writing through the integration of AI tools. Currently, NovelBox is in its early stages of development with many features still incomplete. Pull requests are welcome!
+NovelBox 旨在通过AI工具集成来辅助进行小说写作，目前NovelBox仍处于早期的开发阶段，功能上有许多的不完善之处，欢迎提交PR！
 
 ---
 
-## ✨ Key Features
+## ✨ 主要功能
 
-*   **AI Integration**
-    *   Natively supports **OpenAI** and **Google Gemini** compatible APIs.
-    *   Built with an extensible architecture, making it easy to add new AI services.
-    *   Currently only supports AI-powered text rewriting.
+*   **AI 集成**
+    *   目前原生支持 **OpenAI** 和 **Google Gemini** 兼容的 API。
+    *   采用可扩展架构，轻松添加新的 AI 服务。
+    *   目前仅支持AI重写功能
 
-*   **Novel Editor**
-    *   Three-column writing panel.
-    *   Chapter management: Supports drag-and-drop sorting, adding, editing, and deleting chapters.
-    *   Automatic content saving.
-    *   Supports exporting novels.
+*   **重写流程**
+    *   用户选中文本 → 右键点击 → ContextMenu.emit('rewrite') 
+    *   ↓
+    *   MainEditor.handleRewrite() → startRewrite() → emit('start-rewrite')
+    *   ↓
+    *   EditorPage.startRewrite() → 设置 rewriteSession
+    *   ↓
+    *   AIPanel.watch() → startRewrite() → 调用 LLM 服务
+    *   ↓
+    *   流式显示结果 → 用户可选择替换或进一步处理
 
-*   **Cross-platform & Customization**
-    *   Built with Electron + VueJS.
-    *   i18n support, currently configured for Chinese and English.
+*   **小说编辑器**
+    *   三栏式写作面板
+    *   章节管理：支持拖拽排序、新增、编辑和删除章节。
+    *   内容自动保存
+    *   支持小说导出
 
-## 🛠️ Tech Stack
+*   **跨平台与定制化**
+    *   基于 Electron+VueJS 构建
+    *   i18n支持 目前已配置了中/英双语
 
-*   **[Electron](https://www.electronjs.org/)**: Desktop application framework
-*   **[Vue.js 3](https://vuejs.org/)**: Frontend framework
-*   **[Vite](https://vitejs.dev/)**: Frontend build tool
-*   **[Pinia](https://pinia.vuejs.org/)**: State management
-*   **[Vue Router](https://router.vuejs.org/)**: Routing management
-*   **[Vue I18n](https://vue-i18n.intlify.dev/)**: Internationalization
+## 🛠️ 技术栈
 
-## 🚀 Local Development
+*   **[Electron](https://www.electronjs.org/)**: 桌面应用框架
+*   **[Vue.js 3](https://vuejs.org/)**: 前端框架
+*   **[Vite](https://vitejs.dev/)**: 前端构建工具
+*   **[Pinia](https://pinia.vuejs.org/)**: 状态管理
+*   **[Vue Router](https://router.vuejs.org/)**: 路由管理
+*   **[Vue I18n](https://vue-i18n.intlify.dev/)**: 国际化
 
-**1. Clone the repository**
+## 🚀 本地开发
+
+**1. 克隆仓库**
 ```bash
 git clone https://github.com/AliyahZombie/NovelBox
 cd novelbox
 ```
 
-**2. Install dependencies**
+**2. 安装依赖**
 ```bash
 npm install
 ```
 
-**3. Run the development environment**
-This command starts both the Vite development server and the Electron application.
+**3. 运行开发环境**
+此命令会同时启动 Vite 开发服务器和 Electron 应用。
 ```bash
 npm run dev
 ```
 
-## 📦 Build
+## 📦 构建
 
-You can build an executable for your operating system.
+您可以为您的操作系统构建可执行文件。
 
-**Build and package the application**
+**构建并打包应用**
 ```bash
 npm run dist
 ```
 
-The built files will be located in the `dist` directory.
+构建后的文件将位于 `dist` 目录下。
 
-## 📄 License
+## 📄 许可证
 
-This project is licensed under the [AGPL-3.0](LICENSE) license.
+本项目采用 [AGPL-3.0](LICENSE) 许可证。

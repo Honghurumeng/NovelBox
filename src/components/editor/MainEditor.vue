@@ -197,10 +197,7 @@ export default {
 
       emit('start-rewrite', rewriteSession)
     }
-
-    // 显示自定义提示模态框
-    //const showCustomPromptModal = ref(false)
-
+    
     // 隐藏自定义提示模态框
     const hideCustomPromptModal = () => {
       showCustomPromptModal.value = false
