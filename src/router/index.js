@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Homepage from '@/views/Homepage.vue'
 import EditorPage from '@/views/EditorPage.vue'
-import SettingsPage from '@/views/settings/SettingsPage.vue'
+import SettingsPage from '@/views/SettingsPage.vue'
 
 const routes = [
   {

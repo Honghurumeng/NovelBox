@@ -4,10 +4,10 @@
       <!-- 左侧导航 -->
       <div class="settings-sidebar">
         <div class="sidebar-header">
-          <h2 class="sidebar-title">{{ $t('settings.title') }}</h2>
           <button class="back-btn" @click="goToHome" :title="$t('settings.backToHome')">
             ←
           </button>
+          <h2 class="sidebar-title">{{ $t('settings.title') }}</h2>
         </div>
         <ul class="settings-nav">
           <li 
