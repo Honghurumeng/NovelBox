@@ -1,9 +1,4 @@
-# NovelBox
-
-[English](./README.md) | [中文](./README.zh-CN.md)
-
-
-**NovelBox - AI 驱动的小说写作助手**
+# NovelBox - AI 驱动的小说写作助手
 
 NovelBox 旨在通过AI工具集成来辅助进行小说写作，目前NovelBox仍处于早期的开发阶段，功能上有许多的不完善之处，欢迎提交PR！
 
