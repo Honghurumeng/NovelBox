@@ -369,45 +369,83 @@ export default {
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .edit-btn {
   background: var(--btn-secondary-bg);
   color: var(--btn-secondary-color);
+  border: 1px solid var(--border-color);
 }
 
 .edit-btn:hover {
   background: var(--nav-hover-bg);
+  border-color: var(--text-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .delete-btn {
   background: var(--btn-danger-bg);
   color: var(--btn-danger-color);
+  border: 1px solid var(--btn-danger-color);
 }
 
 .delete-btn:hover {
-  background: var(--reset-btn-hover-bg);
+  background: var(--btn-danger-color);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(197,48,48,0.3);
 }
 
 .export-btn {
-  background: var(--btn-info-bg, #17a2b8);
-  color: var(--btn-info-color, #fff);
+  background: var(--btn-info-bg);
+  color: var(--btn-info-color);
+  border: 1px solid var(--btn-info-color);
 }
 
 .export-btn:hover {
-  background: var(--btn-info-hover-bg, #138496);
+  background: var(--btn-info-color);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(43,108,176,0.3);
 }
 
 .open-btn {
   background: var(--btn-success-bg);
   color: var(--btn-success-color);
+  border: 1px solid var(--btn-success-color);
   flex: 1;
 }
 
 .open-btn:hover {
-  opacity: 0.9;
+  background: var(--btn-success-color);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(47,133,90,0.3);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 .no-novels {
