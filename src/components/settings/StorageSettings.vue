@@ -1,18 +1,18 @@
 <template>
   <div class="settings-section">
-    <h3 class="section-title">{{ $t('settings.storage.title') }}</h3>
+    <h3 class="section-title">存储设置</h3>
     <div class="setting-item">
-      <label class="setting-label">{{ $t('settings.storage.path') }}</label>
+      <label class="setting-label">存储路径</label>
       <div class="storage-path">
-        <span class="path-text">{{ storagePath || $t('settings.storage.loading') }}</span>
+        <span class="path-text">{{ storagePath || '加载中...' }}</span>
         <button @click="selectStoragePath" class="path-btn">
-          {{ $t('settings.storage.change') }}
+          更改
         </button>
       </div>
     </div>
     <div class="setting-item">
       <button @click="resetStoragePath" class="reset-btn">
-        {{ $t('settings.storage.reset') }}
+        重置为默认路径
       </button>
     </div>
   </div>
@@ -20,14 +20,12 @@
 
 <script>
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useUIStore } from '@/stores'
 
 export default {
   name: 'StorageSettings',
   emits: ['pathChanged'],
   setup(props, { emit }) {
-    const { t } = useI18n()
     const uiStore = useUIStore()
     
     const storagePath = ref('')
@@ -40,7 +38,7 @@ export default {
         emit('pathChanged', storagePath.value)
       } catch (error) {
         console.error('获取存储路径失败:', error)
-        storagePath.value = t('settings.storage.failed')
+        storagePath.value = '获取存储路径失败'
       }
     }
     
@@ -52,7 +50,7 @@ export default {
         emit('pathChanged', storagePath.value)
       } catch (error) {
         console.error('选择存储目录失败:', error)
-        alert(t('settings.storage.selectFailed'))
+        alert('选择存储目录失败')
       }
     }
     
@@ -64,7 +62,7 @@ export default {
         emit('pathChanged', storagePath.value)
       } catch (error) {
         console.error('重置存储目录失败:', error)
-        alert(t('settings.storage.resetFailed'))
+        alert('重置存储目录失败')
       }
     }
     

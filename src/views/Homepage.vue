@@ -1,14 +1,13 @@
 <template>
   <div class="homepage">
     <header class="header">
-      <h1>{{ $t('homepage.myNovels') }}</h1>
+      <h1>我的小说</h1>
       <div class="header-actions">
-        <LanguageSwitcher />
         <button class="settings-btn" @click="goToSettings">
-          {{ $t('settings.title') }}
+          设置
         </button>
         <button class="new-novel-btn" @click="showNewNovelModal">
-          {{ $t('homepage.createNewNovel') }}
+          创建新小说
         </button>
       </div>
     </header>
@@ -17,7 +16,7 @@
       <input 
         type="text" 
         v-model="searchQuery" 
-        :placeholder="$t('homepage.searchPlaceholder')"
+        placeholder="搜索小说..."
         class="search-input"
       >
     </div>
@@ -33,29 +32,29 @@
           <p class="novel-author">by {{ novel.author }}</p>
           <p class="novel-description">{{ novel.description }}</p>
           <div class="novel-meta">
-            <span class="chapter-count">{{ novel.chapters.length }} {{ $t('chapters.chapter') }}</span>
+            <span class="chapter-count">{{ novel.chapters.length }} 章</span>
             <span class="word-count">{{ formatTotalWordCount(novel) }}</span>
           </div>
         </div>
         
         <div class="novel-actions">
           <button class="btn edit-btn" @click="editNovel(novel)">
-            {{ $t('common.edit') }}
+            编辑
           </button>
           <button class="btn delete-btn" @click="deleteNovel(novel)">
-            {{ $t('common.delete') }}
+            删除
           </button>
           <button class="btn export-btn" @click="exportNovel(novel)">
-            {{ $t('homepage.exportNovel') }}
+            导出小说
           </button>
           <button class="btn open-btn" @click="openNovel(novel)">
-            {{ $t('homepage.openNovel') }}
+            打开小说
           </button>
         </div>
       </div>
       
       <div v-if="filteredNovels.length === 0" class="no-novels">
-        <p>{{ $t('homepage.noNovelsYet') }}</p>
+        <p>还没有小说，点击"创建新小说"开始创作吧！</p>
       </div>
     </div>
     
@@ -78,23 +77,19 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { useNovelsStore, useUIStore } from '@/stores'
 import { UtilsService } from '@/services'
 import NewNovelModal from '@/components/modals/NewNovelModal.vue'
 import EditNovelModal from '@/components/modals/EditNovelModal.vue'
-import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 export default {
   name: 'Homepage',
   components: {
     NewNovelModal,
-    EditNovelModal,
-    LanguageSwitcher
+    EditNovelModal
   },
   setup() {
     const router = useRouter()
-    const { t } = useI18n()
     const novelsStore = useNovelsStore()
     const uiStore = useUIStore()
 
@@ -193,10 +188,10 @@ export default {
         URL.revokeObjectURL(url)
 
         // 显示成功消息
-        uiStore.showSaveMessage(t('homepage.exportSuccess'))
+        uiStore.showSaveMessage('小说导出成功')
       } catch (error) {
         console.error('导出小说失败:', error)
-        alert(t('homepage.exportError', { error: error.message }))
+        alert('导出失败：' + error.message)
       }
     }
 

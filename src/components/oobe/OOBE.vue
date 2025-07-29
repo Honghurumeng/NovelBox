@@ -6,27 +6,25 @@
         <div v-if="currentPage === 1" class="oobe-page">
           <div class="oobe-logo">📚</div>
           <h1>NovelBox</h1>
-          <p class="subtitle">{{ $t('oobe.page1.subtitle') }}</p>
+          <p class="subtitle">欢迎使用NovelBox，您的AI辅助小说创作工具</p>
           
           <div class="language-selector">
-            <label>{{ $t('oobe.page1.language') }}</label>
-            <select v-model="selectedLocale" @change="changeLocale" class="language-select">
-              <option v-for="locale in availableLocales" :key="locale.code" :value="locale.code">
-                {{ locale.name }}
-              </option>
+            <label>语言</label>
+            <select class="language-select" disabled>
+              <option selected>中文</option>
             </select>
           </div>
           
           <div class="oobe-navigation">
-            <button @click="nextPage" class="next-btn">{{ $t('oobe.next') }}</button>
+            <button @click="nextPage" class="next-btn">下一步</button>
           </div>
         </div>
         
         <!-- 第二页：跨平台支持 -->
         <div v-else-if="currentPage === 2" class="oobe-page">
           <div class="feature-icon">💻</div>
-          <h2>{{ $t('oobe.page2.title') }}</h2>
-          <p class="feature-description">{{ $t('oobe.page2.description') }}</p>
+          <h2>跨平台支持</h2>
+          <p class="feature-description">NovelBox基于Electron构建，支持Windows、macOS和Linux操作系统，让您在任何平台上都能流畅创作。</p>
           
           <div class="tech-stack">
             <span class="tech-item">Electron</span>
@@ -35,25 +33,25 @@
           </div>
           
           <div class="oobe-navigation">
-            <button @click="prevPage" class="prev-btn">{{ $t('oobe.previous') }}</button>
-            <button @click="nextPage" class="next-btn">{{ $t('oobe.next') }}</button>
+            <button @click="prevPage" class="prev-btn">上一步</button>
+            <button @click="nextPage" class="next-btn">下一步</button>
           </div>
         </div>
         
         <!-- 第三页：开源 -->
         <div v-else-if="currentPage === 3" class="oobe-page">
           <div class="feature-icon">🔓</div>
-          <h2>{{ $t('oobe.page3.title') }}</h2>
-          <p class="feature-description">{{ $t('oobe.page3.description') }}</p>
+          <h2>开源项目</h2>
+          <p class="feature-description">NovelBox是一个完全开源的项目，您可以在GitHub上查看源代码、提交问题或贡献功能。</p>
           
           <ul class="features-list">
-            <li>{{ $t('oobe.page3.feature1') }}</li>
-            <li>{{ $t('oobe.page3.feature2') }}</li>
+            <li>完全免费使用，无任何隐藏费用</li>
+            <li>支持本地存储，保护您的创作隐私</li>
           </ul>
           
           <div class="oobe-navigation">
-            <button @click="prevPage" class="prev-btn">{{ $t('oobe.previous') }}</button>
-            <button @click="finishOOBE" class="finish-btn">{{ $t('oobe.finish') }}</button>
+            <button @click="prevPage" class="prev-btn">上一步</button>
+            <button @click="finishOOBE" class="finish-btn">开始使用</button>
           </div>
         </div>
       </div>
@@ -63,21 +61,12 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'OOBE',
   setup() {
-    const { t, locale } = useI18n()
-    
     const showOOBE = ref(false)
     const currentPage = ref(1)
-    const selectedLocale = ref(locale.value)
-    
-    const availableLocales = [
-      { code: 'zh', name: '中文' },
-      { code: 'en', name: 'English' }
-    ]
     
     // 检查是否需要显示OOBE
     onMounted(() => {
@@ -86,11 +75,6 @@ export default {
         showOOBE.value = true
       }
     })
-    
-    const changeLocale = () => {
-      locale.value = selectedLocale.value
-      localStorage.setItem('novelbox-locale', selectedLocale.value)
-    }
     
     const nextPage = () => {
       if (currentPage.value < 3) {
@@ -112,9 +96,6 @@ export default {
     return {
       showOOBE,
       currentPage,
-      selectedLocale,
-      availableLocales,
-      changeLocale,
       nextPage,
       prevPage,
       finishOOBE

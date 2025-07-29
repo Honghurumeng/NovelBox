@@ -2,41 +2,41 @@
   <div class="modal-overlay" @click="closeModal">
     <div class="modal-content" @click.stop>
       <div class="modal-header">
-        <h2>{{ $t('modals.editNovel.title') }}</h2>
+        <h2>编辑小说</h2>
         <button class="close-btn" @click="closeModal">&times;</button>
       </div>
       
       <form @submit.prevent="updateNovel" class="modal-form">
         <div class="form-group">
-          <label for="novelName">{{ $t('modals.editNovel.nameLabel') }}</label>
+          <label for="novelName">小说名称</label>
           <input
             id="novelName"
             v-model="formData.name"
             type="text"
-            :placeholder="$t('modals.editNovel.namePlaceholder')"
+            placeholder="请输入小说名称"
             class="form-input"
             required
           >
         </div>
         
         <div class="form-group">
-          <label for="novelAuthor">{{ $t('modals.editNovel.authorLabel') }}</label>
+          <label for="novelAuthor">作者</label>
           <input
             id="novelAuthor"
             v-model="formData.author"
             type="text"
-            :placeholder="$t('modals.editNovel.authorPlaceholder')"
+            placeholder="请输入作者名"
             class="form-input"
             required
           >
         </div>
         
         <div class="form-group">
-          <label for="novelDescription">{{ $t('modals.editNovel.descriptionLabel') }}</label>
+          <label for="novelDescription">简介</label>
           <textarea
             id="novelDescription"
             v-model="formData.description"
-            :placeholder="$t('modals.editNovel.descriptionPlaceholder')"
+            placeholder="请输入小说简介"
             class="form-textarea"
             rows="4"
           ></textarea>
@@ -44,10 +44,10 @@
         
         <div class="form-actions">
           <button type="button" class="btn btn-secondary" @click="closeModal">
-            {{ $t('common.cancel') }}
+            取消
           </button>
           <button type="submit" class="btn btn-primary">
-            {{ $t('common.save') }}
+            保存
           </button>
         </div>
       </form>
@@ -57,7 +57,6 @@
 
 <script>
 import { reactive, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'EditNovelModal',
@@ -69,7 +68,6 @@ export default {
   },
   emits: ['close', 'update'],
   setup(props, { emit }) {
-    const { t } = useI18n()
     
     const formData = reactive({
       name: '',

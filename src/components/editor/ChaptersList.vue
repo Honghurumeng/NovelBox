@@ -1,11 +1,11 @@
 <template>
   <div class="chapters-list-container">
     <div class="sidebar-header">
-      <span v-if="!uiStore.leftSidebarCollapsed" class="sidebar-title">{{ $t('editor.sidebar.chaptersList') }}</span>
+      <span v-if="!uiStore.leftSidebarCollapsed" class="sidebar-title">章节列表</span>
       <button 
         class="toggle-sidebar-btn right-btn"
         @click="uiStore.toggleLeftSidebar()"
-        :title="$t('common.toggleSidebar')"
+        title="收起侧边栏"
       >
         <span class="toggle-icon">{{ uiStore.leftSidebarCollapsed ? '›' : '‹' }}</span>
       </button>
@@ -33,7 +33,7 @@
         <div class="chapter-actions" @click.stop>
           <button 
             class="action-btn drag-handle" 
-            :title="$t('common.dragToReorder')"
+            title="拖拽排序"
             draggable="true"
             @dragstart="handleDragStart($event, chapter.id)"
             @dragover="handleDragOver"
@@ -45,14 +45,14 @@
           <button 
             class="action-btn" 
             @click="editChapterTitle(chapter.id)" 
-            :title="$t('common.edit')"
+            title="编辑"
           >
             ✏️
           </button>
           <button 
             class="action-btn delete" 
             @click="handleDeleteClick($event, chapter.id)" 
-            :title="$t('chapters.deleteWithShortcut')"
+            title="删除（ctrl+d）"
           >
             🗑️
           </button>
@@ -61,14 +61,14 @@
     </div>
     
     <div v-if="!uiStore.leftSidebarCollapsed" class="btn-add-chapter" @click="addNewChapter">
-      {{ $t('editor.sidebar.addNewChapter') }}
+      + 添加新章节
     </div>
     
     <!-- 编辑章节标题模态框 -->
     <div v-if="showEditModal" class="modal-overlay" @click="closeEditModal">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h3>{{ $t('common.edit') }} {{ $t('editor.sidebar.chaptersList') }}</h3>
+          <h3>编辑 章节列表</h3>
           <button class="close-btn" @click="closeEditModal">&times;</button>
         </div>
         <div class="modal-body">
@@ -76,17 +76,17 @@
             v-model="editingTitle" 
             type="text" 
             class="title-input"
-            :placeholder="$t('editor.chapterTitlePlaceholder')"
+            placeholder="章节标题"
             @keyup.enter="confirmEditTitle"
             ref="titleInput"
           >
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="closeEditModal">
-            {{ $t('common.cancel') }}
+            取消
           </button>
           <button class="btn btn-primary" @click="confirmEditTitle">
-            {{ $t('common.save') }}
+            保存
           </button>
         </div>
       </div>
@@ -96,18 +96,18 @@
     <div v-if="showDeleteModal" class="modal-overlay" @click="closeDeleteModal">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h3>{{ $t('common.delete') }} {{ $t('editor.sidebar.chaptersList') }}</h3>
+          <h3>删除 章节列表</h3>
           <button class="close-btn" @click="closeDeleteModal">&times;</button>
         </div>
         <div class="modal-body">
-          <p>{{ $t('chapters.deleteConfirmation') }}</p>
+          <p>确定要删除这个章节吗？此操作无法撤销。</p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="closeDeleteModal">
-            {{ $t('common.cancel') }}
+            取消
           </button>
           <button class="btn btn-danger" @click="confirmDeleteChapter">
-            {{ $t('common.delete') }}
+            删除
           </button>
         </div>
       </div>
@@ -119,12 +119,10 @@
 import { ref, nextTick, computed } from 'vue'
 import { useChaptersStore, useUIStore } from '@/stores'
 import { UtilsService } from '@/services'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ChaptersList',
   setup() {
-    const { t } = useI18n()
     const chaptersStore = useChaptersStore()
     const uiStore = useUIStore()
     
@@ -208,7 +206,7 @@ export default {
 
     const confirmDeleteChapter = async () => {
       if (chapters.value.length <= 1) {
-        alert(t('chapters.atLeastOneChapter'))
+        alert('至少需要保留一个章节')
         return
       }
 
@@ -242,7 +240,7 @@ export default {
 
     const directDeleteChapter = async (chapterId) => {
       if (chapters.value.length <= 1) {
-        alert(t('chapters.atLeastOneChapter'))
+        alert('至少需要保留一个章节')
         return
       }
 

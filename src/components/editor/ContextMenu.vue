@@ -9,31 +9,30 @@
     <!-- AI重写功能 - 直接放在一级菜单 -->
     <div class="context-menu-item" @click="handleRewrite('expand')">
       <span class="menu-icon">📈</span>
-      {{ $t('editor.rewriteTooltip.expand') }}
+      扩写
     </div>
     <div class="context-menu-item" @click="handleRewrite('contract')">
       <span class="menu-icon">📉</span>
-      {{ $t('editor.rewriteTooltip.contract') }}
+      缩写
     </div>
     <div class="context-menu-item" @click="handleRewrite('beautify')">
       <span class="menu-icon">✨</span>
-      {{ $t('editor.rewriteTooltip.beautify') }}
+      美化文笔
     </div>
     <div class="context-menu-item" @click="handleRewrite('continue')">
       <span class="menu-icon">✍️</span>
-      {{ $t('editor.rewriteTooltip.continue') }}
+      续写
     </div>
     <div class="menu-divider"></div>
     <div class="context-menu-item" @click="handleRewrite('custom')">
       <span class="menu-icon">⚙️</span>
-      {{ $t('editor.rewriteTooltip.custom') }}
+      自定义
     </div>
   </div>
 </template>
 
 <script>
 import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ContextMenu',
@@ -57,7 +56,6 @@ export default {
   },
   emits: ['rewrite', 'hide'],
   setup(props, { emit }) {
-    const { t } = useI18n()
     const contextMenu = ref(null)
 
     const menuStyle = computed(() => ({

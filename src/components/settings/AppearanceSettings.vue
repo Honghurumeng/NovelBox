@@ -1,8 +1,8 @@
 <template>
   <div class="settings-section">
-    <h3 class="section-title">{{ $t('settings.appearance.title') }}</h3>
+    <h3 class="section-title">外观设置</h3>
     <div class="setting-item">
-      <label class="setting-label">{{ $t('settings.appearance.theme') }}</label>
+      <label class="setting-label">主题</label>
       <div class="theme-options">
         <div 
           v-for="theme in themes" 
@@ -18,7 +18,7 @@
               <div class="preview-main"></div>
             </div>
           </div>
-          <span class="theme-name">{{ $t(theme.name) }}</span>
+          <span class="theme-name">{{ getThemeName(theme.id) }}</span>
         </div>
       </div>
     </div>
@@ -36,14 +36,20 @@ export default {
     
     // 主题选项
     const themes = [
-      { id: 'light', name: 'settings.appearance.themes.light' },
-      { id: 'dark', name: 'settings.appearance.themes.dark' },
-      { id: 'oled', name: 'settings.appearance.themes.oled' },
-      { id: 'blue', name: 'settings.appearance.themes.blue' },
-      { id: 'green', name: 'settings.appearance.themes.green' },
-      { id: 'purple', name: 'settings.appearance.themes.purple' },
-      { id: 'cream', name: 'settings.appearance.themes.cream' }
+      { id: 'light', name: '浅色' },
+      { id: 'dark', name: '深色' },
+      { id: 'oled', name: 'OLED' },
+      { id: 'blue', name: '蓝色' },
+      { id: 'green', name: '绿色' },
+      { id: 'purple', name: '紫色' },
+      { id: 'cream', name: '护眼浅黄' }
     ]
+    
+    // 获取主题名称
+    const getThemeName = (themeId) => {
+      const theme = themes.find(t => t.id === themeId)
+      return theme ? theme.name : themeId
+    }
     
     onMounted(() => {
       // 获取当前主题
@@ -61,7 +67,8 @@ export default {
     return {
       selectedTheme,
       themes,
-      changeTheme
+      changeTheme,
+      getThemeName
     }
   }
 }

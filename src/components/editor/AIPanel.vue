@@ -4,13 +4,13 @@
       <button 
         class="toggle-sidebar-btn left-btn"
         @click="uiStore.toggleRightSidebar()"
-        :title="$t('common.toggleSidebar')"
+        title="收起侧边栏"
       >
         <span class="toggle-icon">{{ uiStore.rightSidebarCollapsed ? '‹' : '›' }}</span>
       </button>
       <h2 v-if="!uiStore.rightSidebarCollapsed" class="panel-title">
         <span class="ai-icon">🤖</span>
-        {{ $t('editor.aiPanel.title') }}
+        AI工具
       </h2>
     </div>
     
@@ -29,16 +29,16 @@
         
         <!-- 原文显示 -->
         <div class="original-text-section">
-          <div class="section-label">{{ $t('editor.aiPanel.originalText') }}</div>
+          <div class="section-label">原文</div>
           <div class="original-text">{{ rewriteSession.originalText }}</div>
         </div>
         
         <!-- 重写结果显示 -->
         <div class="rewrite-result-section">
           <div class="section-label">
-            {{ $t('editor.aiPanel.rewriteResult') }}
+            重写结果
             <span v-if="isStreaming" class="streaming-indicator">
-              {{ $t('editor.aiPanel.generating') }}
+              生成中
               <span class="dots">...</span>
             </span>
           </div>
@@ -58,7 +58,7 @@
             </div>
             <button class="retry-btn error-retry-btn" @click="retryRewrite">
               <span class="btn-icon">🔄</span>
-              {{ $t('editor.aiPanel.retry') }}
+              重试
             </button>
           </div>
         </div>
@@ -66,23 +66,23 @@
         <!-- 操作按钮 -->
         <div v-if="!isStreaming && (displayText || rewriteError)" class="action-buttons">
           <button v-if="displayText && !rewriteError" class="action-btn replace-btn" @click="replaceText">
-            {{ $t('editor.aiPanel.replace') }}
+            替换
           </button>
           <button v-if="displayText && !rewriteError" class="action-btn insert-btn" @click="insertText">
-            {{ $t('editor.aiPanel.insert') }}
+            插入
           </button>
           <button class="action-btn retry-btn" @click="retryRewrite">
-            {{ $t('editor.aiPanel.retry') }}
+            重试
           </button>
         </div>
         
         <!-- 进一步要求输入 -->
         <div v-if="!isStreaming && displayText && !rewriteError" class="further-request">
-          <div class="section-label">{{ $t('editor.aiPanel.furtherRequest') }}</div>
+          <div class="section-label">进一步要求</div>
           <textarea 
             v-model="furtherPrompt"
             class="further-prompt-input"
-            :placeholder="$t('editor.aiPanel.furtherPromptPlaceholder')"
+            placeholder="输入进一步的要求或修改建议..."
             @keydown.ctrl.enter="applyFurtherRequest"
           ></textarea>
           <button 
@@ -91,7 +91,7 @@
             :disabled="!furtherPrompt.trim() || isStreaming"
           >
             <span class="btn-icon">🚀</span>
-            {{ $t('editor.aiPanel.applyFurther') }}
+            应用
           </button>
         </div>
       </div>
@@ -100,24 +100,24 @@
       <div v-else class="default-state">
         <div class="welcome-section">
           <div class="welcome-icon">🤖</div>
-          <h3 class="welcome-title">{{ $t('editor.aiPanel.welcomeTitle') }}</h3>
-          <p class="welcome-description">{{ $t('editor.aiPanel.welcomeDescription') }}</p>
+          <h3 class="welcome-title">AI写作助手</h3>
+          <p class="welcome-description">选择文本并右键使用AI重写功能</p>
         </div>
         
         <div class="tips-section">
-          <div class="section-label">{{ $t('editor.aiPanel.tips') }}</div>
+          <div class="section-label">使用提示</div>
           <div class="tips-list">
             <div class="tip-item">
               <span class="tip-icon">💡</span>
-              {{ $t('editor.aiPanel.tip1') }}
+              选中文本后右键查看重写选项
             </div>
             <div class="tip-item">
               <span class="tip-icon">✨</span>
-              {{ $t('editor.aiPanel.tip2') }}
+              支持扩写、缩写、美化和自定义重写
             </div>
             <div class="tip-item">
               <span class="tip-icon">🎯</span>
-              {{ $t('editor.aiPanel.tip3') }}
+              可以基于重写结果进行进一步优化
             </div>
           </div>
         </div>
@@ -129,7 +129,6 @@
 <script>
 import { ref, computed, watch, nextTick } from 'vue'
 import { useUIStore } from '@/stores'
-import { useI18n } from 'vue-i18n'
 import { llmService, LLMRequest } from '@/services'
 
 export default {
@@ -142,7 +141,6 @@ export default {
   },
   emits: ['replace-text', 'insert-text', 'close-session'],
   setup(props, { emit }) {
-    const { t } = useI18n()
     const uiStore = useUIStore()
     
     const displayText = ref('')
@@ -160,7 +158,7 @@ export default {
       try {
         const config = getRewriteConfig()
         if (!config) {
-          throw new Error(t('editor.rewriteTooltip.noModelConfigured'))
+          throw new Error('请先在设置中配置重写模型')
         }
         
         const prompt = generatePrompt(
@@ -230,11 +228,11 @@ export default {
     
     const getRewriteTypeLabel = (type) => {
       const labels = {
-        expand: t('editor.rewriteTooltip.expand'),
-        contract: t('editor.rewriteTooltip.contract'),
-        beautify: t('editor.rewriteTooltip.beautify'),
-        continue: t('editor.rewriteTooltip.continue'),
-        custom: t('editor.rewriteTooltip.custom')
+        expand: '扩写',
+        contract: '缩写',
+        beautify: '美化文笔',
+        continue: '续写',
+        custom: '自定义'
       }
       return labels[type] || type
     }

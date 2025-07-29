@@ -28,12 +28,12 @@
 }
 <template>
   <div class="provider-settings">
-    <h3 class="section-title">{{ $t('settings.provider.title') }}</h3>
+    <h3 class="section-title">提供商设置</h3>
     <div class="provider-container">
       <div class="provider-list">
         <div class="list-header">
-          <h4>{{ $t('settings.provider.listTitle') }}</h4>
-          <button class="add-provider-btn" @click="showAddProviderModal" :title="$t('settings.provider.add')">
+          <h4>提供商列表</h4>
+          <button class="add-provider-btn" @click="showAddProviderModal" title="添加提供商">
             +
           </button>
         </div>
@@ -49,7 +49,7 @@
               {{ getProviderIcon(provider.type) }}
             </div>
             <div class="provider-info">
-              <div class="provider-name">{{ provider.name || $t('settings.provider.untitled') }}</div>
+              <div class="provider-name">{{ provider.name || '未命名提供商' }}</div>
               <div class="provider-type">{{ provider.type }}</div>
             </div>
           </div>
@@ -59,25 +59,25 @@
       <div class="provider-details">
         <div v-if="selectedProvider" class="details-content">
           <div class="details-header">
-            <h4>{{ selectedProvider.name || $t('settings.provider.untitled') }}</h4>
+            <h4>{{ selectedProvider.name || '未命名提供商' }}</h4>
             <button class="delete-btn" @click="deleteProvider(selectedProvider.id)">
-              {{ $t('common.delete') }}
+              删除
             </button>
           </div>
 
           <div class="details-form-body">
             <div class="form-group">
-              <label>{{ $t('settings.provider.name') }}</label>
+              <label>提供商名称</label>
               <input
                 v-model="selectedProvider.name"
                 type="text"
                 class="form-input"
-                :placeholder="$t('settings.provider.namePlaceholder')"
+                placeholder="输入提供商名称"
               >
             </div>
 
             <div class="form-group">
-              <label>{{ $t('settings.provider.type') }}</label>
+              <label>提供商类型</label>
               <select v-model="selectedProvider.type" class="form-select" disabled>
                 <option value="OpenAI">OpenAI</option>
                 <option value="Gemini">Gemini</option>
@@ -85,32 +85,32 @@
             </div>
 
             <div class="form-group">
-              <label>{{ $t('settings.provider.baseUrl') }}</label>
+              <label>API基础URL</label>
               <input
                 v-model="selectedProvider.base_url"
                 type="text"
                 class="form-input"
-                :placeholder="$t('settings.provider.baseUrlPlaceholder')"
+                placeholder="例如: https://api.openai.com/v1"
               >
             </div>
 
             <div class="form-group">
-              <label>{{ $t('settings.provider.apiKey') }}</label>
+              <label>API密钥</label>
               <input
                 v-model="selectedProvider.api_key"
                 type="password"
                 class="form-input"
-                :placeholder="$t('settings.provider.apiKeyPlaceholder')"
+                placeholder="输入您的API密钥"
                 @blur="fetchModels"
               >
             </div>
 
             <div class="form-group models-section">
               <div class="models-header">
-                <label>{{ $t('settings.provider.models') }}</label>
+                <label>模型列表</label>
                 <div class="models-actions">
                   <button class="fetch-models-btn" @click="fetchModels">
-                    {{ $t('settings.provider.fetchModels') }}
+                    获取模型列表
                   </button>
                 </div>
               </div>
@@ -126,19 +126,19 @@
                       v-if="selectedProvider.type === 'OpenAI'"
                       type="text"
                       class="model-input"
-                      :placeholder="$t('settings.provider.modelName')"
+                      placeholder="模型名称"
                     >
                     <input
                       v-model="model.name"
                       v-else
                       type="text"
                       class="model-input"
-                      :placeholder="$t('settings.provider.modelName')"
+                      placeholder="模型名称"
                     >
                     <button
                       class="remove-model-btn"
                       @click="removeModel(index)"
-                      :title="$t('common.delete')"
+                      title="删除"
                     >
                       ×
                     </button>
@@ -148,7 +148,7 @@
                       v-model="newModelName"
                       type="text"
                       class="model-input"
-                      :placeholder="$t('settings.provider.addModelPlaceholder')"
+                      placeholder="输入模型名称并按回车添加"
                       @keyup.enter="addModel"
                     >
                     <button
@@ -160,7 +160,7 @@
                     </button>
                   </div>
                   <div v-if="selectedProvider.models.length === 0 && !newModelName" class="no-models">
-                    {{ $t('settings.provider.noModels') }}
+                    暂无模型，请添加或获取模型列表
                   </div>
                 </div>
               </div>
@@ -169,13 +169,13 @@
           
           <div class="form-actions">
             <button class="save-btn" @click="saveProvider">
-              {{ $t('common.save') }}
+              保存
             </button>
           </div>
         </div>
 
         <div v-else class="no-selection">
-          <p>{{ $t('settings.provider.selectProvider') }}</p>
+          <p>请选择一个提供商进行配置</p>
         </div>
       </div>
     </div>
@@ -183,33 +183,33 @@
     <div v-if="showAddModal" class="modal-overlay" @click="closeAddModal">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h3>{{ $t('settings.provider.add') }}</h3>
+          <h3>添加提供商</h3>
           <button class="close-btn" @click="closeAddModal">×</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>{{ $t('settings.provider.type') }}</label>
+            <label>提供商类型</label>
             <select v-model="newProvider.type" class="form-select">
               <option value="OpenAI">OpenAI</option>
               <option value="Gemini">Gemini</option>
             </select>
           </div>
           <div class="form-group">
-            <label>{{ $t('settings.provider.name') }}</label>
+            <label>提供商名称</label>
             <input
               v-model="newProvider.name"
               type="text"
               class="form-input"
-              :placeholder="$t('settings.provider.namePlaceholder')"
+              placeholder="输入提供商名称"
             >
           </div>
         </div>
         <div class="modal-footer">
           <button class="cancel-btn" @click="closeAddModal">
-            {{ $t('common.cancel') }}
+            取消
           </button>
           <button class="confirm-btn" @click="addProvider">
-            {{ $t('common.confirm') }}
+            确认
           </button>
         </div>
       </div>
@@ -219,9 +219,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
 
 // 提供商数据
 const providers = ref([])
@@ -264,7 +261,7 @@ const closeAddModal = () => {
 // 添加提供商
 const addProvider = () => {
   if (!newProvider.value.name.trim()) {
-    alert(t('settings.provider.nameRequired'))
+    alert('请输入提供商名称')
     return
   }
   
@@ -289,7 +286,7 @@ const selectProvider = (provider) => {
 
 // 删除提供商
 const deleteProvider = (id) => {
-  if (!confirm(t('settings.provider.deleteConfirm'))) return
+  if (!confirm('确定要删除这个提供商吗？')) return
   
   const index = providers.value.findIndex(p => p.id === id)
   if (index !== -1) {
@@ -306,13 +303,13 @@ const deleteProvider = (id) => {
 // 保存提供商
 const saveProvider = () => {
   saveProviders()
-  alert(t('settings.provider.saved'))
+  alert('提供商配置已保存')
 }
 
 // 从上游获取模型列表
 const fetchModels = async () => {
   if (!selectedProvider.value || !selectedProvider.value.api_key) {
-    alert(t('settings.provider.apiKeyRequired'));
+    alert('请输入API密钥');
     return;
   }
   
@@ -370,7 +367,7 @@ const fetchModels = async () => {
     saveProviders();
   } catch (error) {
     console.error('获取模型列表失败:', error);
-    alert(t('settings.provider.fetchModelsFailed') + ': ' + error.message);
+    alert('获取模型列表失败' + ': ' + error.message);
     // 恢复原始模型列表
     if (selectedProvider.value) {
       selectedProvider.value.models = originalModels;
@@ -606,10 +603,6 @@ onMounted(() => {
   outline: none;
   border-color: var(--accent-color);
   box-shadow: 0 0 0 2px var(--accent-shadow);
-}
-
-.models-list-container {
-  /* Container for the list */
 }
 
 .models-list {

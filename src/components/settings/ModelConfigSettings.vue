@@ -1,25 +1,25 @@
 <template>
   <div class="settings-section">
-    <h2 class="section-title">{{ $t('settings.aiFeatures.title') }}</h2>
+    <h2 class="section-title">AI功能</h2>
     
     <!-- 文本重写模型配置 -->
     <div class="setting-item">
-      <label class="setting-label">{{ $t('settings.aiFeatures.rewriteModel') }}</label>
+      <label class="setting-label">文本重写模型</label>
       
       <div v-if="availableProviders.length === 0" class="no-providers-warning">
-        {{ $t('settings.aiFeatures.noProvidersConfigured') }}
+        未配置提供商。请先在提供商设置中配置。
       </div>
       
       <div v-else class="model-config">
         <!-- 选择提供商 -->
         <div class="config-field">
-          <label class="field-label">{{ $t('settings.aiFeatures.selectProvider') }}</label>
+          <label class="field-label">选择提供商</label>
           <select 
             v-model="selectedProvider" 
             class="setting-select"
             @change="onProviderChange"
           >
-            <option value="">{{ $t('settings.aiFeatures.selectProvider') }}</option>
+            <option value="">选择提供商</option>
             <option 
               v-for="provider in availableProviders" 
               :key="provider.key"
@@ -32,13 +32,13 @@
 
         <!-- 选择模型 -->
         <div v-if="selectedProvider" class="config-field">
-          <label class="field-label">{{ $t('settings.aiFeatures.selectModel') }}</label>
+          <label class="field-label">选择模型</label>
           <select 
             v-model="selectedModel" 
             class="setting-select"
             @change="onModelChange"
           >
-            <option value="">{{ $t('settings.aiFeatures.selectModel') }}</option>
+            <option value="">选择模型</option>
             <option 
               v-for="model in availableModels" 
               :key="model.id || model.name"

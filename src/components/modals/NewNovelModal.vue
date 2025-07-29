@@ -2,19 +2,19 @@
   <div class="modal-overlay" @click="closeModal">
     <div class="modal-content" @click.stop>
       <div class="modal-header">
-        <h2 class="modal-title">{{ $t('modals.newNovel.title') }}</h2>
+        <h2 class="modal-title">创建新小说</h2>
         <button class="close-btn" @click="closeModal">&times;</button>
       </div>
       
       <div class="modal-body">
         <form @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label for="novelName" class="form-label">{{ $t('modals.newNovel.nameLabel') }}</label>
+            <label for="novelName" class="form-label">小说名称</label>
             <input
               id="novelName"
               v-model="formData.name"
               type="text"
-              :placeholder="$t('modals.newNovel.namePlaceholder')"
+              placeholder="请输入小说名称"
               class="form-input"
               required
               maxlength="100"
@@ -23,12 +23,12 @@
           </div>
           
             <div class="form-group">
-              <label for="novelAuthor" class="form-label">{{ $t('modals.newNovel.authorLabel') }}</label>
+              <label for="novelAuthor" class="form-label">作者</label>
               <input
                 id="novelAuthor"
                 v-model="formData.author"
                 type="text"
-                :placeholder="$t('modals.newNovel.authorPlaceholder')"
+                placeholder="请输入作者名"
                 class="form-input"
                 required
                 maxlength="50"
@@ -36,11 +36,11 @@
             </div>
             
             <div class="form-group">
-              <label for="novelDescription" class="form-label">{{ $t('modals.newNovel.descriptionLabel') }}</label>
+              <label for="novelDescription" class="form-label">简介</label>
               <textarea
                 id="novelDescription"
                 v-model="formData.description"
-                :placeholder="$t('modals.newNovel.descriptionPlaceholder')"
+                placeholder="请输入小说简介"
                 class="form-textarea"
                 rows="4"
                 maxlength="500"
@@ -49,10 +49,10 @@
           
           <div class="modal-footer">
             <button type="button" class="btn btn-cancel" @click="closeModal">
-              {{ $t('common.cancel') }}
+              取消
             </button>
             <button type="submit" class="btn btn-create" :disabled="submitting">
-              {{ submitting ? $t('common.saving') : $t('common.save') }}
+              {{ submitting ? "保存中..." : "保存" }}
             </button>
           </div>
         </form>
@@ -63,14 +63,12 @@
 
 <script>
 import { ref, watch, nextTick } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useNovelsStore, useUIStore } from '@/stores'
 import { UtilsService } from '@/services'
 
 export default {
   name: 'NewNovelModal',
   setup() {
-    const { t } = useI18n()
     const novelsStore = useNovelsStore()
     const uiStore = useUIStore()
     

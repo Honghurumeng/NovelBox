@@ -5,7 +5,7 @@
         ref="editorTextarea"
         v-model="editorContent"
         class="chapter-editor" 
-        :placeholder="$t('editor.startWriting')"
+        placeholder="开始写作..."
         @input="handleEditorInput"
         @mouseup="handleTextSelection"
         @keyup="handleTextSelection"
@@ -26,7 +26,7 @@
       <div v-if="showCustomPromptModal" class="modal-overlay" @click="hideCustomPromptModal">
         <div class="custom-prompt-modal" @click.stop>
           <div class="modal-header">
-            <h3 class="modal-title">{{ $t('editor.rewriteTooltip.custom') }}</h3>
+            <h3 class="modal-title">自定义</h3>
             <button class="modal-close" @click="hideCustomPromptModal">×</button>
           </div>
           
@@ -35,7 +35,7 @@
               ref="customPromptTextarea"
               v-model="customPrompt"
               class="custom-prompt-textarea"
-              :placeholder="$t('editor.rewriteTooltip.customPromptPlaceholder')"
+              placeholder="输入自定义提示..."
               @keydown.ctrl.enter.exact.prevent="applyCustomPrompt"
               @keydown.esc="hideCustomPromptModal"
             ></textarea>
@@ -47,13 +47,13 @@
               @click="applyCustomPrompt"
               :disabled="!customPrompt.trim()"
             >
-              {{ $t('editor.rewriteTooltip.apply') }}
+              应用
             </button>
             <button 
               class="action-btn cancel-btn" 
               @click="hideCustomPromptModal"
             >
-              {{ $t('editor.rewriteTooltip.cancel') }}
+              取消
             </button>
           </div>
         </div>
@@ -66,7 +66,6 @@
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNovelsStore, useChaptersStore, useUIStore } from '@/stores'
-import { useI18n } from 'vue-i18n'
 import { llmService, LLMRequest } from '@/services'
 import ContextMenu from './ContextMenu.vue'
 
@@ -77,7 +76,6 @@ export default {
   },
   emits: ['start-rewrite'],
   setup(props, { emit }) {
-    const { t } = useI18n()
     const router = useRouter()
     const novelsStore = useNovelsStore()
     const chaptersStore = useChaptersStore()

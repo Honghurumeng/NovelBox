@@ -4,10 +4,10 @@
       <!-- 左侧导航 -->
       <div class="settings-sidebar">
         <div class="sidebar-header">
-          <button class="back-btn" @click="goToHome" :title="$t('settings.backToHome')">
+          <button class="back-btn" @click="goToHome" title="返回主页">
             ←
           </button>
-          <h2 class="sidebar-title">{{ $t('settings.title') }}</h2>
+          <h2 class="sidebar-title">设置</h2>
         </div>
         <ul class="settings-nav">
           <li 
@@ -18,22 +18,16 @@
             @click="activeCategory = category.id"
           >
             <span class="nav-icon">{{ category.icon }}</span>
-            <span class="nav-label">{{ $t(category.label) }}</span>
+            <span class="nav-label">{{ getCategoryLabel(category.label) }}</span>
           </li>
         </ul>
       </div>
       
       <!-- 右侧内容 -->
       <div class="settings-content">
-        <!-- 语言设置 -->
-        <LanguageSettings 
-          v-if="activeCategory === 'language'" 
-          @locale-changed="handleLocaleChange"
-        />
-        
         <!-- 主题设置 -->
         <AppearanceSettings 
-          v-else-if="activeCategory === 'appearance'" 
+          v-if="activeCategory === 'appearance'" 
           @theme-changed="handleThemeChange"
         />
         
@@ -68,10 +62,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useUIStore } from '@/stores'
 import { useRouter } from 'vue-router'
-import LanguageSettings from '@/components/settings/LanguageSettings.vue'
 import AppearanceSettings from '@/components/settings/AppearanceSettings.vue'
 import StorageSettings from '@/components/settings/StorageSettings.vue'
 import ProviderSettings from '@/components/settings/ProviderSettings.vue'
@@ -79,18 +71,28 @@ import ModelConfigSettings from '@/components/settings/ModelConfigSettings.vue'
 import DeveloperSettings from '@/components/settings/DeveloperSettings.vue'
 import AboutSection from '@/components/settings/AboutSection.vue'
 
-const { t, locale } = useI18n()
 const uiStore = useUIStore()
 const router = useRouter()
 
-const activeCategory = ref('language')
-const selectedLocale = ref(locale.value)
+const activeCategory = ref('appearance')
 const selectedTheme = ref('light')
 const storagePath = ref('')
 
+// 设置分类标签映射
+const getCategoryLabel = (labelKey) => {
+  const labels = {
+    'settings.appearance.title': '外观设置',
+    'settings.storage.title': '存储设置',
+    'settings.provider.title': '提供商设置',
+    'settings.aiFeatures.title': 'AI功能',
+    'settings.developer.title': '开发者选项',
+    'about.title': '关于'
+  }
+  return labels[labelKey] || labelKey
+}
+
 // 设置分类
 const categories = [
-  { id: 'language', label: 'settings.language.title', icon: '🌐' },
   { id: 'appearance', label: 'settings.appearance.title', icon: '🎨' },
   { id: 'storage', label: 'settings.storage.title', icon: '💾' },
   { id: 'provider', label: 'settings.provider.title', icon: '🔌' },
@@ -121,11 +123,6 @@ const resetOOBE = () => {
 // 应用主题
 const applyTheme = (themeId) => {
   document.body.className = `theme-${themeId}`
-}
-
-// 处理语言变更
-const handleLocaleChange = (newLocale) => {
-  selectedLocale.value = newLocale
 }
 
 // 处理主题变更

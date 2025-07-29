@@ -2,26 +2,26 @@
   <div class="settings-section about-section">
     <div class="about-content">
       <div class="app-info">
-        <h1 class="app-name">{{ $t('about.appName') }}</h1>
-        <p class="app-description">{{ $t('about.appDescription') }}</p>
-        <p class="app-version">{{ $t('about.version', { version: '1.0.0' }) }}</p>
+        <h1 class="app-name">NovelBox</h1>
+        <p class="app-description">AI辅助的小说创作工具</p>
+        <p class="app-version">版本 1.0.0</p>
       </div>
       
       <div class="links">
         <div class="link-item">
-          <span class="link-label">{{ $t('about.github') }}：</span>
+          <span class="link-label">GitHub：</span>
           <a href="https://github.com/AliyahZombie/NovelBox" target="_blank" class="link-url">
             https://github.com/AliyahZombie/NovelBox
           </a>
         </div>
         <div class="link-item">
-          <span class="link-label">{{ $t('about.contact') }}：</span>
+          <span class="link-label">联系作者：</span>
           <a href="mailto:aliyahzombie2024@gmail.com" class="link-url">
             aliyahzombie2024@gmail.com
           </a>
         </div>
         <div class="link-item">
-          <span class="link-label">{{ $t('about.license') }}: </span>
+          <span class="link-label">开源协议: </span>
           <span class="link-url">AGPL-3.0</span>
         </div>
       </div>

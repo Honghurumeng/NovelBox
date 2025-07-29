@@ -4,7 +4,7 @@
     <div class="editor-header">
       <div class="editor-header-left">
         <button class="back-btn" @click="goToHomepage">
-          {{ $t('editor.backToHomepage') }}
+          ← 返回主页
         </button>
         <span class="current-novel-title">
           {{ novelsStore.currentNovelTitle }}
@@ -18,7 +18,7 @@
             type="text" 
             v-model="editingTitle"
             class="chapter-title-input"
-            :placeholder="$t('editor.chapterTitlePlaceholder')"
+            placeholder="章节标题"
             @blur="finishEditingTitle"
             @keydown.enter="finishEditingTitle"
             @keydown.esc="cancelEditingTitle"
@@ -29,9 +29,9 @@
             class="chapter-title-display"
             @click="startEditingTitle"
           >
-            {{ chaptersStore.currentChapterTitle || $t('chapters.untitled') }}
+            {{ chaptersStore.currentChapterTitle || '未命名章节' }}
           </span>
-          <span v-if="hasUnsavedChanges" class="unsaved-indicator">{{ $t('editor.unsavedChanges') }}</span>
+          <span v-if="hasUnsavedChanges" class="unsaved-indicator">未保存</span>
         </div>
       </div>
       
@@ -42,8 +42,8 @@
         >
           {{ uiStore.saveIndicatorMessage }}
         </span>
-        <button class="save-btn" @click="manualSave" :title="$t('common.save')">
-          💾 {{ $t('common.save') }}
+        <button class="save-btn" @click="manualSave" title="保存">
+          💾 保存
         </button>
       </div>
     </div>
@@ -88,7 +88,6 @@
 import { onMounted, onUnmounted, ref, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useNovelsStore, useChaptersStore, useUIStore } from '@/stores'
-import { useI18n } from 'vue-i18n'
 import ChaptersList from '@/components/editor/ChaptersList.vue'
 import MainEditor from '@/components/editor/MainEditor.vue'
 import AIPanel from '@/components/editor/AIPanel.vue'
@@ -109,7 +108,6 @@ export default {
   setup(props) {
     const route = useRoute()
     const router = useRouter()
-    const { t } = useI18n()
     const novelsStore = useNovelsStore()
     const chaptersStore = useChaptersStore()
     const uiStore = useUIStore()
@@ -205,7 +203,7 @@ export default {
         await novelsStore.saveNovels()
         lastSavedContent = chaptersStore.currentChapterContent
         hasUnsavedChanges.value = false
-        uiStore.showSaveMessage(t('editor.manualSaveSuccess'))
+        uiStore.showSaveMessage('手动保存成功')
       } catch (error) {
         console.error('手动保存失败:', error)
         alert('保存失败: ' + error.message)

@@ -1,9 +1,9 @@
 <template>
   <div class="settings-section">
-    <h3 class="section-title">{{ $t('settings.developer.title') }}</h3>
+    <h3 class="section-title">开发者选项</h3>
     <div class="setting-item">
       <button @click="resetOOBE" class="reset-btn">
-        {{ $t('settings.developer.resetoobe') }}
+        重置新手引导
       </button>
     </div>
   </div>
