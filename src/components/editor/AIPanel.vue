@@ -1,13 +1,20 @@
 <template>
   <div class="ai-panel">
     <div class="panel-header">
-      <h2 class="panel-title">
+      <button 
+        class="toggle-sidebar-btn left-btn"
+        @click="uiStore.toggleRightSidebar()"
+        :title="$t('common.toggleSidebar')"
+      >
+        <span class="toggle-icon">{{ uiStore.rightSidebarCollapsed ? '‹' : '›' }}</span>
+      </button>
+      <h2 v-if="!uiStore.rightSidebarCollapsed" class="panel-title">
         <span class="ai-icon">🤖</span>
         {{ $t('editor.aiPanel.title') }}
       </h2>
     </div>
     
-    <div class="panel-content">
+    <div v-if="!uiStore.rightSidebarCollapsed" class="panel-content">
       <!-- AI重写结果显示区域 -->
       <div v-if="rewriteSession" class="rewrite-session">
         <div class="session-header">
@@ -310,6 +317,9 @@ export default {
   padding: 16px 20px;
   border-bottom: 1px solid var(--border-color);
   background: var(--sidebar-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .panel-title {
@@ -320,10 +330,51 @@ export default {
   align-items: center;
   gap: 8px;
   font-weight: 600;
+  flex: 1;
 }
 
 .ai-icon {
   font-size: 1.3rem;
+}
+
+.toggle-sidebar-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.toggle-sidebar-btn:hover {
+  background: var(--nav-hover-bg);
+  color: var(--text-primary);
+  transform: scale(1.05);
+}
+
+.toggle-sidebar-btn:active {
+  transform: scale(0.95);
+}
+
+.toggle-icon {
+  transition: transform 0.2s ease;
+}
+
+.toggle-sidebar-btn:hover .toggle-icon {
+  transform: translateX(-2px);
+}
+
+.toggle-sidebar-btn.left-btn {
+  margin-right: auto;
 }
 
 .panel-content {

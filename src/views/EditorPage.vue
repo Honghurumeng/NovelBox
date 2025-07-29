@@ -54,14 +54,7 @@
         class="left-sidebar" 
         :class="{ collapsed: uiStore.leftSidebarCollapsed }"
       >
-        <button 
-          class="toggle-left-sidebar" 
-          @click="uiStore.toggleLeftSidebar()"
-        >
-          {{ uiStore.leftSidebarCollapsed ? '›' : '‹' }}
-        </button>
-        
-        <ChaptersList v-show="!uiStore.leftSidebarCollapsed" />
+        <ChaptersList />
       </div>
       
       <!-- 主编辑区域 -->
@@ -80,15 +73,7 @@
         class="right-sidebar" 
         :class="{ collapsed: uiStore.rightSidebarCollapsed }"
       >
-        <button 
-          class="toggle-right-sidebar" 
-          @click="uiStore.toggleRightSidebar()"
-        >
-          {{ uiStore.rightSidebarCollapsed ? '‹' : '›' }}
-        </button>
-        
         <AIPanel 
-          v-show="!uiStore.rightSidebarCollapsed" 
           :rewrite-session="rewriteSession"
           @replace-text="handleReplaceText"
           @close-session="handleCloseSession"
@@ -558,30 +543,6 @@ export default {
   width: 50px;
 }
 
-.toggle-left-sidebar {
-  position: absolute;
-  top: 50%;
-  right: -10px;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 40px;
-  background: var(--btn-primary-bg);
-  color: white;
-  border: none;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  z-index: 101;
-  transition: all 0.2s;
-}
-
-.toggle-left-sidebar:hover {
-  opacity: 0.9;
-}
-
 /* 右侧边栏样式 */
 .right-sidebar {
   position: relative;
@@ -596,30 +557,6 @@ export default {
 
 .right-sidebar.collapsed {
   width: 50px;
-}
-
-.toggle-right-sidebar {
-  position: absolute;
-  top: 50%;
-  left: -10px;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 40px;
-  background: var(--btn-primary-bg);
-  color: white;
-  border: none;
-  border-radius: 4px 0 0 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  z-index: 101;
-  transition: all 0.2s;
-}
-
-.toggle-right-sidebar:hover {
-  opacity: 0.9;
 }
 
 /* 主编辑区域样式 */

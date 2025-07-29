@@ -1,10 +1,17 @@
 <template>
   <div class="chapters-list-container">
     <div class="sidebar-header">
-      <span class="sidebar-title">{{ $t('editor.sidebar.chaptersList') }}</span>
+      <span v-if="!uiStore.leftSidebarCollapsed" class="sidebar-title">{{ $t('editor.sidebar.chaptersList') }}</span>
+      <button 
+        class="toggle-sidebar-btn right-btn"
+        @click="uiStore.toggleLeftSidebar()"
+        :title="$t('common.toggleSidebar')"
+      >
+        <span class="toggle-icon">{{ uiStore.leftSidebarCollapsed ? '›' : '‹' }}</span>
+      </button>
     </div>
     
-    <div class="chapters-list-wrapper">
+    <div v-if="!uiStore.leftSidebarCollapsed" class="chapters-list-wrapper">
       <div 
         v-for="chapter in chapters" 
         :key="chapter.id"
@@ -53,7 +60,7 @@
       </div>
     </div>
     
-    <div class="btn-add-chapter" @click="addNewChapter">
+    <div v-if="!uiStore.leftSidebarCollapsed" class="btn-add-chapter" @click="addNewChapter">
       {{ $t('editor.sidebar.addNewChapter') }}
     </div>
     
@@ -330,14 +337,58 @@ export default {
 }
 
 .sidebar-header {
-  padding: 20px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .sidebar-title {
   margin: 0;
   font-size: 1.2rem;
   color: var(--text-primary);
+  flex: 1;
+}
+
+.toggle-sidebar-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.toggle-sidebar-btn:hover {
+  background: var(--nav-hover-bg);
+  color: var(--text-primary);
+  transform: scale(1.05);
+}
+
+.toggle-sidebar-btn:active {
+  transform: scale(0.95);
+}
+
+.toggle-icon {
+  transition: transform 0.2s ease;
+}
+
+.toggle-sidebar-btn:hover .toggle-icon {
+  transform: translateX(2px);
+}
+
+.toggle-sidebar-btn.right-btn {
+  margin-left: auto;
 }
 
 .chapters-list-wrapper {
