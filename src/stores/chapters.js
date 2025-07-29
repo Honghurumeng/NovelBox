@@ -9,7 +9,9 @@ export const useChaptersStore = defineStore('chapters', {
     currentChapter: null,
     autoSaveTimer: null,
     draggedChapterId: null,
-    autoSaveCallback: null
+    autoSaveCallback: null,
+    pendingSave: false,
+    lastSaveTime: null
   }),
 
   getters: {
@@ -114,6 +116,39 @@ export const useChaptersStore = defineStore('chapters', {
 
       this.currentChapter.content = content
       this.currentChapter.wordCount = content.length
+      
+      // 防抖保存：只有在内容真正变化时才触发保存
+      this.debouncedSave()
+    },
+
+    // 防抖保存函数
+    debouncedSave() {
+      if (this.pendingSave) return
+      
+      this.pendingSave = true
+      clearTimeout(this.autoSaveTimer)
+      
+      this.autoSaveTimer = setTimeout(async () => {
+        if (this.currentChapter) {
+          const novelsStore = useNovelsStore()
+          const uiStore = useUIStore()
+          
+          try {
+            await novelsStore.saveNovels()
+            this.lastSaveTime = new Date()
+            uiStore.showSaveMessage(t('editor.autoSaveIndicator'))
+            
+            if (this.autoSaveCallback) {
+              await this.autoSaveCallback()
+            }
+          } catch (error) {
+            console.error('自动保存失败:', error)
+            uiStore.showSaveMessage(t('editor.autoSaveFailed'))
+          } finally {
+            this.pendingSave = false
+          }
+        }
+      }, 2000) // 2秒防抖延迟
     },
 
     async reorderChapters(draggedChapterId, targetChapterId, position) {
@@ -146,21 +181,32 @@ export const useChaptersStore = defineStore('chapters', {
     startAutoSave() {
       const uiStore = useUIStore()
       this.clearAutoSaveTimer()
+      
+      // 改为每30秒检查一次是否有未保存的更改
       this.autoSaveTimer = setInterval(async () => {
-        if (this.currentChapter) {
+        if (this.currentChapter && !this.pendingSave) {
           const novelsStore = useNovelsStore()
-          await novelsStore.saveNovels()
-          uiStore.showSaveMessage(t('editor.autoSaveIndicator'))
-          if(this.autoSaveCallback) {
-            await this.autoSaveCallback()
+          
+          try {
+            await novelsStore.saveNovels()
+            this.lastSaveTime = new Date()
+            uiStore.showSaveMessage(t('editor.autoSaveIndicator'))
+            
+            if (this.autoSaveCallback) {
+              await this.autoSaveCallback()
+            }
+          } catch (error) {
+            console.error('自动保存失败:', error)
+            uiStore.showSaveMessage(t('editor.autoSaveFailed'))
           }
         }
-      }, 5000) // 5秒自动保存一次
+      }, 30000) // 30秒检查一次
     },
 
     clearAutoSaveTimer() {
       if (this.autoSaveTimer) {
         clearInterval(this.autoSaveTimer)
+        clearTimeout(this.autoSaveTimer)
         this.autoSaveTimer = null
       }
     },
@@ -168,6 +214,8 @@ export const useChaptersStore = defineStore('chapters', {
     clearCurrentChapter() {
       this.clearAutoSaveTimer()
       this.currentChapter = null
+      this.pendingSave = false
+      this.lastSaveTime = null
     },
 
     // Drag and drop state management

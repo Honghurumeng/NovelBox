@@ -5,14 +5,25 @@ const config = {
   appId: 'com.novelbox.app',
   productName: 'NovelBox',
   directories: {
-    output: 'dist'
+    output: 'dist',
+    buildResources: 'build'
   },
   files: [
     'dist/**/*',
     'main.js',
     'preload.js',
     'package.json',
-    '!node_modules/**/*'
+    '!node_modules/**/*',
+    '!src/**/*',
+    '!*.log',
+    '!*.tmp'
+  ],
+  extraResources: [
+    {
+      from: 'src/locales',
+      to: 'locales',
+      filter: ['**/*.json']
+    }
   ],
   extends: null,
   win: {
@@ -25,12 +36,17 @@ const config = {
         target: 'zip',
         arch: ['x64']
       }
-    ]
+    ],
+    icon: 'build/icon.ico'
   },
   nsis: {
     oneClick: false,
     allowToChangeInstallationDirectory: true,
-    perMachine: true
+    perMachine: false,
+    createDesktopShortcut: true,
+    createStartMenuShortcut: true,
+    shortcutName: 'NovelBox',
+    uninstallDisplayName: 'NovelBox'
   },
   mac: {
     target: [
@@ -43,7 +59,10 @@ const config = {
         arch: ['x64', 'arm64']
       }
     ],
-    category: 'public.app-category.utilities'
+    category: 'public.app-category.utilities',
+    icon: 'build/icon.icns',
+    hardenedRuntime: true,
+    gatekeeperAssess: false
   },
   linux: {
     target: [
@@ -57,8 +76,12 @@ const config = {
       }
     ],
     category: 'Utility',
-    maintainer: 'NovelBox Team <novelbox@example.com>'
-  }
+    maintainer: 'NovelBox Team <novelbox@example.com>',
+    icon: 'build/icon.png'
+  },
+  compression: 'maximum',
+  asar: true,
+  afterSign: 'scripts/notarize.js'
 }
 
 module.exports = config
