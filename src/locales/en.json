@@ -37,6 +37,7 @@
       "expand": "Expand",
       "contract": "Contract",
       "beautify": "Beautify",
+      "continue": "Continue Writing",
       "custom": "Custom",
       "customPromptPlaceholder": "Enter your custom prompt...",
       "apply": "Apply",

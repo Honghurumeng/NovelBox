@@ -16,6 +16,17 @@ NovelBox 旨在通过AI工具集成来辅助进行小说写作，目前NovelBox�
     *   采用可扩展架构，轻松添加新的 AI 服务。
     *   目前仅支持AI重写功能
 
+*   **重写流程**
+    *   用户选中文本 → 右键点击 → ContextMenu.emit('rewrite') 
+    *   ↓
+    *   MainEditor.handleRewrite() → startRewrite() → emit('start-rewrite')
+    *   ↓
+    *   EditorPage.startRewrite() → 设置 rewriteSession
+    *   ↓
+    *   AIPanel.watch() → startRewrite() → 调用 LLM 服务
+    *   ↓
+    *   流式显示结果 → 用户可选择替换或进一步处理
+
 *   **小说编辑器**
     *   三栏式写作面板
     *   章节管理：支持拖拽排序、新增、编辑和删除章节。

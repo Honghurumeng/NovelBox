@@ -19,6 +19,10 @@
       <span class="menu-icon">✨</span>
       {{ $t('editor.rewriteTooltip.beautify') }}
     </div>
+    <div class="context-menu-item" @click="handleRewrite('continue')">
+      <span class="menu-icon">✍️</span>
+      {{ $t('editor.rewriteTooltip.continue') }}
+    </div>
     <div class="menu-divider"></div>
     <div class="context-menu-item" @click="handleRewrite('custom')">
       <span class="menu-icon">⚙️</span>

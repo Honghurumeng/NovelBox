@@ -219,6 +219,7 @@ export default {
         expand: `直接输出结果，不要任何助手提示：请扩写以下文本，增加更多细节、描述和内容，但保持原有的风格和意思：\n\n${text}`,
         contract: `直接输出结果，不要任何助手提示：请缩写以下文本，保留核心内容和关键信息，使其更加简洁：\n\n${text}`,
         beautify: `直接输出结果，不要任何助手提示：请优化以下文本的文笔，改进语言表达（如增加修辞、使用高级词汇或增加成语使用）、增强可读性，但保持原意不变：\n\n${text}`,
+        continue: `直接输出结果，不要任何助手提示：请根据以下文本的语境、风格和内容，继续续写一段内容，保持逻辑连贯和风格一致：\n\n${text}`,
         custom: customPromptText ? `直接输出结果，不要任何助手提示：${customPromptText}\n\n文本：${text}` : text
       }
       console.log(customPromptText)
@@ -231,6 +232,7 @@ export default {
         expand: t('editor.rewriteTooltip.expand'),
         contract: t('editor.rewriteTooltip.contract'),
         beautify: t('editor.rewriteTooltip.beautify'),
+        continue: t('editor.rewriteTooltip.continue'),
         custom: t('editor.rewriteTooltip.custom')
       }
       return labels[type] || type
