@@ -84,6 +84,10 @@
           @insert-text="handleInsertText"
           @close-session="handleCloseSession"
           @rewrite="handleRewriteFromPanel"
+          @story-background="handleStoryBackground"
+          @character-info="handleCharacterInfo"
+          @outline-generate="handleOutlineGenerate"
+          @chapter-list="handleChapterList"
         />
       </div>
     </div>
@@ -233,6 +237,31 @@ export default {
         })
       }
     }
+    
+    // AI创作辅助功能处理方法
+    const handleStoryBackground = () => {
+      // 故事背景生成功能
+      console.log('故事背景生成功能')
+      notificationService.info('故事背景生成功能开发中...')
+    }
+    
+    const handleCharacterInfo = () => {
+      // 人物信息生成功能
+      console.log('人物信息生成功能')
+      notificationService.info('人物信息生成功能开发中...')
+    }
+    
+    const handleOutlineGenerate = () => {
+      // 大纲生成功能
+      console.log('大纲生成功能')
+      notificationService.info('大纲生成功能开发中...')
+    }
+    
+    const handleChapterList = () => {
+      // 章节列表生成功能
+      console.log('章节列表生成功能')
+      notificationService.info('章节列表生成功能开发中...')
+    }
 
     // Header相关方法
     const goToHomepage = async () => {
@@ -371,7 +400,13 @@ export default {
       handleRewriteFromPanel,
       handleReplaceText,
       handleInsertText,
-      handleCloseSession
+      handleCloseSession,
+      
+      // AI创作辅助功能
+      handleStoryBackground,
+      handleCharacterInfo,
+      handleOutlineGenerate,
+      handleChapterList
     }
   }
 }

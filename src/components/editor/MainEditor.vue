@@ -1,5 +1,21 @@
 <template>
   <div class="main-editor">
+    <!-- 章纲展示区域 -->
+    <div v-if="chapterOutline" class="chapter-outline-section">
+      <div class="outline-header">
+        <div class="outline-title">
+          <span class="outline-icon">📋</span>
+          章节大纲
+        </div>
+        <button class="outline-toggle-btn" @click="toggleOutlineExpanded" :title="outlineExpanded ? '收起大纲' : '展开大纲'">
+          <span class="toggle-icon">{{ outlineExpanded ? '▼' : '▶' }}</span>
+        </button>
+      </div>
+      <div v-if="outlineExpanded" class="outline-content">
+        <div class="outline-text">{{ chapterOutline }}</div>
+      </div>
+    </div>
+    
     <div class="editor-content">
       <textarea 
         ref="editorTextarea"
@@ -46,6 +62,10 @@ export default {
     const selectedText = ref('')
     const selectionStart = ref(0)
     const selectionEnd = ref(0)
+    
+    // 章纲展示相关状态
+    const chapterOutline = ref('')
+    const outlineExpanded = ref(true)
     
     const editorContent = computed({
       get: () => chaptersStore.currentChapterContent,
@@ -179,6 +199,11 @@ export default {
 
       emit('start-rewrite', rewriteSession)
     }
+    
+    // 切换大纲展开状态
+    const toggleOutlineExpanded = () => {
+      outlineExpanded.value = !outlineExpanded.value
+    }
 
     const undo = () => {
       if (historyIndex.value > 0) {
@@ -304,12 +329,15 @@ export default {
       editorTextarea,
       editorContent,
       selectedText,
+      chapterOutline,
+      outlineExpanded,
       handleEditorInput,
       handleTextSelection,
       handleKeyboardSelection,
       getCurrentCursorPosition,
       setCursorPosition,
-      handleRewriteFromPanel
+      handleRewriteFromPanel,
+      toggleOutlineExpanded
     }
   }
 }
@@ -321,6 +349,78 @@ export default {
   display: flex;
   flex-direction: column;
   background: var(--content-bg);
+}
+
+/* 章纲展示区域 */
+.chapter-outline-section {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  margin: 0 24px;
+  margin-top: 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.outline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--sidebar-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.outline-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.outline-icon {
+  font-size: 1rem;
+}
+
+.outline-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.outline-toggle-btn:hover {
+  background: var(--nav-hover-bg);
+  color: var(--text-primary);
+}
+
+.toggle-icon {
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+}
+
+.outline-content {
+  padding: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.outline-text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .editor-content {

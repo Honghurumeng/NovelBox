@@ -91,7 +91,7 @@
         
         <!-- AI功能按钮 -->
         <div v-if="selectedText" class="ai-functions-section">
-          <div class="section-label">AI功能</div>
+          <div class="section-label">文本AI功能</div>
           <div class="function-buttons">
             <button class="btn btn-outline btn-primary" @click="handleRewrite('expand')">
               <span class="btn-icon">📈</span>
@@ -112,6 +112,29 @@
             <button class="btn btn-outline btn-secondary" @click="handleCustomRewrite">
               <span class="btn-icon">⚙️</span>
               自定义
+            </button>
+          </div>
+        </div>
+        
+        <!-- 创作辅助功能区域 -->
+        <div class="ai-functions-section">
+          <div class="section-label">创作辅助功能</div>
+          <div class="function-buttons">
+            <button class="btn btn-outline btn-purple" @click="handleStoryBackground">
+              <span class="btn-icon">🌍</span>
+              故事背景
+            </button>
+            <button class="btn btn-outline btn-orange" @click="handleCharacterInfo">
+              <span class="btn-icon">👥</span>
+              人物信息
+            </button>
+            <button class="btn btn-outline btn-teal" @click="handleOutlineGenerate">
+              <span class="btn-icon">📋</span>
+              大纲生成
+            </button>
+            <button class="btn btn-outline btn-indigo" @click="handleChapterList">
+              <span class="btn-icon">📚</span>
+              章纲生成
             </button>
           </div>
         </div>
@@ -167,7 +190,7 @@ export default {
       default: ''
     }
   },
-  emits: ['replace-text', 'insert-text', 'close-session', 'update-session', 'rewrite'],
+  emits: ['replace-text', 'insert-text', 'close-session', 'update-session', 'rewrite', 'story-background', 'character-info', 'outline-generate', 'chapter-list'],
   setup(props, { emit }) {
     const uiStore = useUIStore()
     
@@ -325,6 +348,23 @@ export default {
       showCustomPromptModal.value = false
     }
     
+    // 创作辅助功能处理方法
+    const handleStoryBackground = () => {
+      emit('story-background')
+    }
+    
+    const handleCharacterInfo = () => {
+      emit('character-info')
+    }
+    
+    const handleOutlineGenerate = () => {
+      emit('outline-generate')
+    }
+    
+    const handleChapterList = () => {
+      emit('chapter-list')
+    }
+    
     // 监听重写会话变化，自动开始重写
     watch(() => props.rewriteSession, (newSession) => {
       if (newSession) {
@@ -349,7 +389,11 @@ export default {
       handleRewrite,
       handleCustomRewrite,
       handleCustomPromptConfirm,
-      handleCustomPromptCancel
+      handleCustomPromptCancel,
+      handleStoryBackground,
+      handleCharacterInfo,
+      handleOutlineGenerate,
+      handleChapterList
     }
   }
 }
@@ -691,6 +735,67 @@ export default {
   font-size: 1rem;
   margin-top: 1px;
   flex-shrink: 0;
+}
+
+/* 新增按钮颜色样式 */
+.btn-purple {
+  --btn-color: #8b5cf6;
+  --btn-hover-color: #7c3aed;
+}
+
+.btn-orange {
+  --btn-color: #f97316;
+  --btn-hover-color: #ea580c;
+}
+
+.btn-teal {
+  --btn-color: #14b8a6;
+  --btn-hover-color: #0d9488;
+}
+
+.btn-indigo {
+  --btn-color: #6366f1;
+  --btn-hover-color: #4f46e5;
+}
+
+.btn-outline.btn-purple {
+  color: var(--btn-color);
+  border-color: var(--btn-color);
+}
+
+.btn-outline.btn-purple:hover {
+  background: var(--btn-color);
+  color: white;
+}
+
+.btn-outline.btn-orange {
+  color: var(--btn-color);
+  border-color: var(--btn-color);
+}
+
+.btn-outline.btn-orange:hover {
+  background: var(--btn-color);
+  color: white;
+}
+
+.btn-outline.btn-teal {
+  color: var(--btn-color);
+  border-color: var(--btn-color);
+}
+
+.btn-outline.btn-teal:hover {
+  background: var(--btn-color);
+  color: white;
+}
+
+.btn-outline.btn-indigo {
+  color: var(--btn-color);
+  border-color: var(--btn-color);
+}
+
+.btn-outline.btn-indigo:hover {
+  background: var(--btn-color);
+  color: white;
 }
 
 
