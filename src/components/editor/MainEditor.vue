@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNovelsStore, useChaptersStore, useUIStore } from '@/stores'
 import { llmService, LLMRequest } from '@/services'
@@ -97,7 +97,7 @@ export default {
     const selectedText = ref('')
     const selectionStart = ref(0)
     const selectionEnd = ref(0)
-    const contextMenuPosition = ref({ x: 0, y: 0 })
+    const contextMenuPosition = reactive({ x: 0, y: 0 })
     
     const editorContent = computed({
       get: () => chaptersStore.currentChapterContent,
@@ -150,10 +150,8 @@ export default {
         selectionStart.value = start
         selectionEnd.value = end
         
-        contextMenuPosition.value = {
-          x: event.clientX,
-          y: event.clientY
-        }
+        contextMenuPosition.x = event.clientX
+        contextMenuPosition.y = event.clientY
         
         showContextMenu.value = true
       }

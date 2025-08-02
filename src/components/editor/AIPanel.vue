@@ -139,7 +139,7 @@ export default {
       default: null
     }
   },
-  emits: ['replace-text', 'insert-text', 'close-session'],
+  emits: ['replace-text', 'insert-text', 'close-session', 'update-session'],
   setup(props, { emit }) {
     const uiStore = useUIStore()
     
@@ -284,7 +284,7 @@ export default {
       furtherPrompt.value = ''
       
       // 更新会话并重新开始重写
-      Object.assign(props.rewriteSession, newSession)
+      emit('update-session', newSession)
       startRewrite()
     }
     

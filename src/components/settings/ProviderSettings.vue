@@ -190,7 +190,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 
 // 提供商数据
 const providers = ref([])
@@ -199,7 +199,7 @@ const showAddModal = ref(false)
 const newModelName = ref('')
 
 // 新提供商表单
-const newProvider = ref({
+const newProvider = reactive({
   type: 'OpenAI',
   name: ''
 })
@@ -218,8 +218,8 @@ const getProviderIcon = (type) => {
 
 // 显示添加提供商模态框
 const showAddProviderModal = () => {
-  newProvider.value.type = 'OpenAI'
-  newProvider.value.name = ''
+  newProvider.type = 'OpenAI'
+  newProvider.name = ''
   showAddModal.value = true
 }
 
@@ -230,15 +230,15 @@ const closeAddModal = () => {
 
 // 添加提供商
 const addProvider = () => {
-  if (!newProvider.value.name.trim()) {
+  if (!newProvider.name.trim()) {
     alert('请输入提供商名称')
     return
   }
   
   const provider = {
     id: Date.now().toString(),
-    type: newProvider.value.type,
-    name: newProvider.value.name,
+    type: newProvider.type,
+    name: newProvider.name,
     base_url: '',
     api_key: '',
     models: []
