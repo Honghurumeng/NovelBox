@@ -69,30 +69,33 @@
   /* 按钮样式 */
   --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
-  --btn-primary-hover: #7a8db5;
+  --btn-primary-hover: rgba(139, 157, 195, 0.8);
+  --btn-primary-border: #8b9dc3;
   
   --btn-secondary-bg: #f8f9fa;
   --btn-secondary-color: #495057;
-  --btn-secondary-hover: #e9ecef;
+  --btn-secondary-hover: rgba(248, 249, 250, 0.8);
   --btn-secondary-border: #dee2e6;
   
   --btn-danger-bg: #fff5f5;
   --btn-danger-color: #c53030;
-  --btn-danger-hover: #c53030;
+  --btn-danger-hover: rgba(255, 245, 245, 0.8);
   --btn-danger-border: #feb2b2;
   
   --btn-success-bg: #f0fff4;
   --btn-success-color: #2f855a;
-  --btn-success-hover: #2f855a;
+  --btn-success-hover: rgba(240, 255, 244, 0.8);
   --btn-success-border: #9ae6b4;
   
   --btn-warning-bg: #fffaf0;
   --btn-warning-color: #d69e2e;
-  --btn-warning-hover: #d69e2e;
+  --btn-warning-hover: rgba(255, 250, 240, 0.8);
   --btn-warning-border: #fbd38d;
   
   --btn-info-bg: #f0f9ff;
   --btn-info-color: #2b6cb0;
+  --btn-info-hover: rgba(240, 249, 255, 0.8);
+  --btn-info-border: #93c5fd;
   
   /* 模态框 */
   --modal-bg: #ffffff;
@@ -142,30 +145,33 @@
   /* 按钮样式 */
   --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
-  --btn-primary-hover: #7a8db5;
+  --btn-primary-hover: rgba(139, 157, 195, 0.8);
+  --btn-primary-border: #8b9dc3;
   
   --btn-secondary-bg: #404040;
   --btn-secondary-color: #e5e5e5;
-  --btn-secondary-hover: #525252;
+  --btn-secondary-hover: rgba(64, 64, 64, 0.8);
   --btn-secondary-border: #525252;
   
   --btn-danger-bg: #450a0a;
   --btn-danger-color: #fca5a5;
-  --btn-danger-hover: #dc2626;
+  --btn-danger-hover: rgba(69, 10, 10, 0.8);
   --btn-danger-border: #7f1d1d;
   
   --btn-success-bg: #14532d;
   --btn-success-color: #86efac;
-  --btn-success-hover: #059669;
+  --btn-success-hover: rgba(20, 83, 45, 0.8);
   --btn-success-border: #166534;
   
   --btn-warning-bg: #451a03;
   --btn-warning-color: #fde68a;
-  --btn-warning-hover: #d97706;
+  --btn-warning-hover: rgba(69, 26, 3, 0.8);
   --btn-warning-border: #92400e;
   
   --btn-info-bg: #0c2340;
   --btn-info-color: #93c5fd;
+  --btn-info-hover: rgba(12, 35, 64, 0.8);
+  --btn-info-border: #1e40af;
   
   /* 模态框 */
   --modal-bg: #262626;
@@ -207,7 +213,7 @@ body {
   justify-content: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  border: 1px solid transparent;
+  border: 1px solid;
   border-radius: var(--radius-lg);
   font-size: var(--font-sm);
   font-weight: 500;
@@ -219,7 +225,7 @@ body {
   overflow: hidden;
   user-select: none;
   min-height: 40px;
-  box-shadow: 0 2px 8px var(--accent-shadow);
+  box-shadow: none;
 }
 
 .btn:disabled {
@@ -230,8 +236,8 @@ body {
 }
 
 .btn:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transform: translateY(1px);
+  box-shadow: none;
 }
 
 /* 按钮尺寸 */
@@ -253,83 +259,79 @@ body {
 .btn-primary {
   background: var(--btn-primary-bg);
   color: var(--btn-primary-color);
-  border-color: transparent;
-  box-shadow: 0 2px 8px var(--accent-shadow);
+  border-color: var(--btn-primary-border, var(--btn-primary-bg));
 }
 
 .btn-primary:hover:not(:disabled) {
   background: var(--btn-primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px var(--accent-shadow);
+  border-color: var(--btn-primary-border, var(--btn-primary-bg));
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-secondary {
   background: var(--btn-secondary-bg);
   color: var(--btn-secondary-color);
   border-color: var(--btn-secondary-border);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .btn-secondary:hover:not(:disabled) {
   background: var(--btn-secondary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-color: var(--btn-secondary-border);
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-danger {
   background: var(--btn-danger-bg);
   color: var(--btn-danger-color);
   border-color: var(--btn-danger-border);
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
 }
 
 .btn-danger:hover:not(:disabled) {
   background: var(--btn-danger-hover);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  border-color: var(--btn-danger-border);
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-success {
   background: var(--btn-success-bg);
   color: var(--btn-success-color);
   border-color: var(--btn-success-border);
-  box-shadow: 0 2px 8px rgba(47, 133, 90, 0.2);
 }
 
 .btn-success:hover:not(:disabled) {
   background: var(--btn-success-hover);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(47, 133, 90, 0.3);
+  border-color: var(--btn-success-border);
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-warning {
   background: var(--btn-warning-bg);
   color: var(--btn-warning-color);
   border-color: var(--btn-warning-border);
-  box-shadow: 0 2px 8px rgba(214, 158, 46, 0.2);
 }
 
 .btn-warning:hover:not(:disabled) {
   background: var(--btn-warning-hover);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(214, 158, 46, 0.3);
+  border-color: var(--btn-warning-border);
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-info {
   background: var(--btn-info-bg);
   color: var(--btn-info-color);
-  border-color: var(--btn-info-color);
-  box-shadow: 0 2px 8px rgba(43, 108, 176, 0.2);
+  border-color: var(--btn-info-border, var(--btn-info-color));
 }
 
 .btn-info:hover:not(:disabled) {
-  background: var(--btn-info-color);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+  background: var(--btn-info-hover);
+  border-color: var(--btn-info-border, var(--btn-info-color));
+  transform: none;
+  box-shadow: none;
 }
 
 /* 特殊按钮样式 */
@@ -367,41 +369,57 @@ body {
 .btn-outline.btn-primary {
   color: var(--accent-solid);
   border-color: var(--accent-solid);
+  background: transparent;
 }
 
 .btn-outline.btn-primary:hover:not(:disabled) {
   background: var(--accent-solid);
   color: white;
+  opacity: 0.8;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-outline.btn-success {
   color: var(--btn-success-color);
   border-color: var(--btn-success-color);
+  background: transparent;
 }
 
 .btn-outline.btn-success:hover:not(:disabled) {
   background: var(--btn-success-color);
   color: white;
+  opacity: 0.8;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-outline.btn-danger {
   color: var(--btn-danger-color);
   border-color: var(--btn-danger-color);
+  background: transparent;
 }
 
 .btn-outline.btn-danger:hover:not(:disabled) {
   background: var(--btn-danger-color);
   color: white;
+  opacity: 0.8;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-outline.btn-info {
   color: var(--btn-info-color);
   border-color: var(--btn-info-color);
+  background: transparent;
 }
 
 .btn-outline.btn-info:hover:not(:disabled) {
   background: var(--btn-info-color);
   color: white;
+  opacity: 0.8;
+  transform: none;
+  box-shadow: none;
 }
 
 /* 统一的卡片样式 */
