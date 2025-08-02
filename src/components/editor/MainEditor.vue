@@ -9,6 +9,11 @@
         @input="handleEditorInput"
         @mouseup="handleTextSelection"
         @keyup="handleTextSelection"
+        @select="handleTextSelection"
+        @selectionchange="handleTextSelection"
+        @focus="handleTextSelection"
+        @click="handleTextSelection"
+        @keydown="handleKeyboardSelection"
       ></textarea>
       
       <!-- 自定义提示模态框 -->
@@ -97,37 +102,80 @@ export default {
     }
 
     
+    // 文本选择防抖计时器
+    let selectionTimeout = null
+    
     // 处理文本选择
     const handleTextSelection = () => {
-      if (!editorTextarea.value) return
-      
-      const textarea = editorTextarea.value
-      const start = textarea.selectionStart
-      const end = textarea.selectionEnd
-      const text = textarea.value.substring(start, end)
-      
-      // 更新选择状态
-      if (text && text.trim().length > 0 && text.length <= 1000) {
-        selectedText.value = text
-        selectionStart.value = start
-        selectionEnd.value = end
-        // 通知父组件文本选择变化
-        emit('selected-text-change', {
-          text: text,
-          start: start,
-          end: end
-        })
-      } else {
-        selectedText.value = ''
-        // 通知父组件清空选择
-        emit('selected-text-change', {
-          text: '',
-          start: 0,
-          end: 0
-        })
+      // 清除之前的计时器
+      if (selectionTimeout) {
+        clearTimeout(selectionTimeout)
       }
+      
+      // 使用防抖，避免过度频繁调用
+      selectionTimeout = setTimeout(() => {
+        if (!editorTextarea.value) return
+        
+        const textarea = editorTextarea.value
+        const start = textarea.selectionStart
+        const end = textarea.selectionEnd
+        const text = textarea.value.substring(start, end)
+        
+        console.log('文本选择变化:', { start, end, textLength: text.length, text: text.slice(0, 50) + (text.length > 50 ? '...' : '') })
+        
+        // 更新选择状态
+        if (text && text.trim().length > 0 && text.length <= 1000) {
+          selectedText.value = text
+          selectionStart.value = start
+          selectionEnd.value = end
+          // 通知父组件文本选择变化
+          emit('selected-text-change', {
+            text: text,
+            start: start,
+            end: end
+          })
+        } else {
+          selectedText.value = ''
+          // 通知父组件清空选择
+          emit('selected-text-change', {
+            text: '',
+            start: 0,
+            end: 0
+          })
+        }
+      }, 100) // 100ms防抖延迟
     }
 
+    // 全局选择变化监听器
+    const handleGlobalSelectionChange = () => {
+      // 对于textarea，需要检查document.activeElement
+      if (document.activeElement === editorTextarea.value) {
+        console.log('全局选择变化检测到编辑器为焦点元素，触发文本选择检查')
+        handleTextSelection()
+      }
+    }
+    
+    // 处理键盘选择事件
+    const handleKeyboardSelection = (event) => {
+      // 检测可能改变选择的键盘事件
+      const selectionKeys = [
+        'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+        'Home', 'End', 'PageUp', 'PageDown'
+      ]
+      
+      const isSelectionModifier = event.shiftKey || event.ctrlKey || event.metaKey
+      const isSelectionKey = selectionKeys.includes(event.key)
+      const isSelectAll = (event.ctrlKey || event.metaKey) && event.key === 'a'
+      
+      if (isSelectionModifier && isSelectionKey || isSelectAll) {
+        console.log('检测到键盘选择操作:', event.key, { shift: event.shiftKey, ctrl: event.ctrlKey })
+        // 延迟一点执行，让键盘事件先完成
+        setTimeout(() => {
+          handleTextSelection()
+        }, 10)
+      }
+    }
+    
     // 处理重写请求（可以从AIPanel调用）
     const handleRewriteFromPanel = (type) => {
       if (type === 'custom') {
@@ -277,6 +325,8 @@ export default {
     onMounted(() => {
       document.addEventListener('keydown', handleKeyDown)
       document.addEventListener('click', handleClickOutside)
+      // 添加全局选择变化监听
+      document.addEventListener('selectionchange', handleGlobalSelectionChange)
       // 初始化自动保存定时器
       initAutoSave()
     })
@@ -284,7 +334,13 @@ export default {
     onUnmounted(() => {
       document.removeEventListener('keydown', handleKeyDown)
       document.removeEventListener('click', handleClickOutside)
+      // 移除全局选择变化监听
+      document.removeEventListener('selectionchange', handleGlobalSelectionChange)
       chaptersStore.clearAutoSaveTimer()
+      // 清理防抖计时器
+      if (selectionTimeout) {
+        clearTimeout(selectionTimeout)
+      }
     })
 
     return {
@@ -299,6 +355,7 @@ export default {
       selectedText,
       handleEditorInput,
       handleTextSelection,
+      handleKeyboardSelection,
       handleRewriteFromPanel,
       hideCustomPromptModal,
       applyCustomPrompt

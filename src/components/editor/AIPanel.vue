@@ -91,7 +91,10 @@
       <div v-else class="default-state">
         <!-- 选中文本显示区域 -->
         <div v-if="selectedText" class="selected-text-section">
-          <div class="section-label">选中的文本</div>
+          <div class="section-label">
+            选中的文本
+            <span class="text-length-indicator">{{ selectedText.length }} 字符</span>
+          </div>
           <div class="selected-text">{{ selectedText }}</div>
         </div>
         
@@ -488,6 +491,16 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: space-between;
+}
+
+.text-length-indicator {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--input-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 400;
 }
 
 /* 原文显示 */
