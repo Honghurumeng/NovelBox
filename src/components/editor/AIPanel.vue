@@ -354,7 +354,7 @@ export default {
 .toggle-sidebar-btn {
   background: transparent;
   color: var(--text-secondary);
-  border: none;
+  border: 1px solid var(--border-color);
   width: 28px;
   height: 28px;
   border-radius: 6px;
@@ -388,7 +388,7 @@ export default {
 }
 
 .toggle-sidebar-btn.left-btn {
-  margin-right: auto;
+  margin-right: 10px;
 }
 
 .panel-content {
@@ -642,13 +642,13 @@ export default {
 }
 
 .replace-btn {
-  background: linear-gradient(135deg, var(--btn-primary-bg), var(--accent-color));
+  background: linear-gradient(135deg, var(--btn-secondary-bg), var(--accent-color));
   color: white;
   border: none;
 }
 
 .replace-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--btn-primary-bg), var(--accent-color));
+  background: linear-gradient(135deg, var(--btn-secondary-bg), var(--accent-color));
   box-shadow: 0 4px 12px rgba(var(--accent-color-rgb), 0.3);
 }
 
@@ -704,8 +704,8 @@ export default {
 }
 
 .apply-further-btn {
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-color);
+  background: var(--btn-secondary-bg);
+  color: var(  --btn-secondary-color);
   border-color: transparent;
   width: 100%;
 }

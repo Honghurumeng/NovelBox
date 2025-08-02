@@ -320,7 +320,7 @@ export default {
 .toggle-sidebar-btn {
   background: transparent;
   color: var(--text-secondary);
-  border: none;
+  border: 1px solid var(--border-color);
   width: 28px;
   height: 28px;
   border-radius: 6px;
@@ -579,8 +579,8 @@ export default {
 }
 
 .btn-primary {
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-color);
+  background: var(--btn-secondary-bg);
+  color: var(  --btn-secondary-color);
 }
 
 .btn-primary:hover {

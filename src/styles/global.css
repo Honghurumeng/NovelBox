@@ -215,7 +215,7 @@
   --bg-color: #fdf6e3;
   --text-primary: #586e75;
   --text-secondary: #657b83;
-  --border-color: #eee8d5;
+  --border-color: #d1c7a7;
   --sidebar-bg: #eee8d5;
   --content-bg: #fdf6e3;
   --input-bg: #ffffff;
@@ -682,9 +682,9 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-.form-input:invalid, .form-textarea:invalid {
+/* .form-input:invalid, .form-textarea:invalid {
   border-color: var(--btn-danger-color);
-}
+} */
 
 .form-input:disabled, .form-textarea:disabled {
   opacity: 0.6;

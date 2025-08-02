@@ -491,9 +491,9 @@ export default {
 }
 
 .save-btn {
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-color);
-  border: none;
+  background: var(--btn-secondary-bg);
+  color: var(  --btn-secondary-color);
+  border: 1px solid var(--border-color);
   padding: 6px 14px;
   border-radius: 6px;
   cursor: pointer;

@@ -135,8 +135,8 @@ export default {
 }
 
 .path-btn {
-  background: var(--accent-color);
-  color: white;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
 }
 
 .path-btn:hover {

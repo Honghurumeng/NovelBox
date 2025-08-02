@@ -273,8 +273,8 @@ export default {
 }
 
 .btn-create {
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-color);
+  background: var(--btn-secondary-bg);
+  color: var(  --btn-secondary-color);
 }
 
 .btn-create:hover {

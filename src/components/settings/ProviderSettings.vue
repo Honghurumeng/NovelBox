@@ -1,31 +1,3 @@
-.fetch-models-btn {
-  background: var(--accent-color);
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: opacity 0.2s;
-}
-
-.fetch-models-btn:hover {
-  opacity: 0.9;
-}
-
-.fetch-models-btn:active {
-  transform: translateY(1px);
-}
-
-.models-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.models-actions {
-  flex-shrink: 0;
-}
 <template>
   <div class="provider-settings">
     <h3 class="section-title">提供商设置</h3>
@@ -466,8 +438,8 @@ onMounted(() => {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--accent-color);
-  color: white;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
@@ -562,8 +534,8 @@ onMounted(() => {
 
 
 .delete-btn {
-  background: var(--danger-color);
-  color: white;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
@@ -663,8 +635,8 @@ onMounted(() => {
 }
 
 .add-model-btn {
-  background: var(--accent-color);
-  color: white;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
 }
 
 .add-model-btn:hover {
@@ -688,8 +660,8 @@ onMounted(() => {
 }
 
 .save-btn {
-  background: var(--accent-color);
-  color: white;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
   border: none;
   padding: 12px 24px;
   border-radius: 6px;
@@ -800,5 +772,34 @@ onMounted(() => {
 
 .confirm-btn:hover {
   opacity: 0.9;
+}
+
+.fetch-models-btn {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+
+.fetch-models-btn:hover {
+  opacity: 0.9;
+}
+
+.fetch-models-btn:active {
+  transform: translateY(1px);
+}
+
+.models-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.models-actions {
+  flex-shrink: 0;
 }
 </style>

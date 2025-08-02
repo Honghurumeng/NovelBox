@@ -46,7 +46,7 @@
           <button type="button" class="btn btn-secondary" @click="closeModal">
             取消
           </button>
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-secondary">
             保存
           </button>
         </div>
@@ -228,8 +228,8 @@ export default {
 }
 
 .btn-primary {
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-color);
+  background: var(--btn-secondary-bg);
+  color: var(  --btn-secondary-color);
 }
 
 .btn-primary:hover {

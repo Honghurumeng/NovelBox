@@ -538,8 +538,8 @@ export default {
 }
 
 .apply-btn {
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-color);
+  background: var(--btn-secondary-bg);
+  color: var(  --btn-secondary-color);
   border-color: transparent;
 }
 
