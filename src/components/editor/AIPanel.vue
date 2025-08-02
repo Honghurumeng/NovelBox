@@ -52,23 +52,25 @@
         </div>
         
         <!-- 操作按钮 -->
-        <div v-if="!isStreaming && displayText" class="action-buttons">
-          <button class="btn btn-success" @click="replaceText">
+        <div v-if="!isStreaming && (displayText || hasError)" class="action-buttons">
+          <!-- 成功时显示替换和插入按钮 -->
+          <button v-if="displayText && !hasError" class="btn btn-success" @click="replaceText">
             <span class="btn-icon">🔄</span>
             替换
           </button>
-          <button class="btn btn-info" @click="insertText">
-            <span class="btn-icon">📝</span>
+          <button v-if="displayText && !hasError" class="btn btn-info" @click="insertText">
+            <span class="btn-icon">➕</span>
             插入
           </button>
-          <button class="btn btn-warning" @click="retryRewrite">
+          <!-- 错误时或任何时候都显示重试按钮 -->
+          <button v-if="hasError" class="btn btn-warning" @click="retryRewrite">
             <span class="btn-icon">🔄</span>
             重试
           </button>
         </div>
         
-        <!-- 进一步要求输入 -->
-        <div v-if="!isStreaming && displayText" class="further-request">
+        <!-- 进一步要求输入 - 只在成功且有内容时显示 -->
+        <div v-if="!isStreaming && displayText && !hasError" class="further-request">
           <div class="section-label">进一步要求</div>
           <textarea 
             v-model="furtherPrompt"
@@ -179,12 +181,14 @@ export default {
     const displayText = ref('')
     const isStreaming = ref(false)
     const furtherPrompt = ref('')
+    const hasError = ref(false) // 用于跟踪是否发生错误
     
     const startRewrite = async () => {
       if (!props.rewriteSession) return
       
       displayText.value = ''
       isStreaming.value = true
+      hasError.value = false // 重置错误状态
       
       try {
         const config = getRewriteConfig()
@@ -223,6 +227,7 @@ export default {
         
       } catch (error) {
         console.error('Rewrite failed:', error)
+        hasError.value = true // 设置错误状态
         // 使用通知服务显示错误
         notificationService.error('AI重写失败: ' + (error.message || '未知错误'))
       } finally {
@@ -286,12 +291,10 @@ export default {
     }
     
     const insertText = () => {
-      if (displayText.value && props.rewriteSession) {
+      if (displayText.value) {
+        // 插入操作不需要原文信息，只需要插入的文本
         emit('insert-text', {
-          originalText: props.rewriteSession.originalText,
-          newText: displayText.value.trim(),
-          selectionStart: props.rewriteSession.selectionStart,
-          selectionEnd: props.rewriteSession.selectionEnd
+          newText: displayText.value.trim()
         })
         closeRewriteSession()
       }
@@ -321,6 +324,7 @@ export default {
     }
     
     const closeRewriteSession = () => {
+      hasError.value = false // 重置错误状态
       emit('close-session')
     }
     
@@ -343,6 +347,7 @@ export default {
       uiStore,
       displayText,
       isStreaming,
+      hasError,
       furtherPrompt,
       getRewriteTypeLabel,
       formatRewriteText,

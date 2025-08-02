@@ -176,6 +176,22 @@ export default {
       }
     }
     
+    // 获取当前光标位置
+    const getCurrentCursorPosition = () => {
+      if (!editorTextarea.value) return 0
+      return editorTextarea.value.selectionStart
+    }
+    
+    // 设置光标位置
+    const setCursorPosition = (position) => {
+      if (!editorTextarea.value) return
+      nextTick(() => {
+        editorTextarea.value.selectionStart = position
+        editorTextarea.value.selectionEnd = position
+        editorTextarea.value.focus()
+      })
+    }
+    
     // 处理重写请求（可以从AIPanel调用）
     const handleRewriteFromPanel = (type) => {
       if (type === 'custom') {
@@ -356,6 +372,8 @@ export default {
       handleEditorInput,
       handleTextSelection,
       handleKeyboardSelection,
+      getCurrentCursorPosition,
+      setCursorPosition,
       handleRewriteFromPanel,
       hideCustomPromptModal,
       applyCustomPrompt

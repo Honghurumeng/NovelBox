@@ -66,6 +66,7 @@
         }"
       >
         <MainEditor 
+          ref="mainEditorRef"
           @start-rewrite="handleStartRewrite"
           @selected-text-change="handleSelectedTextChange"
         />
@@ -120,6 +121,7 @@ export default {
     
     // Header相关状态
     const titleInput = ref(null)
+    const mainEditorRef = ref(null)
     const editingTitle = ref('')
     const hasUnsavedChanges = ref(false)
     let lastSavedContent = ''
@@ -210,14 +212,24 @@ export default {
 
     // 处理插入文本事件
     const handleInsertText = (insertData) => {
-      if (chaptersStore.currentChapter) {
+      if (chaptersStore.currentChapter && mainEditorRef.value) {
+        // 获取当前光标位置
+        const cursorPosition = mainEditorRef.value.getCurrentCursorPosition()
         const currentContent = chaptersStore.currentChapter.content
+        
+        // 在光标位置插入新文本
         const newContent = 
-          currentContent.substring(0, insertData.selectionEnd) +
+          currentContent.substring(0, cursorPosition) +
           insertData.newText +
-          currentContent.substring(insertData.selectionEnd)
+          currentContent.substring(cursorPosition)
         
         chaptersStore.updateChapterContent(newContent)
+        
+        // 设置光标到插入文本的末尾
+        const newCursorPosition = cursorPosition + insertData.newText.length
+        nextTick(() => {
+          mainEditorRef.value.setCursorPosition(newCursorPosition)
+        })
       }
     }
 
@@ -339,6 +351,7 @@ export default {
       
       // 头部相关状态
       titleInput,
+      mainEditorRef,
       editingTitle,
       hasUnsavedChanges,
       
