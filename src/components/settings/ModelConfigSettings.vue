@@ -111,6 +111,8 @@ const onModelChange = () => {
 }
 
 onMounted(() => {
+  // 强制重新加载提供商数据，确保获取最新状态
+  llmService.reloadProviders()
   loadProviders()
   loadSavedConfig()
   
