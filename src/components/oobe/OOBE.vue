@@ -16,7 +16,7 @@
           </div>
           
           <div class="oobe-navigation">
-            <button @click="nextPage" class="next-btn">下一步</button>
+            <button @click="nextPage" class="btn btn-primary next-btn">下一步</button>
           </div>
         </div>
         
@@ -33,8 +33,8 @@
           </div>
           
           <div class="oobe-navigation">
-            <button @click="prevPage" class="prev-btn">上一步</button>
-            <button @click="nextPage" class="next-btn">下一步</button>
+            <button @click="prevPage" class="btn btn-secondary prev-btn">上一步</button>
+            <button @click="nextPage" class="btn btn-primary next-btn">下一步</button>
           </div>
         </div>
         
@@ -50,8 +50,8 @@
           </ul>
           
           <div class="oobe-navigation">
-            <button @click="prevPage" class="prev-btn">上一步</button>
-            <button @click="finishOOBE" class="finish-btn">开始使用</button>
+            <button @click="prevPage" class="btn btn-secondary prev-btn">上一步</button>
+            <button @click="finishOOBE" class="btn btn-success finish-btn">开始使用</button>
           </div>
         </div>
       </div>

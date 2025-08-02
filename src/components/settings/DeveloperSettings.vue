@@ -2,7 +2,7 @@
   <div class="settings-section">
     <h3 class="section-title">开发者选项</h3>
     <div class="setting-item">
-      <button @click="resetOOBE" class="reset-btn">
+      <button @click="resetOOBE" class="btn btn-warning reset-btn">
         重置新手引导
       </button>
     </div>

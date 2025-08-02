@@ -46,7 +46,7 @@
           <button type="button" class="btn btn-secondary" @click="closeModal">
             取消
           </button>
-          <button type="submit" class="btn btn-secondary">
+          <button type="submit" class="btn btn-primary">
             保存
           </button>
         </div>

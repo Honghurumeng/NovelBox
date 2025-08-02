@@ -5,13 +5,13 @@
       <label class="setting-label">存储路径</label>
       <div class="storage-path">
         <span class="path-text">{{ storagePath || '加载中...' }}</span>
-        <button @click="selectStoragePath" class="path-btn">
+        <button @click="selectStoragePath" class="btn btn-secondary path-btn">
           更改
         </button>
       </div>
     </div>
     <div class="setting-item">
-      <button @click="resetStoragePath" class="reset-btn">
+      <button @click="resetStoragePath" class="btn btn-warning reset-btn">
         重置为默认路径
       </button>
     </div>

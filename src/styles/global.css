@@ -219,12 +219,19 @@ body {
   overflow: hidden;
   user-select: none;
   min-height: 40px;
+  box-shadow: 0 2px 8px var(--accent-shadow);
 }
 
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 /* 按钮尺寸 */
@@ -232,12 +239,14 @@ body {
   padding: var(--spacing-xs) var(--spacing-sm);
   font-size: var(--font-xs);
   border-radius: var(--radius-md);
+  min-height: 32px;
 }
 
 .btn-lg {
   padding: var(--spacing-md) var(--spacing-lg);
   font-size: var(--font-base);
   border-radius: var(--radius-xl);
+  min-height: 48px;
 }
 
 /* 按钮变体 */
@@ -245,30 +254,33 @@ body {
   background: var(--btn-primary-bg);
   color: var(--btn-primary-color);
   border-color: transparent;
+  box-shadow: 0 2px 8px var(--accent-shadow);
 }
 
 .btn-primary:hover:not(:disabled) {
   background: var(--btn-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--accent-shadow);
 }
 
 .btn-secondary {
   background: var(--btn-secondary-bg);
   color: var(--btn-secondary-color);
   border-color: var(--btn-secondary-border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .btn-secondary:hover:not(:disabled) {
   background: var(--btn-secondary-hover);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .btn-danger {
   background: var(--btn-danger-bg);
   color: var(--btn-danger-color);
   border-color: var(--btn-danger-border);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
 }
 
 .btn-danger:hover:not(:disabled) {
@@ -282,39 +294,114 @@ body {
   background: var(--btn-success-bg);
   color: var(--btn-success-color);
   border-color: var(--btn-success-border);
+  box-shadow: 0 2px 8px rgba(47, 133, 90, 0.2);
 }
 
 .btn-success:hover:not(:disabled) {
   background: var(--btn-success-hover);
   color: white;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 12px rgba(47, 133, 90, 0.3);
 }
 
 .btn-warning {
   background: var(--btn-warning-bg);
   color: var(--btn-warning-color);
   border-color: var(--btn-warning-border);
+  box-shadow: 0 2px 8px rgba(214, 158, 46, 0.2);
 }
 
 .btn-warning:hover:not(:disabled) {
   background: var(--btn-warning-hover);
   color: white;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 12px rgba(214, 158, 46, 0.3);
 }
 
 .btn-info {
   background: var(--btn-info-bg);
   color: var(--btn-info-color);
   border-color: var(--btn-info-color);
+  box-shadow: 0 2px 8px rgba(43, 108, 176, 0.2);
 }
 
 .btn-info:hover:not(:disabled) {
   background: var(--btn-info-color);
   color: white;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+}
+
+/* 特殊按钮样式 */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-lg);
+  font-weight: normal;
+}
+
+.btn-icon.btn-sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--font-base);
+}
+
+.btn-icon.btn-lg {
+  width: 48px;
+  height: 48px;
+  font-size: var(--font-xl);
+}
+
+/* 轮廓按钮样式 */
+.btn-outline {
+  background: transparent;
+  border: 1px solid currentColor;
+  box-shadow: none;
+}
+
+.btn-outline.btn-primary {
+  color: var(--accent-solid);
+  border-color: var(--accent-solid);
+}
+
+.btn-outline.btn-primary:hover:not(:disabled) {
+  background: var(--accent-solid);
+  color: white;
+}
+
+.btn-outline.btn-success {
+  color: var(--btn-success-color);
+  border-color: var(--btn-success-color);
+}
+
+.btn-outline.btn-success:hover:not(:disabled) {
+  background: var(--btn-success-color);
+  color: white;
+}
+
+.btn-outline.btn-danger {
+  color: var(--btn-danger-color);
+  border-color: var(--btn-danger-color);
+}
+
+.btn-outline.btn-danger:hover:not(:disabled) {
+  background: var(--btn-danger-color);
+  color: white;
+}
+
+.btn-outline.btn-info {
+  color: var(--btn-info-color);
+  border-color: var(--btn-info-color);
+}
+
+.btn-outline.btn-info:hover:not(:disabled) {
+  background: var(--btn-info-color);
+  color: white;
 }
 
 /* 统一的卡片样式 */

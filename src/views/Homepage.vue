@@ -3,10 +3,10 @@
     <header class="header">
       <h1>我的小说</h1>
       <div class="header-actions">
-        <button class="settings-btn" @click="goToSettings">
+        <button class="btn btn-primary settings-btn" @click="goToSettings">
           设置
         </button>
-        <button class="new-novel-btn" @click="showNewNovelModal">
+        <button class="btn btn-primary new-novel-btn" @click="showNewNovelModal">
           创建新小说
         </button>
       </div>
@@ -38,16 +38,16 @@
         </div>
         
         <div class="novel-actions">
-          <button class="btn edit-btn" @click="editNovel(novel)">
+          <button class="btn btn-secondary edit-btn" @click="editNovel(novel)">
             编辑
           </button>
-          <button class="btn delete-btn" @click="promptDeleteNovel(novel)">
+          <button class="btn btn-danger delete-btn" @click="promptDeleteNovel(novel)">
             删除
           </button>
-          <button class="btn export-btn" @click="exportNovel(novel)">
+          <button class="btn btn-info export-btn" @click="exportNovel(novel)">
             导出小说
           </button>
-          <button class="btn open-btn" @click="openNovel(novel)">
+          <button class="btn btn-success open-btn" @click="openNovel(novel)">
             打开小说
           </button>
         </div>
@@ -256,25 +256,6 @@ export default {
   align-items: center;
 }
 
-.settings-btn,
-.new-novel-btn {
-  background: var(--btn-primary-bg);
-  color: var(--btn-primary-color);
-  border: none;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-sm);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition-normal);
-  box-shadow: 0 2px 8px var(--accent-shadow);
-}
-
-.settings-btn:hover,
-.new-novel-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px var(--accent-shadow);
-}
 
 .search-bar {
   margin-bottom: var(--spacing-xl);
@@ -435,37 +416,7 @@ export default {
   }
 }
 
-.export-btn {
-  background: var(--btn-info-bg);
-  color: var(--btn-info-color);
-  border: 1px solid var(--btn-info-color);
-}
 
-.export-btn:hover {
-  background: var(--btn-info-color);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(43,108,176,0.3);
-}
-
-.open-btn {
-  background: var(--btn-success-bg);
-  color: var(--btn-success-color);
-  border: 1px solid var(--btn-success-color);
-  flex: 1;
-}
-
-.open-btn:hover {
-  background: var(--btn-success-color);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(47,133,90,0.3);
-}
-
-.btn:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-}
 
 .no-novels {
   grid-column: 1 / -1;
@@ -560,21 +511,4 @@ export default {
   gap: 12px;
 }
 
-.btn-secondary {
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-color);
-}
-
-.btn-secondary:hover {
-  background: var(--nav-hover-bg);
-}
-
-.btn-danger {
-  background: var(--btn-danger-bg);
-  color: var(--btn-danger-color);
-}
-
-.btn-danger:hover {
-  opacity: 0.9;
-}
 </style>

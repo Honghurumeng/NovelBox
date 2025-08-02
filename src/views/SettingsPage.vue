@@ -4,7 +4,7 @@
       <!-- 左侧导航 -->
       <div class="settings-sidebar">
         <div class="sidebar-header">
-          <button class="back-btn" @click="goToHome" title="返回主页">
+          <button class="btn btn-secondary btn-icon back-btn" @click="goToHome" title="返回主页">
             ←
           </button>
           <h2 class="sidebar-title">设置</h2>

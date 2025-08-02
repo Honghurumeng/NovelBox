@@ -48,10 +48,10 @@
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-cancel" @click="closeModal">
+            <button type="button" class="btn btn-secondary btn-cancel" @click="closeModal">
               取消
             </button>
-            <button type="submit" class="btn btn-create" :disabled="submitting">
+            <button type="submit" class="btn btn-primary btn-create" :disabled="submitting">
               {{ submitting ? "保存中..." : "保存" }}
             </button>
           </div>

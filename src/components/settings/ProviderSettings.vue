@@ -5,7 +5,7 @@
       <div class="provider-list">
         <div class="list-header">
           <h4>提供商列表</h4>
-          <button class="add-provider-btn" @click="showAddProviderModal" title="添加提供商">
+          <button class="btn btn-primary btn-icon add-provider-btn" @click="showAddProviderModal" title="添加提供商">
             +
           </button>
         </div>
@@ -32,7 +32,7 @@
         <div v-if="selectedProvider" class="details-content">
           <div class="details-header">
             <h4>{{ selectedProvider.name || '未命名提供商' }}</h4>
-            <button class="delete-btn" @click="deleteProvider(selectedProvider.id)">
+            <button class="btn btn-danger delete-btn" @click="deleteProvider(selectedProvider.id)">
               删除
             </button>
           </div>
@@ -81,7 +81,7 @@
               <div class="models-header">
                 <label>模型列表</label>
                 <div class="models-actions">
-                  <button class="fetch-models-btn" @click="fetchModels">
+                  <button class="btn btn-secondary btn-sm fetch-models-btn" @click="fetchModels">
                     获取模型列表
                   </button>
                 </div>
@@ -108,7 +108,7 @@
                       placeholder="模型名称"
                     >
                     <button
-                      class="remove-model-btn"
+                      class="btn btn-danger btn-sm btn-icon remove-model-btn"
                       @click="removeModel(index)"
                       title="删除"
                     >
@@ -124,7 +124,7 @@
                       @keyup.enter="addModel"
                     >
                     <button
-                      class="add-model-btn"
+                      class="btn btn-success btn-sm btn-icon add-model-btn"
                       @click="addModel"
                       :disabled="!newModelName.trim()"
                     >
@@ -140,7 +140,7 @@
           </div>
           
           <div class="form-actions">
-            <button class="save-btn" @click="saveProvider">
+            <button class="btn btn-primary save-btn" @click="saveProvider">
               保存
             </button>
           </div>

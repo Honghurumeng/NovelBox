@@ -22,7 +22,7 @@
             <span class="session-icon">✨</span>
             {{ getRewriteTypeLabel(rewriteSession.type) }}
           </div>
-          <button class="close-session-btn" @click="closeRewriteSession">
+          <button class="btn btn-secondary btn-sm close-session-btn" @click="closeRewriteSession">
             ×
           </button>
         </div>
@@ -56,7 +56,7 @@
               <span class="error-icon">⚠️</span>
               <span class="error-text">{{ rewriteError }}</span>
             </div>
-            <button class="retry-btn error-retry-btn" @click="retryRewrite">
+            <button class="btn btn-warning btn-sm retry-btn error-retry-btn" @click="retryRewrite">
               <span class="btn-icon">🔄</span>
               重试
             </button>
@@ -65,13 +65,13 @@
         
         <!-- 操作按钮 -->
         <div v-if="!isStreaming && (displayText || rewriteError)" class="action-buttons">
-          <button v-if="displayText && !rewriteError" class="action-btn replace-btn" @click="replaceText">
+          <button v-if="displayText && !rewriteError" class="btn btn-success action-btn replace-btn" @click="replaceText">
             替换
           </button>
-          <button v-if="displayText && !rewriteError" class="action-btn insert-btn" @click="insertText">
+          <button v-if="displayText && !rewriteError" class="btn btn-info action-btn insert-btn" @click="insertText">
             插入
           </button>
-          <button class="action-btn retry-btn" @click="retryRewrite">
+          <button class="btn btn-warning action-btn retry-btn" @click="retryRewrite">
             重试
           </button>
         </div>
@@ -86,7 +86,7 @@
             @keydown.ctrl.enter="applyFurtherRequest"
           ></textarea>
           <button 
-            class="action-btn apply-further-btn" 
+            class="btn btn-primary action-btn apply-further-btn" 
             @click="applyFurtherRequest"
             :disabled="!furtherPrompt.trim() || isStreaming"
           >
