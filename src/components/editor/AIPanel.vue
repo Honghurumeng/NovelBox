@@ -14,6 +14,14 @@
       </h2>
     </div>
     
+    <!-- 自定义提示模态框 -->
+    <CustomPromptModal 
+      :is-visible="showCustomPromptModal"
+      :selected-text="selectedText"
+      @confirm="handleCustomPromptConfirm"
+      @cancel="handleCustomPromptCancel"
+    />
+    
     <div v-if="!uiStore.rightSidebarCollapsed" class="panel-content">
       <!-- AI重写结果显示区域 -->
       <div v-if="rewriteSession" class="rewrite-session">
@@ -120,7 +128,7 @@
               <span class="btn-icon">✍️</span>
               续写
             </button>
-            <button class="btn btn-outline btn-secondary" @click="handleRewrite('custom')">
+            <button class="btn btn-outline btn-secondary" @click="handleCustomRewrite">
               <span class="btn-icon">⚙️</span>
               自定义
             </button>
@@ -161,9 +169,13 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { useUIStore } from '@/stores'
 import { llmService, LLMRequest, notificationService } from '@/services'
+import CustomPromptModal from '@/components/modals/CustomPromptModal.vue'
 
 export default {
   name: 'AIPanel',
+  components: {
+    CustomPromptModal
+  },
   props: {
     rewriteSession: {
       type: Object,
@@ -182,6 +194,7 @@ export default {
     const isStreaming = ref(false)
     const furtherPrompt = ref('')
     const hasError = ref(false) // 用于跟踪是否发生错误
+    const showCustomPromptModal = ref(false) // 控制自定义提示模态框显示
     
     const startRewrite = async () => {
       if (!props.rewriteSession) return
@@ -334,6 +347,23 @@ export default {
       emit('rewrite', type)
     }
     
+    const handleCustomRewrite = () => {
+      if (!props.selectedText.trim()) return
+      
+      showCustomPromptModal.value = true
+    }
+    
+    const handleCustomPromptConfirm = (customPrompt) => {
+      showCustomPromptModal.value = false
+      
+      // 触发自定义重写，传递自定义提示
+      emit('rewrite', 'custom', customPrompt)
+    }
+    
+    const handleCustomPromptCancel = () => {
+      showCustomPromptModal.value = false
+    }
+    
     // 监听重写会话变化，自动开始重写
     watch(() => props.rewriteSession, (newSession) => {
       if (newSession) {
@@ -349,6 +379,7 @@ export default {
       isStreaming,
       hasError,
       furtherPrompt,
+      showCustomPromptModal,
       getRewriteTypeLabel,
       formatRewriteText,
       replaceText,
@@ -356,7 +387,10 @@ export default {
       retryRewrite,
       applyFurtherRequest,
       closeRewriteSession,
-      handleRewrite
+      handleRewrite,
+      handleCustomRewrite,
+      handleCustomPromptConfirm,
+      handleCustomPromptCancel
     }
   }
 }

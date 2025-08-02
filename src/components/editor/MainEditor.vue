@@ -15,43 +15,6 @@
         @click="handleTextSelection"
         @keydown="handleKeyboardSelection"
       ></textarea>
-      
-      <!-- 自定义提示模态框 -->
-      <div v-if="showCustomPromptModal" class="modal-overlay" @click="hideCustomPromptModal">
-        <div class="custom-prompt-modal" @click.stop>
-          <div class="modal-header">
-            <h3 class="modal-title">自定义</h3>
-            <button class="modal-close" @click="hideCustomPromptModal">×</button>
-          </div>
-          
-          <div class="modal-content">
-            <textarea
-              ref="customPromptTextarea"
-              v-model="customPrompt"
-              class="custom-prompt-textarea"
-              placeholder="输入自定义提示..."
-              @keydown.ctrl.enter.exact.prevent="applyCustomPrompt"
-              @keydown.esc="hideCustomPromptModal"
-            ></textarea>
-          </div>
-          
-          <div class="modal-actions">
-            <button 
-              class="action-btn apply-btn" 
-              @click="applyCustomPrompt"
-              :disabled="!customPrompt.trim()"
-            >
-              应用
-            </button>
-            <button 
-              class="action-btn cancel-btn" 
-              @click="hideCustomPromptModal"
-            >
-              取消
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -72,7 +35,6 @@ export default {
     const uiStore = useUIStore()
     
     const editorTextarea = ref(null)
-    const customPromptTextarea = ref(null)
     
     // 撤销/重做
     const historyStack = ref([])
@@ -81,8 +43,6 @@ export default {
     const HISTORY_LIMIT = 100
     
     // 自定义提示模态框状态
-    const showCustomPromptModal = ref(false)
-    const customPrompt = ref('')
     const selectedText = ref('')
     const selectionStart = ref(0)
     const selectionEnd = ref(0)
@@ -193,15 +153,9 @@ export default {
     }
     
     // 处理重写请求（可以从AIPanel调用）
-    const handleRewriteFromPanel = (type) => {
-      if (type === 'custom') {
-        showCustomPromptModal.value = true
-        nextTick(() => {
-          customPromptTextarea.value?.focus()
-        })
-      } else {
-        startRewrite(type)
-      }
+    const handleRewriteFromPanel = (type, customPromptText = '') => {
+      // 直接开始重写，AIPanel会处理自定义提示的输入
+      startRewrite(type, customPromptText)
     }
 
     // 开始重写
@@ -224,22 +178,6 @@ export default {
       }
 
       emit('start-rewrite', rewriteSession)
-    }
-    
-    // 隐藏自定义提示模态框
-    const hideCustomPromptModal = () => {
-      showCustomPromptModal.value = false
-      customPrompt.value = ''
-    }
-
-    // 应用自定义提示
-    const applyCustomPrompt = () => {
-      const promptText = customPrompt.value.trim()
-      if (promptText) {
-        console.log('应用自定义提示:', promptText)
-        startRewrite('custom', promptText)
-        hideCustomPromptModal()
-      }
     }
 
     const undo = () => {
@@ -364,19 +302,14 @@ export default {
       chaptersStore,
       uiStore,
       editorTextarea,
-      customPromptTextarea,
       editorContent,
-      showCustomPromptModal,
-      customPrompt,
       selectedText,
       handleEditorInput,
       handleTextSelection,
       handleKeyboardSelection,
       getCurrentCursorPosition,
       setCursorPosition,
-      handleRewriteFromPanel,
-      hideCustomPromptModal,
-      applyCustomPrompt
+      handleRewriteFromPanel
     }
   }
 }
@@ -447,141 +380,5 @@ export default {
 .theme-dark .chapter-editor::-webkit-scrollbar-thumb:hover,
 .theme-oled .chapter-editor::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
-}
-
-/* 模态框样式 */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  backdrop-filter: blur(4px);
-}
-
-.custom-prompt-modal {
-  background: var(--modal-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: var(--card-hover-shadow);
-  width: 90%;
-  max-width: 500px;
-  max-height: 80vh;
-  overflow: hidden;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--sidebar-bg);
-}
-
-.modal-title {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: var(--text-secondary);
-  padding: 0;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-
-.modal-close:hover {
-  background: var(--nav-hover-bg);
-  color: var(--text-primary);
-}
-
-.modal-content {
-  padding: 20px;
-}
-
-.custom-prompt-textarea {
-  width: 100%;
-  min-height: 80px;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: var(--input-bg);
-  color: var(--text-primary);
-  font-size: 12px;
-  font-family: inherit;
-  resize: vertical;
-  margin-bottom: 8px;
-}
-
-.custom-prompt-textarea:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px var(--accent-shadow);
-}
-
-.modal-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  padding: 16px 20px;
-  border-top: 1px solid var(--border-color);
-  background: var(--sidebar-bg);
-}
-
-.action-btn {
-  padding: 8px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-color);
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
-  transition: all 0.2s;
-  text-align: center;
-}
-
-.action-btn:hover:not(:disabled) {
-  background: var(--nav-hover-bg);
-  color: var(--text-primary);
-  border-color: var(--accent-color);
-}
-
-.action-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.apply-btn {
-  background: var(--btn-secondary-bg);
-  color: var(  --btn-secondary-color);
-  border-color: transparent;
-}
-
-.apply-btn:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.cancel-btn {
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-color);
 }
 </style>

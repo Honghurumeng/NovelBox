@@ -183,13 +183,14 @@ export default {
     }
     
     // 处理从AIPanel发起的重写请求
-    const handleRewriteFromPanel = (type) => {
+    const handleRewriteFromPanel = (type, customPrompt = '') => {
       if (!selectedText.value) return
       
       // 创建重写会话
       const session = {
         type,
         originalText: selectedText.value,
+        customPrompt: customPrompt, // 添加自定义提示
         selectionStart: selectionRange.value.start,
         selectionEnd: selectionRange.value.end
       }
