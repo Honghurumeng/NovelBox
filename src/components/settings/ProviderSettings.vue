@@ -218,10 +218,8 @@ const getProviderIcon = (type) => {
 
 // 显示添加提供商模态框
 const showAddProviderModal = () => {
-  newProvider.value = {
-    type: 'OpenAI',
-    name: ''
-  }
+  newProvider.value.type = 'OpenAI'
+  newProvider.value.name = ''
   showAddModal.value = true
 }
 

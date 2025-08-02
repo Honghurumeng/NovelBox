@@ -12,40 +12,40 @@
             <label for="novelName" class="form-label">小说名称</label>
             <input
               id="novelName"
-              v-model="formData.name"
+              v-model.trim="formData.name"
               type="text"
               placeholder="请输入小说名称"
               class="form-input"
               required
               maxlength="100"
               ref="nameInput"
-            >
+            />
           </div>
           
-            <div class="form-group">
-              <label for="novelAuthor" class="form-label">作者</label>
-              <input
-                id="novelAuthor"
-                v-model="formData.author"
-                type="text"
-                placeholder="请输入作者名"
-                class="form-input"
-                required
-                maxlength="50"
-              >
-            </div>
+          <div class="form-group">
+            <label for="novelAuthor" class="form-label">作者</label>
+            <input
+              id="novelAuthor"
+              v-model.trim="formData.author"
+              type="text"
+              placeholder="请输入作者名"
+              class="form-input"
+              required
+              maxlength="50"
+            />
+          </div>
             
-            <div class="form-group">
-              <label for="novelDescription" class="form-label">简介</label>
-              <textarea
-                id="novelDescription"
-                v-model="formData.description"
-                placeholder="请输入小说简介"
-                class="form-textarea"
-                rows="4"
-                maxlength="500"
-              ></textarea>
-            </div>
+          <div class="form-group">
+            <label for="novelDescription" class="form-label">简介</label>
+            <textarea
+              id="novelDescription"
+              v-model.trim="formData.description"
+              placeholder="请输入小说简介"
+              class="form-textarea"
+              rows="4"
+              maxlength="500"
+            ></textarea>
+          </div>
           
           <div class="modal-footer">
             <button type="button" class="btn btn-cancel" @click="closeModal">
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { ref, watch, nextTick } from 'vue'
+import { ref, reactive, watch, nextTick } from 'vue'
 import { useNovelsStore, useUIStore } from '@/stores'
 import { UtilsService } from '@/services'
 
@@ -75,7 +75,7 @@ export default {
     const nameInput = ref(null)
     const submitting = ref(false)
     
-    const formData = ref({
+    const formData = reactive({
       name: '',
       author: '',
       description: ''
@@ -83,11 +83,9 @@ export default {
 
     // 重置表单
     const resetForm = () => {
-      formData.value = {
-        name: '',
-        author: '',
-        description: ''
-      }
+      formData.name = ''
+      formData.author = ''
+      formData.description = ''
     }
 
     // 关闭模态框
@@ -98,7 +96,7 @@ export default {
 
     // 处理表单提交
     const handleSubmit = async () => {
-      const validation = UtilsService.validateNovelData(formData.value)
+      const validation = UtilsService.validateNovelData(formData)
       
       if (!validation.isValid) {
         alert(validation.errors.join('\n'))
@@ -108,7 +106,7 @@ export default {
       submitting.value = true
       
       try {
-        await novelsStore.createNovel(formData.value)
+        await novelsStore.createNovel(formData)
         closeModal()
       } catch (error) {
         alert('创建失败: ' + error.message)
@@ -274,7 +272,7 @@ export default {
 
 .btn-create {
   background: var(--btn-secondary-bg);
-  color: var(  --btn-secondary-color);
+  color: var(--btn-secondary-color);
 }
 
 .btn-create:hover {
