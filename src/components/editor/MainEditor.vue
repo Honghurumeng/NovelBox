@@ -9,18 +9,7 @@
         @input="handleEditorInput"
         @mouseup="handleTextSelection"
         @keyup="handleTextSelection"
-        @contextmenu="handleContextMenu"
       ></textarea>
-      
-      <!-- 新的右键菜单组件 -->
-      <ContextMenu
-        :visible="showContextMenu"
-        :position="contextMenuPosition"
-        :selected-text="selectedText"
-        :textarea-ref="editorTextarea"
-        @rewrite="handleRewrite"
-        @hide="hideContextMenu"
-      />
       
       <!-- 自定义提示模态框 -->
       <div v-if="showCustomPromptModal" class="modal-overlay" @click="hideCustomPromptModal">
@@ -67,14 +56,10 @@ import { ref, reactive, computed, watch, nextTick, onMounted, onUnmounted } from
 import { useRouter } from 'vue-router'
 import { useNovelsStore, useChaptersStore, useUIStore } from '@/stores'
 import { llmService, LLMRequest } from '@/services'
-import ContextMenu from './ContextMenu.vue'
 
 export default {
   name: 'MainEditor',
-  components: {
-    ContextMenu
-  },
-  emits: ['start-rewrite'],
+  emits: ['start-rewrite', 'selected-text-change'],
   setup(props, { emit }) {
     const router = useRouter()
     const novelsStore = useNovelsStore()
@@ -90,14 +75,12 @@ export default {
     const isUndoingOrRedoing = ref(false)
     const HISTORY_LIMIT = 100
     
-    // 右键菜单相关状态
-    const showContextMenu = ref(false)
+    // 自定义提示模态框状态
     const showCustomPromptModal = ref(false)
     const customPrompt = ref('')
     const selectedText = ref('')
     const selectionStart = ref(0)
     const selectionEnd = ref(0)
-    const contextMenuPosition = reactive({ x: 0, y: 0 })
     
     const editorContent = computed({
       get: () => chaptersStore.currentChapterContent,
@@ -128,42 +111,25 @@ export default {
         selectedText.value = text
         selectionStart.value = start
         selectionEnd.value = end
+        // 通知父组件文本选择变化
+        emit('selected-text-change', {
+          text: text,
+          start: start,
+          end: end
+        })
       } else {
         selectedText.value = ''
+        // 通知父组件清空选择
+        emit('selected-text-change', {
+          text: '',
+          start: 0,
+          end: 0
+        })
       }
     }
 
-    // 处理右键菜单
-    const handleContextMenu = (event) => {
-      if (!editorTextarea.value) return
-      
-      const textarea = editorTextarea.value
-      const start = textarea.selectionStart
-      const end = textarea.selectionEnd
-      const text = textarea.value.substring(start, end)
-      
-      // 只有选中文本时才显示右键菜单
-      if (text && text.trim().length > 0 && text.length <= 1000) {
-        event.preventDefault()
-        
-        selectedText.value = text
-        selectionStart.value = start
-        selectionEnd.value = end
-        
-        contextMenuPosition.x = event.clientX
-        contextMenuPosition.y = event.clientY
-        
-        showContextMenu.value = true
-      }
-    }
-
-    // 隐藏右键菜单
-    const hideContextMenu = () => {
-      showContextMenu.value = false
-    }
-
-    // 处理重写请求
-    const handleRewrite = (type) => {
+    // 处理重写请求（可以从AIPanel调用）
+    const handleRewriteFromPanel = (type) => {
       if (type === 'custom') {
         showCustomPromptModal.value = true
         nextTick(() => {
@@ -296,12 +262,9 @@ export default {
       }
     }
 
-    // 点击外部隐藏右键菜单
+    // 点击外部处理
     const handleClickOutside = (event) => {
-      // 隐藏右键菜单
-      if (showContextMenu.value) {
-        showContextMenu.value = false
-      }
+      // 可以在这里添加其他需要点击外部隐藏的功能
     }
 
     // 初始化自动保存定时器
@@ -331,16 +294,12 @@ export default {
       editorTextarea,
       customPromptTextarea,
       editorContent,
-      showContextMenu,
       showCustomPromptModal,
       customPrompt,
       selectedText,
-      contextMenuPosition,
       handleEditorInput,
       handleTextSelection,
-      handleContextMenu,
-      hideContextMenu,
-      handleRewrite,
+      handleRewriteFromPanel,
       hideCustomPromptModal,
       applyCustomPrompt
     }

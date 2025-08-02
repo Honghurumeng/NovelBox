@@ -98,18 +98,53 @@
       
       <!-- 默认状态 - 无重写会话时显示 -->
       <div v-else class="default-state">
-        <div class="welcome-section">
-          <div class="welcome-icon">🤖</div>
-          <h3 class="welcome-title">AI写作助手</h3>
-          <p class="welcome-description">选择文本并右键使用AI重写功能</p>
+        <!-- 选中文本显示区域 -->
+        <div v-if="selectedText" class="selected-text-section">
+          <div class="section-label">选中的文本</div>
+          <div class="selected-text">{{ selectedText }}</div>
         </div>
         
-        <div class="tips-section">
+        <!-- AI功能按钮 -->
+        <div v-if="selectedText" class="ai-functions-section">
+          <div class="section-label">AI功能</div>
+          <div class="function-buttons">
+            <button class="function-btn expand-btn" @click="handleRewrite('expand')">
+              <span class="btn-icon">📈</span>
+              扩写
+            </button>
+            <button class="function-btn contract-btn" @click="handleRewrite('contract')">
+              <span class="btn-icon">📉</span>
+              缩写
+            </button>
+            <button class="function-btn beautify-btn" @click="handleRewrite('beautify')">
+              <span class="btn-icon">✨</span>
+              美化文笔
+            </button>
+            <button class="function-btn continue-btn" @click="handleRewrite('continue')">
+              <span class="btn-icon">✍️</span>
+              续写
+            </button>
+            <button class="function-btn custom-btn" @click="handleRewrite('custom')">
+              <span class="btn-icon">⚙️</span>
+              自定义
+            </button>
+          </div>
+        </div>
+        
+        <!-- 欢迎信息 - 无选中文本时显示 -->
+        <div v-if="!selectedText" class="welcome-section">
+          <div class="welcome-icon">🤖</div>
+          <h3 class="welcome-title">AI写作助手</h3>
+          <p class="welcome-description">选择文本使用AI重写功能</p>
+        </div>
+        
+        <!-- 使用提示 -->
+        <div v-if="!selectedText" class="tips-section">
           <div class="section-label">使用提示</div>
           <div class="tips-list">
             <div class="tip-item">
               <span class="tip-icon">💡</span>
-              选中文本后右键查看重写选项
+              选中文本后在此面板进行AI操作
             </div>
             <div class="tip-item">
               <span class="tip-icon">✨</span>
@@ -137,9 +172,13 @@ export default {
     rewriteSession: {
       type: Object,
       default: null
+    },
+    selectedText: {
+      type: String,
+      default: ''
     }
   },
-  emits: ['replace-text', 'insert-text', 'close-session', 'update-session'],
+  emits: ['replace-text', 'insert-text', 'close-session', 'update-session', 'rewrite'],
   setup(props, { emit }) {
     const uiStore = useUIStore()
     
@@ -292,6 +331,12 @@ export default {
       emit('close-session')
     }
     
+    const handleRewrite = (type) => {
+      if (!props.selectedText.trim()) return
+      
+      emit('rewrite', type)
+    }
+    
     // 监听重写会话变化，自动开始重写
     watch(() => props.rewriteSession, (newSession) => {
       if (newSession) {
@@ -313,7 +358,8 @@ export default {
       insertText,
       retryRewrite,
       applyFurtherRequest,
-      closeRewriteSession
+      closeRewriteSession,
+      handleRewrite
     }
   }
 }
@@ -721,6 +767,126 @@ export default {
   flex-direction: column;
   gap: 20px;
   height: 100%;
+}
+
+/* 选中文本显示区域 */
+.selected-text-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.selected-text {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  max-height: 120px;
+  overflow-y: auto;
+  word-wrap: break-word;
+  margin-top: 8px;
+}
+
+/* AI功能按钮区域 */
+.ai-functions-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.function-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.function-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  min-height: 44px;
+}
+
+.function-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.function-btn:hover::before {
+  opacity: 1;
+}
+
+.function-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-color);
+}
+
+.function-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.btn-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* 特定按钮颜色 */
+.expand-btn:hover {
+  background: linear-gradient(135deg, #2196f3, #42a5f5);
+  color: white;
+  border-color: transparent;
+}
+
+.contract-btn:hover {
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+  color: white;
+  border-color: transparent;
+}
+
+.beautify-btn:hover {
+  background: linear-gradient(135deg, #9c27b0, #ba68c8);
+  color: white;
+  border-color: transparent;
+}
+
+.continue-btn:hover {
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: white;
+  border-color: transparent;
+}
+
+.custom-btn:hover {
+  background: linear-gradient(135deg, #607d8b, #78909c);
+  color: white;
+  border-color: transparent;
 }
 
 .welcome-section {

@@ -65,7 +65,10 @@
           'right-collapsed': uiStore.rightSidebarCollapsed
         }"
       >
-        <MainEditor @start-rewrite="handleStartRewrite" />
+        <MainEditor 
+          @start-rewrite="handleStartRewrite"
+          @selected-text-change="handleSelectedTextChange"
+        />
       </div>
       
       <!-- 右侧栏 - AI工具 -->
@@ -75,9 +78,11 @@
       >
         <AIPanel 
           :rewrite-session="rewriteSession"
+          :selected-text="selectedText"
           @replace-text="handleReplaceText"
           @insert-text="handleInsertText"
           @close-session="handleCloseSession"
+          @rewrite="handleRewriteFromPanel"
         />
       </div>
     </div>
@@ -121,6 +126,8 @@ export default {
     
     // AI重写会话管理
     const rewriteSession = ref(null)
+    const selectedText = ref('')
+    const selectionRange = ref({ start: 0, end: 0 })
 
     const init = async () => {
       // Load novels if not already loaded
@@ -158,6 +165,34 @@ export default {
     // 处理开始重写事件
     const handleStartRewrite = (session) => {
       rewriteSession.value = session
+    }
+    
+    // 处理选中文本变化
+    const handleSelectedTextChange = (selectionData) => {
+      if (typeof selectionData === 'string') {
+        // 兼容旧格式
+        selectedText.value = selectionData
+        selectionRange.value = { start: 0, end: selectionData.length }
+      } else {
+        // 新格式
+        selectedText.value = selectionData.text
+        selectionRange.value = { start: selectionData.start, end: selectionData.end }
+      }
+    }
+    
+    // 处理从AIPanel发起的重写请求
+    const handleRewriteFromPanel = (type) => {
+      if (!selectedText.value) return
+      
+      // 创建重写会话
+      const session = {
+        type,
+        originalText: selectedText.value,
+        selectionStart: selectionRange.value.start,
+        selectionEnd: selectionRange.value.end
+      }
+      
+      handleStartRewrite(session)
     }
 
     // 处理替换文本事件
@@ -292,19 +327,34 @@ export default {
     })
 
     return {
+      // 状态管理
       novelsStore,
       chaptersStore,
       uiStore,
+      
+      // AI相关状态
       rewriteSession,
+      selectedText,
+      selectionRange,
+      
+      // 头部相关状态
       titleInput,
       editingTitle,
       hasUnsavedChanges,
+      
+      // 导航和保存方法
       goToHomepage,
       manualSave,
+      
+      // 标题编辑方法
       startEditingTitle,
       finishEditingTitle,
       cancelEditingTitle,
+      
+      // AI相关方法
       handleStartRewrite,
+      handleSelectedTextChange,
+      handleRewriteFromPanel,
       handleReplaceText,
       handleInsertText,
       handleCloseSession
