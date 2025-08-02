@@ -368,6 +368,8 @@ const removeModel = (index) => {
 // 保存提供商到本地存储
 const saveProviders = () => {
   localStorage.setItem('novelbox-providers', JSON.stringify(providers.value))
+  // 触发自定义事件通知其他组件提供商数据已更新
+  window.dispatchEvent(new CustomEvent('providers-updated'))
 }
 
 // 从本地存储加载提供商
@@ -761,13 +763,13 @@ onMounted(() => {
   color: var(--btn-secondary-color);
 }
 
-.cancel-btn:hover {
+/* .cancel-btn:hover {
   background: var(--btn-secondary-hover);
-}
+} */
 
 .confirm-btn {
-  background: var(--accent-color);
-  color: white;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
 }
 
 .confirm-btn:hover {

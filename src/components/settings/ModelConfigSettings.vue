@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { llmService } from '@/services'
 
 const selectedProvider = ref('')
@@ -115,11 +115,25 @@ onMounted(() => {
   loadSavedConfig()
   
   // 监听提供商变化，重新加载
-  window.addEventListener('storage', (e) => {
+  const handleStorageChange = (e) => {
     if (e.key === 'novelbox-providers') {
       llmService.reloadProviders()
       loadProviders()
     }
+  }
+  
+  const handleProvidersUpdated = () => {
+    llmService.reloadProviders()
+    loadProviders()
+  }
+  
+  window.addEventListener('storage', handleStorageChange)
+  window.addEventListener('providers-updated', handleProvidersUpdated)
+  
+  // 在组件卸载时移除事件监听器
+  onUnmounted(() => {
+    window.removeEventListener('storage', handleStorageChange)
+    window.removeEventListener('providers-updated', handleProvidersUpdated)
   })
 })
 </script>
