@@ -50,10 +50,10 @@
   --input-bg: #ffffff;
   
   /* 主色调 */
-  --accent-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --accent-solid: #667eea;
-  --accent-shadow: rgba(102, 126, 234, 0.2);
-  --accent-hover: rgba(102, 126, 234, 0.1);
+  --accent-color: #8b9dc3;
+  --accent-solid: #8b9dc3;
+  --accent-shadow: rgba(139, 157, 195, 0.2);
+  --accent-hover: rgba(139, 157, 195, 0.1);
   
   /* 导航和交互 */
   --nav-hover-bg: #f1f3f5;
@@ -67,9 +67,9 @@
   --card-border: rgba(0, 0, 0, 0.08);
   
   /* 按钮样式 */
-  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
-  --btn-primary-hover: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  --btn-primary-hover: #7a8db5;
   
   --btn-secondary-bg: #f8f9fa;
   --btn-secondary-color: #495057;
@@ -123,10 +123,10 @@
   --input-bg: #262626;
   
   /* 主色调 */
-  --accent-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --accent-solid: #667eea;
-  --accent-shadow: rgba(102, 126, 234, 0.3);
-  --accent-hover: rgba(102, 126, 234, 0.15);
+  --accent-color: #8b9dc3;
+  --accent-solid: #8b9dc3;
+  --accent-shadow: rgba(139, 157, 195, 0.3);
+  --accent-hover: rgba(139, 157, 195, 0.15);
   
   /* 导航和交互 */
   --nav-hover-bg: #404040;
@@ -140,9 +140,9 @@
   --card-border: rgba(255, 255, 255, 0.1);
   
   /* 按钮样式 */
-  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
-  --btn-primary-hover: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  --btn-primary-hover: #7a8db5;
   
   --btn-secondary-bg: #404040;
   --btn-secondary-color: #e5e5e5;
@@ -549,8 +549,9 @@ body {
   --sidebar-bg: #000000;
   --content-bg: #000000;
   --input-bg: #000000;
-  --accent-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --accent-shadow: rgba(102, 126, 234, 0.4);
+  --accent-color: #8b9dc3;
+  --accent-solid: #8b9dc3;
+  --accent-shadow: rgba(139, 157, 195, 0.4);
   --nav-hover-bg: #1a1a1a;
   --nav-active-bg: #333333;
   --nav-active-color: #ffffff;
@@ -560,7 +561,7 @@ body {
   --card-bg: #000000;
   --card-shadow: 0 4px 12px rgba(255, 255, 255, 0.03);
   --card-hover-shadow: 0 6px 16px rgba(255, 255, 255, 0.05);
-  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
   --btn-secondary-bg: #1a1a1a;
   --btn-secondary-color: #e9ecef;
@@ -584,8 +585,9 @@ body {
   --sidebar-bg: #bbdefb;
   --content-bg: #e3f2fd;
   --input-bg: #ffffff;
-  --accent-color: linear-gradient(135deg, #2196f3 0%, #0d47a1 100%);
-  --accent-shadow: rgba(33, 150, 243, 0.3);
+  --accent-color: #64b5f6;
+  --accent-solid: #64b5f6;
+  --accent-shadow: rgba(100, 181, 246, 0.3);
   --nav-hover-bg: #90caf9;
   --nav-active-bg: #64b5f6;
   --nav-active-color: #0d47a1;
@@ -593,9 +595,9 @@ body {
   --reset-btn-color: #d32f2f;
   --reset-btn-hover-bg: #bbdefb;
   --card-bg: #ffffff;
-  --card-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
-  --card-hover-shadow: 0 6px 16px rgba(33, 150, 243, 0.2);
-  --btn-primary-bg: linear-gradient(135deg, #2196f3 0%, #0d47a1 100%);
+  --card-shadow: 0 4px 12px rgba(100, 181, 246, 0.15);
+  --card-hover-shadow: 0 6px 16px rgba(100, 181, 246, 0.2);
+  --btn-primary-bg: #64b5f6;
   --btn-primary-color: #ffffff;
   --btn-secondary-bg: #bbdefb;
   --btn-secondary-color: #0d47a1;
@@ -619,8 +621,9 @@ body {
   --sidebar-bg: #c8e6c9;
   --content-bg: #e8f5e9;
   --input-bg: #ffffff;
-  --accent-color: linear-gradient(135deg, #4caf50 0%, #1b5e20 100%);
-  --accent-shadow: rgba(76, 175, 80, 0.3);
+  --accent-color: #81c784;
+  --accent-solid: #81c784;
+  --accent-shadow: rgba(129, 199, 132, 0.3);
   --nav-hover-bg: #a5d6a7;
   --nav-active-bg: #81c784;
   --nav-active-color: #1b5e20;
@@ -628,9 +631,9 @@ body {
   --reset-btn-color: #d32f2f;
   --reset-btn-hover-bg: #c8e6c9;
   --card-bg: #ffffff;
-  --card-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
-  --card-hover-shadow: 0 6px 16px rgba(76, 175, 80, 0.2);
-  --btn-primary-bg: linear-gradient(135deg, #4caf50 0%, #1b5e20 100%);
+  --card-shadow: 0 4px 12px rgba(129, 199, 132, 0.15);
+  --card-hover-shadow: 0 6px 16px rgba(129, 199, 132, 0.2);
+  --btn-primary-bg: #81c784;
   --btn-primary-color: #ffffff;
   --btn-secondary-bg: #c8e6c9;
   --btn-secondary-color: #1b5e20;
@@ -654,8 +657,9 @@ body {
   --sidebar-bg: #e1bee7;
   --content-bg: #f3e5f5;
   --input-bg: #ffffff;
-  --accent-color: linear-gradient(135deg, #9c27b0 0%, #4a148c 100%);
-  --accent-shadow: rgba(156, 39, 176, 0.3);
+  --accent-color: #ba68c8;
+  --accent-solid: #ba68c8;
+  --accent-shadow: rgba(186, 104, 200, 0.3);
   --nav-hover-bg: #ce93d8;
   --nav-active-bg: #ba68c8;
   --nav-active-color: #4a148c;
@@ -663,9 +667,9 @@ body {
   --reset-btn-color: #d32f2f;
   --reset-btn-hover-bg: #e1bee7;
   --card-bg: #ffffff;
-  --card-shadow: 0 4px 12px rgba(156, 39, 176, 0.15);
-  --card-hover-shadow: 0 6px 16px rgba(156, 39, 176, 0.2);
-  --btn-primary-bg: linear-gradient(135deg, #9c27b0 0%, #4a148c 100%);
+  --card-shadow: 0 4px 12px rgba(186, 104, 200, 0.15);
+  --card-hover-shadow: 0 6px 16px rgba(186, 104, 200, 0.2);
+  --btn-primary-bg: #ba68c8;
   --btn-primary-color: #ffffff;
   --btn-secondary-bg: #e1bee7;
   --btn-secondary-color: #4a148c;
@@ -689,8 +693,9 @@ body {
   --sidebar-bg: #eee8d5;
   --content-bg: #fdf6e3;
   --input-bg: #ffffff;
-  --accent-color: linear-gradient(135deg, #b58900 0%, #cb4b16 100%);
-  --accent-shadow: rgba(181, 137, 0, 0.3);
+  --accent-color: #dcc896;
+  --accent-solid: #dcc896;
+  --accent-shadow: rgba(220, 200, 150, 0.3);
   --nav-hover-bg: #e9e2d0;
   --nav-active-bg: #dcd4bc;
   --nav-active-color: #586e75;
@@ -698,10 +703,10 @@ body {
   --reset-btn-color: #dc322f;
   --reset-btn-hover-bg: #e9e2d0;
   --card-bg: #ffffff;
-  --card-shadow: 0 4px 12px rgba(181, 137, 0, 0.15);
-  --card-hover-shadow: 0 6px 16px rgba(181, 137, 0, 0.2);
-  --btn-primary-bg: linear-gradient(135deg, #b58900 0%, #cb4b16 100%);
-  --btn-primary-color: #ffffff;
+  --card-shadow: 0 4px 12px rgba(220, 200, 150, 0.15);
+  --card-hover-shadow: 0 6px 16px rgba(220, 200, 150, 0.2);
+  --btn-primary-bg: #dcc896;
+  --btn-primary-color: #586e75;
   --btn-secondary-bg: #eee8d5;
   --btn-secondary-color: #586e75;
   --btn-danger-bg: #ffdfdf;
@@ -724,8 +729,9 @@ body {
   --sidebar-bg: #ffffff;
   --content-bg: #f8f9fa;
   --input-bg: #ffffff;
-  --accent-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --accent-shadow: rgba(102, 126, 234, 0.2);
+  --accent-color: #8b9dc3;
+  --accent-solid: #8b9dc3;
+  --accent-shadow: rgba(139, 157, 195, 0.2);
   --nav-hover-bg: #f1f3f5;
   --nav-active-bg: #e9ecef;
   --nav-active-color: #212529;
@@ -735,7 +741,7 @@ body {
   --card-bg: #ffffff;
   --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   --card-hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  --btn-primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
   --btn-secondary-bg: #f8f9fa;
   --btn-secondary-color: #495057;
@@ -838,7 +844,7 @@ body {
 
 /* Focus outline styles */
 *:focus-visible {
-  outline: 2px solid var(--accent-color);
+  outline: 2px solid var(--accent-solid);
   outline-offset: 2px;
 }
 
