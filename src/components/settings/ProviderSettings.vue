@@ -193,7 +193,7 @@
 import { ref, reactive, onMounted } from 'vue'
 
 // 提供商数据
-const providers = ref([])
+const providers = reactive([])
 const selectedProvider = ref(null)
 const showAddModal = ref(false)
 const newModelName = ref('')
@@ -244,7 +244,7 @@ const addProvider = () => {
     models: []
   }
   
-  providers.value.push(provider)
+  providers.push(provider)
   closeAddModal()
   saveProviders()
 }
@@ -258,12 +258,12 @@ const selectProvider = (provider) => {
 const deleteProvider = (id) => {
   if (!confirm('确定要删除这个提供商吗？')) return
   
-  const index = providers.value.findIndex(p => p.id === id)
+  const index = providers.findIndex(p => p.id === id)
   if (index !== -1) {
-    providers.value.splice(index, 1)
+    providers.splice(index, 1)
     
     if (selectedProvider.value && selectedProvider.value.id === id) {
-      selectedProvider.value = providers.value.length > 0 ? providers.value[0] : null
+      selectedProvider.value = providers.length > 0 ? providers[0] : null
     }
     
     saveProviders()
@@ -365,7 +365,7 @@ const removeModel = (index) => {
 
 // 保存提供商到本地存储
 const saveProviders = () => {
-  localStorage.setItem('novelbox-providers', JSON.stringify(providers.value))
+  localStorage.setItem('novelbox-providers', JSON.stringify(providers))
   // 触发自定义事件通知其他组件提供商数据已更新
   window.dispatchEvent(new CustomEvent('providers-updated'))
 }
@@ -375,14 +375,15 @@ const loadProviders = () => {
   try {
     const saved = localStorage.getItem('novelbox-providers')
     if (saved) {
-      providers.value = JSON.parse(saved)
-      if (providers.value.length > 0) {
-        selectedProvider.value = providers.value[0]
+      const loadedProviders = JSON.parse(saved)
+      providers.splice(0, providers.length, ...loadedProviders)
+      if (providers.length > 0) {
+        selectedProvider.value = providers[0]
       }
     }
   } catch (error) {
     console.error('加载提供商失败:', error)
-    providers.value = []
+    providers.splice(0, providers.length)
   }
 }
 
