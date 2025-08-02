@@ -11,3 +11,4 @@ export {
   llmService 
 } from './llm'
 export { notificationService } from './notifications'
+export { confirmService } from './confirm'

@@ -71,23 +71,6 @@
       @close="uiStore.closeEditNovelModal"
       @update="updateNovel"
     />
- 
-    <!-- 删除确认模态框 -->
-    <div v-if="showDeleteModal" class="modal-overlay" @click="closeDeleteModal">
-      <div class="modal-content" @click.stop>
-        <div class="modal-header">
-          <h3>删除 {{ deletingNovel?.name }}</h3>
-          <button class="close-btn" @click="closeDeleteModal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p>确定要删除这本小说吗？此操作无法撤销。</p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" @click="closeDeleteModal">取消</button>
-          <button class="btn btn-danger" @click="confirmDeleteNovel">删除</button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -95,7 +78,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNovelsStore, useUIStore } from '@/stores'
-import { UtilsService, notificationService } from '@/services'
+import { UtilsService, notificationService, confirmService } from '@/services'
 import NewNovelModal from '@/components/modals/NewNovelModal.vue'
 import EditNovelModal from '@/components/modals/EditNovelModal.vue'
 
@@ -111,10 +94,6 @@ export default {
     const uiStore = useUIStore()
 
     const searchQuery = ref('')
-
-    // 删除小说相关状态
-    const showDeleteModal = ref(false)
-    const deletingNovel = ref(null)
     
     const filteredNovels = computed(() => {
       if (!searchQuery.value) {
@@ -164,25 +143,16 @@ export default {
       }
     }
     
-    const promptDeleteNovel = (novel) => {
-      deletingNovel.value = novel
-      showDeleteModal.value = true
-    }
-
-    const closeDeleteModal = () => {
-      showDeleteModal.value = false
-      deletingNovel.value = null
-    }
-
-    const confirmDeleteNovel = async () => {
-      if (!deletingNovel.value) return
+    const promptDeleteNovel = async (novel) => {
+      const confirmed = await confirmService.delete(`小说《${novel.name}》`)
+      if (!confirmed) return
+      
       try {
-        await novelsStore.deleteNovel(deletingNovel.value.id)
+        await novelsStore.deleteNovel(novel.id)
+        notificationService.success('小说已删除')
       } catch (error) {
         console.error('删除小说失败:', error)
         notificationService.error('删除小说失败: ' + error.message)
-      } finally {
-        closeDeleteModal()
       }
     }
     
@@ -248,12 +218,7 @@ export default {
       createNovel,
       editNovel,
       updateNovel,
-      // 删除相关
-      showDeleteModal,
-      deletingNovel,
       promptDeleteNovel,
-      closeDeleteModal,
-      confirmDeleteNovel,
       openNovel,
       exportNovel,
       goToSettings
@@ -264,188 +229,210 @@ export default {
 
 <style scoped>
 .homepage {
-  padding: 24px;
+  padding: var(--spacing-lg);
   max-width: 1200px;
   margin: 0 auto;
+  background: var(--bg-color);
+  min-height: 100vh;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-xl);
 }
 
 .header h1 {
   margin: 0;
   color: var(--text-primary);
-  font-size: 2rem;
+  font-size: var(--font-3xl);
+  font-weight: 700;
 }
 
 .header-actions {
   display: flex;
-  gap: 16px;
+  gap: var(--spacing-md);
   align-items: center;
 }
 
-.settings-btn {
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-color);
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.settings-btn:hover {
-  background: var(--nav-hover-bg);
-}
-
+.settings-btn,
 .new-novel-btn {
-  background: var(--btn-secondary-bg);
-  color: var(  --btn-secondary-color);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
   border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-sm);
   font-weight: 500;
-  transition: all 0.2s;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: 0 2px 8px var(--accent-shadow);
 }
 
+.settings-btn:hover,
 .new-novel-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--accent-shadow);
+  box-shadow: 0 4px 16px var(--accent-shadow);
 }
 
 .search-bar {
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-xl);
 }
 
 .search-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: all 0.2s;
+  border-radius: var(--radius-lg);
   background: var(--input-bg);
   color: var(--text-primary);
+  font-size: var(--font-base);
+  transition: all var(--transition-normal);
 }
 
 .search-input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--accent-shadow);
-  border-color: var(--accent-color);
+  border-color: var(--accent-solid);
+  box-shadow: 0 0 0 3px var(--accent-shadow);
 }
 
 .novels-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-lg);
 }
 
 .novel-card {
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 20px;
   background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
   box-shadow: var(--card-shadow);
-  transition: all 0.2s;
-}
-
-.novel-card:hover {
-  box-shadow: var(--card-hover-shadow);
-  transform: translateY(-2px);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: visible;
 }
 
 .novel-title {
-  margin: 0 0 8px 0;
+  margin: 0 0 var(--spacing-sm) 0;
   color: var(--text-primary);
-  font-size: 1.25rem;
+  font-size: var(--font-xl);
   font-weight: 600;
+  line-height: 1.3;
 }
 
 .novel-author {
-  margin: 0 0 12px 0;
+  margin: 0 0 var(--spacing-md) 0;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: var(--font-sm);
 }
 
 .novel-description {
-  margin: 0 0 16px 0;
+  margin: 0 0 var(--spacing-md) 0;
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--font-sm);
   line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .novel-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: 16px;
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+  border-top: 1px solid var(--border-color);
 }
 
 .novel-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-sm);
 }
 
-.btn {
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
-  position: relative;
-  overflow: hidden;
+.novel-actions .btn {
+  flex: 1;
+  text-align: center;
+  font-size: var(--font-xs);
+  padding: var(--spacing-sm);
 }
 
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s;
+/* 悬停效果增强 */
+.novel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-hover-shadow);
 }
 
-.btn:hover::before {
-  left: 100%;
+.novel-card:hover .novel-title {
+  color: var(--accent-solid);
 }
 
-.edit-btn {
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-color);
-  border: 1px solid var(--btn-secondary-color);
+/* 空状态样式 */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--text-secondary);
 }
 
-.edit-btn:hover {
-  background: var(--btn-secondary-color);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(107,114,128,0.3);
+.empty-state h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: var(--font-xl);
+  color: var(--text-primary);
 }
 
-.delete-btn {
-  background: var(--btn-danger-bg);
-  color: var(--btn-danger-color);
-  border: 1px solid var(--btn-danger-color);
+.empty-state p {
+  margin: 0 0 var(--spacing-lg) 0;
+  font-size: var(--font-base);
 }
 
-.delete-btn:hover {
-  background: var(--btn-danger-color);
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(197,48,48,0.3);
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .homepage {
+    padding: var(--spacing-md);
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: center;
+  }
+  
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .novels-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .novel-actions {
+    flex-direction: column;
+  }
+  
+  .novel-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: var(--font-2xl);
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .header-actions .btn {
+    width: 100%;
+  }
 }
 
 .export-btn {

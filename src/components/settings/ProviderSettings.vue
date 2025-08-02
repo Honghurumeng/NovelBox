@@ -191,7 +191,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { notificationService } from '@/services'
+import { notificationService, confirmService } from '@/services'
 
 // 提供商数据
 const providers = reactive([])
@@ -256,8 +256,9 @@ const selectProvider = (provider) => {
 }
 
 // 删除提供商
-const deleteProvider = (id) => {
-  if (!confirm('确定要删除这个提供商吗？')) return
+const deleteProvider = async (id) => {
+  const confirmed = await confirmService.delete('这个提供商')
+  if (!confirmed) return
   
   const index = providers.findIndex(p => p.id === id)
   if (index !== -1) {
@@ -268,6 +269,7 @@ const deleteProvider = (id) => {
     }
     
     saveProviders()
+    notificationService.success('提供商已删除')
   }
 }
 

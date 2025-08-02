@@ -327,11 +327,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 16px;
+  padding: var(--spacing-sm) var(--spacing-md);
   border-bottom: 1px solid var(--border-color);
   background: var(--sidebar-bg);
   min-height: 50px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
   position: relative;
   z-index: 200;
 }
@@ -339,58 +339,15 @@ export default {
 .editor-header-left {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: var(--spacing-lg);
   flex: 1;
   min-width: 0;
-}
-
-.back-btn {
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-color);
-  border: 1px solid var(--border-color);
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85em;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  position: relative;
-  overflow: hidden;
-}
-
-.back-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s;
-}
-
-.back-btn:hover::before {
-  left: 100%;
-}
-
-.back-btn:hover {
-  background: var(--nav-hover-bg);
-  color: var(--text-primary);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.back-btn:active {
-  transform: translateY(0);
 }
 
 .current-novel-title {
   font-weight: 600;
   color: var(--text-primary);
-  font-size: 1.1em;
+  font-size: var(--font-lg);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -402,46 +359,34 @@ export default {
   justify-content: center;
   align-items: center;
   min-width: 0;
-  padding: 0 20px;
+  padding: 0 var(--spacing-lg);
 }
 
 .chapter-title-editor {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-md);
   max-width: 500px;
   width: 100%;
 }
 
 .chapter-title-input {
+  /* 使用统一的输入框样式 */
   flex: 1;
-  padding: 6px 12px;
-  border: 2px solid var(--accent-color);
-  border-radius: 6px;
-  font-size: 1em;
-  font-weight: 500;
   text-align: center;
-  background: var(--input-bg);
-  color: var(--text-primary);
-  transition: all 0.3s ease;
-}
-
-.chapter-title-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--accent-shadow);
-  border-color: var(--accent-color);
+  font-weight: 500;
 }
 
 .chapter-title-display {
   flex: 1;
-  font-size: 1.05em;
+  font-size: var(--font-lg);
   font-weight: 600;
   color: var(--text-primary);
   text-align: center;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
   border: 2px solid transparent;
   white-space: nowrap;
   overflow: hidden;
@@ -450,86 +395,35 @@ export default {
 
 .chapter-title-display:hover {
   background: var(--nav-hover-bg);
-  color: var(--accent-color);
-  border-color: var(--accent-color);
+  color: var(--accent-solid);
+  border-color: var(--accent-solid);
   transform: translateY(-1px);
 }
 
 .unsaved-indicator {
-  font-size: 0.8em;
+  font-size: var(--font-sm);
   color: var(--text-secondary);
   font-style: italic;
-  margin-left: 8px;
+  margin-left: var(--spacing-sm);
   vertical-align: middle;
   animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
 }
 
 .editor-header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--spacing-md);
   flex: 1;
   justify-content: flex-end;
   min-width: 0;
 }
 
 .auto-save-indicator {
-  font-size: 0.9em;
-  color: #28a745;
+  font-size: var(--font-sm);
+  color: var(--success-color);
   font-weight: 500;
   animation: fadeInOut 2s ease-in-out;
   white-space: nowrap;
-}
-
-@keyframes fadeInOut {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
-}
-
-.save-btn {
-  background: var(--btn-secondary-bg);
-  color: var(  --btn-secondary-color);
-  border: 1px solid var(--border-color);
-  padding: 6px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85em;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  position: relative;
-  overflow: hidden;
-}
-
-.save-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s;
-}
-
-.save-btn:hover::before {
-  left: 100%;
-}
-
-.save-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px var(--accent-shadow);
-}
-
-.save-btn:active {
-  transform: translateY(0);
 }
 
 /* 编辑器内容区域 */

@@ -162,44 +162,33 @@ const handlePathChange = (newPath) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px;
+  padding: var(--spacing-xl);
   border-bottom: 1px solid var(--border-color);
 }
 
 .sidebar-title {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: var(--font-2xl);
+  font-weight: 700;
   color: var(--text-primary);
 }
 
 .back-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--text-secondary);
-  padding: 8px;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-
-.back-btn:hover {
-  background: var(--nav-hover-bg);
-  color: var(--text-primary);
+  /* 使用统一的图标按钮样式 */
 }
 
 .settings-nav {
   list-style: none;
   padding: 0;
-  margin: 16px 0 0;
+  margin: var(--spacing-md) 0 0;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  padding: 12px 24px;
+  padding: var(--spacing-md) var(--spacing-xl);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
   color: var(--text-secondary);
 }
 
@@ -214,13 +203,13 @@ const handlePathChange = (newPath) => {
 }
 
 .nav-icon {
-  font-size: 1.2rem;
-  margin-right: 12px;
+  font-size: var(--font-lg);
+  margin-right: var(--spacing-md);
 }
 
 .settings-content {
   flex: 1;
-  padding: 24px;
+  padding: var(--spacing-xl);
   overflow-y: auto;
   background: var(--content-bg);
 }
@@ -230,45 +219,31 @@ const handlePathChange = (newPath) => {
 }
 
 .section-title {
-  margin: 0 0 24px 0;
-  font-size: 1.5rem;
+  margin: 0 0 var(--spacing-xl) 0;
+  font-size: var(--font-2xl);
+  font-weight: 600;
   color: var(--text-primary);
-  padding-bottom: 12px;
+  padding-bottom: var(--spacing-md);
   border-bottom: 1px solid var(--border-color);
 }
 
 .setting-item {
-  margin-bottom: 24px;
+  margin-bottom: var(--spacing-xl);
   display: flex;
   flex-direction: column;
 }
 
 .setting-label {
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: var(--text-primary);
-  font-size: 1rem;
+  /* 使用统一的标签样式 */
 }
 
 .setting-select {
-  width: 300px;
-  padding: 10px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: var(--input-bg);
-  color: var(--text-primary);
-  font-size: 1rem;
-}
-
-.setting-select:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px var(--accent-shadow);
+  /* 使用统一的选择框样式 */
 }
 
 .theme-options {
   display: flex;
-  gap: 24px;
+  gap: var(--spacing-xl);
   flex-wrap: wrap;
 }
 
@@ -277,22 +252,23 @@ const handlePathChange = (newPath) => {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  transition: all var(--transition-base);
 }
 
 .theme-preview {
   width: 120px;
   height: 80px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 8px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: var(--spacing-sm);
   border: 2px solid transparent;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
 }
 
 .theme-option.active .theme-preview {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px var(--accent-color);
+  border-color: var(--accent-solid);
+  box-shadow: var(--focus-ring);
 }
 
 .theme-preview.theme-light {
