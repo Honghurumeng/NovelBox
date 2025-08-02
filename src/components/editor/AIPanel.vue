@@ -76,25 +76,6 @@
             重试
           </button>
         </div>
-        
-        <!-- 进一步要求输入 - 只在成功且有内容时显示 -->
-        <div v-if="!isStreaming && displayText && !hasError" class="further-request">
-          <div class="section-label">进一步要求</div>
-          <textarea 
-            v-model="furtherPrompt"
-            class="further-prompt-input"
-            placeholder="输入进一步的要求或修改建议..."
-            @keydown.ctrl.enter="applyFurtherRequest"
-          ></textarea>
-          <button 
-            class="btn btn-primary" 
-            @click="applyFurtherRequest"
-            :disabled="!furtherPrompt.trim() || isStreaming"
-          >
-            <span class="btn-icon">🚀</span>
-            应用
-          </button>
-        </div>
       </div>
       
       <!-- 默认状态 - 无重写会话时显示 -->
@@ -192,7 +173,6 @@ export default {
     
     const displayText = ref('')
     const isStreaming = ref(false)
-    const furtherPrompt = ref('')
     const hasError = ref(false) // 用于跟踪是否发生错误
     const showCustomPromptModal = ref(false) // 控制自定义提示模态框显示
     
@@ -317,25 +297,6 @@ export default {
       startRewrite()
     }
     
-    const applyFurtherRequest = () => {
-      if (!furtherPrompt.value.trim()) return
-      
-      // 创建新的重写会话，基于当前结果进行进一步处理
-      const newSession = {
-        ...props.rewriteSession,
-        type: 'custom',
-        customPrompt: furtherPrompt.value,
-        originalText: displayText.value // 使用当前重写结果作为新的原文
-      }
-      
-      // 重置进一步要求输入
-      furtherPrompt.value = ''
-      
-      // 更新会话并重新开始重写
-      emit('update-session', newSession)
-      startRewrite()
-    }
-    
     const closeRewriteSession = () => {
       hasError.value = false // 重置错误状态
       emit('close-session')
@@ -378,14 +339,12 @@ export default {
       displayText,
       isStreaming,
       hasError,
-      furtherPrompt,
       showCustomPromptModal,
       getRewriteTypeLabel,
       formatRewriteText,
       replaceText,
       insertText,
       retryRewrite,
-      applyFurtherRequest,
       closeRewriteSession,
       handleRewrite,
       handleCustomRewrite,
@@ -626,35 +585,6 @@ export default {
   display: flex;
   gap: 8px;
   margin-top: 12px;
-}
-
-/* 进一步要求 */
-.further-request {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 12px;
-}
-
-.further-prompt-input {
-  width: 100%;
-  min-height: 60px;
-  padding: 8px 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  background: var(--input-bg);
-  color: var(--text-primary);
-  font-size: 0.85rem;
-  line-height: 1.4;
-  resize: vertical;
-  margin-bottom: 8px;
-  font-family: inherit;
-}
-
-.further-prompt-input:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px var(--accent-shadow);
 }
 
 /* 默认状态 */
