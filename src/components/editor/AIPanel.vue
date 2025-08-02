@@ -49,35 +49,26 @@
             <!-- 流式输出光标 -->
             <span v-if="isStreaming" class="streaming-cursor">|</span>
           </div>
-          
-          <!-- 错误信息 -->
-          <div v-if="rewriteError" class="error-message">
-            <div class="error-content">
-              <span class="error-icon">⚠️</span>
-              <span class="error-text">{{ rewriteError }}</span>
-            </div>
-            <button class="btn btn-warning btn-sm retry-btn error-retry-btn" @click="retryRewrite">
-              <span class="btn-icon">🔄</span>
-              重试
-            </button>
-          </div>
         </div>
         
         <!-- 操作按钮 -->
-        <div v-if="!isStreaming && (displayText || rewriteError)" class="action-buttons">
-          <button v-if="displayText && !rewriteError" class="btn btn-success action-btn replace-btn" @click="replaceText">
+        <div v-if="!isStreaming && displayText" class="action-buttons">
+          <button class="btn btn-success" @click="replaceText">
+            <span class="btn-icon">🔄</span>
             替换
           </button>
-          <button v-if="displayText && !rewriteError" class="btn btn-info action-btn insert-btn" @click="insertText">
+          <button class="btn btn-info" @click="insertText">
+            <span class="btn-icon">📝</span>
             插入
           </button>
-          <button class="btn btn-warning action-btn retry-btn" @click="retryRewrite">
+          <button class="btn btn-warning" @click="retryRewrite">
+            <span class="btn-icon">🔄</span>
             重试
           </button>
         </div>
         
         <!-- 进一步要求输入 -->
-        <div v-if="!isStreaming && displayText && !rewriteError" class="further-request">
+        <div v-if="!isStreaming && displayText" class="further-request">
           <div class="section-label">进一步要求</div>
           <textarea 
             v-model="furtherPrompt"
@@ -86,7 +77,7 @@
             @keydown.ctrl.enter="applyFurtherRequest"
           ></textarea>
           <button 
-            class="btn btn-primary action-btn apply-further-btn" 
+            class="btn btn-primary" 
             @click="applyFurtherRequest"
             :disabled="!furtherPrompt.trim() || isStreaming"
           >
@@ -108,23 +99,23 @@
         <div v-if="selectedText" class="ai-functions-section">
           <div class="section-label">AI功能</div>
           <div class="function-buttons">
-            <button class="function-btn expand-btn" @click="handleRewrite('expand')">
+            <button class="btn btn-outline btn-primary" @click="handleRewrite('expand')">
               <span class="btn-icon">📈</span>
               扩写
             </button>
-            <button class="function-btn contract-btn" @click="handleRewrite('contract')">
+            <button class="btn btn-outline btn-warning" @click="handleRewrite('contract')">
               <span class="btn-icon">📉</span>
               缩写
             </button>
-            <button class="function-btn beautify-btn" @click="handleRewrite('beautify')">
+            <button class="btn btn-outline btn-info" @click="handleRewrite('beautify')">
               <span class="btn-icon">✨</span>
               美化文笔
             </button>
-            <button class="function-btn continue-btn" @click="handleRewrite('continue')">
+            <button class="btn btn-outline btn-success" @click="handleRewrite('continue')">
               <span class="btn-icon">✍️</span>
               续写
             </button>
-            <button class="function-btn custom-btn" @click="handleRewrite('custom')">
+            <button class="btn btn-outline btn-secondary" @click="handleRewrite('custom')">
               <span class="btn-icon">⚙️</span>
               自定义
             </button>
@@ -164,7 +155,7 @@
 <script>
 import { ref, computed, watch, nextTick } from 'vue'
 import { useUIStore } from '@/stores'
-import { llmService, LLMRequest } from '@/services'
+import { llmService, LLMRequest, notificationService } from '@/services'
 
 export default {
   name: 'AIPanel',
@@ -184,7 +175,6 @@ export default {
     
     const displayText = ref('')
     const isStreaming = ref(false)
-    const rewriteError = ref('')
     const furtherPrompt = ref('')
     
     const startRewrite = async () => {
@@ -192,7 +182,6 @@ export default {
       
       displayText.value = ''
       isStreaming.value = true
-      rewriteError.value = ''
       
       try {
         const config = getRewriteConfig()
@@ -231,7 +220,8 @@ export default {
         
       } catch (error) {
         console.error('Rewrite failed:', error)
-        rewriteError.value = error.message || 'Unknown error'
+        // 使用通知服务显示错误
+        notificationService.error('AI重写失败: ' + (error.message || '未知错误'))
       } finally {
         isStreaming.value = false
       }
@@ -350,7 +340,6 @@ export default {
       uiStore,
       displayText,
       isStreaming,
-      rewriteError,
       furtherPrompt,
       getRewriteTypeLabel,
       formatRewriteText,
@@ -580,144 +569,11 @@ export default {
   51%, 100% { opacity: 0; }
 }
 
-.error-message {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px;
-  background: var(--btn-danger-bg);
-  color: var(--btn-danger-color);
-  border-radius: 6px;
-  font-size: 0.85rem;
-  margin-top: 8px;
-}
-
-.error-content {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.error-text {
-  flex: 1;
-  line-height: 1.4;
-}
-
-.error-icon {
-  font-size: 1rem;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.error-retry-btn {
-  align-self: flex-end;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.error-retry-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-}
-
 /* 操作按钮 */
 .action-buttons {
   display: flex;
   gap: 8px;
   margin-top: 12px;
-}
-
-.action-btn {
-  padding: 10px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--card-bg);
-  color: var(--text-primary);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  flex: 1;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.action-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.action-btn:hover:not(:disabled)::before {
-  opacity: 1;
-}
-
-.action-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: var(--accent-color);
-}
-
-.action-btn:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.action-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.replace-btn {
-  background: linear-gradient(135deg, var(--btn-secondary-bg), var(--accent-color));
-  color: white;
-  border: none;
-}
-
-.replace-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--btn-secondary-bg), var(--accent-color));
-  box-shadow: 0 4px 12px rgba(var(--accent-color-rgb), 0.3);
-}
-
-.insert-btn {
-  background: linear-gradient(135deg, #4caf50, #66bb6a);
-  color: white;
-  border: none;
-}
-
-.insert-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #4caf50, #66bb6a);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-}
-
-.retry-btn {
-  background: linear-gradient(135deg, #ff9800, #ffb74d);
-  color: white;
-  border: none;
-}
-
-.retry-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ff9800, #ffb74d);
-  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
 }
 
 /* 进一步要求 */
@@ -747,18 +603,6 @@ export default {
   outline: none;
   border-color: var(--accent-color);
   box-shadow: 0 0 0 2px var(--accent-shadow);
-}
-
-.apply-further-btn {
-  background: var(--btn-secondary-bg);
-  color: var(  --btn-secondary-color);
-  border-color: transparent;
-  width: 100%;
-}
-
-.apply-further-btn:hover:not(:disabled) {
-  opacity: 0.9;
-  transform: translateY(-1px);
 }
 
 /* 默认状态 */
@@ -806,87 +650,10 @@ export default {
   margin-top: 8px;
 }
 
-.function-btn {
+.action-buttons {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 12px 8px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--card-bg);
-  color: var(--text-primary);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  min-height: 44px;
-}
-
-.function-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.function-btn:hover::before {
-  opacity: 1;
-}
-
-.function-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: var(--accent-color);
-}
-
-.function-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.btn-icon {
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-
-/* 特定按钮颜色 */
-.expand-btn:hover {
-  background: linear-gradient(135deg, #2196f3, #42a5f5);
-  color: white;
-  border-color: transparent;
-}
-
-.contract-btn:hover {
-  background: linear-gradient(135deg, #ff9800, #ffb74d);
-  color: white;
-  border-color: transparent;
-}
-
-.beautify-btn:hover {
-  background: linear-gradient(135deg, #9c27b0, #ba68c8);
-  color: white;
-  border-color: transparent;
-}
-
-.continue-btn:hover {
-  background: linear-gradient(135deg, #4caf50, #66bb6a);
-  color: white;
-  border-color: transparent;
-}
-
-.custom-btn:hover {
-  background: linear-gradient(135deg, #607d8b, #78909c);
-  color: white;
-  border-color: transparent;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .welcome-section {
