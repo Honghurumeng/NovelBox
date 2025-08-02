@@ -191,6 +191,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { notificationService } from '@/services'
 
 // 提供商数据
 const providers = reactive([])
@@ -231,7 +232,7 @@ const closeAddModal = () => {
 // 添加提供商
 const addProvider = () => {
   if (!newProvider.name.trim()) {
-    alert('请输入提供商名称')
+    notificationService.warning('请输入提供商名称')
     return
   }
   
@@ -273,13 +274,13 @@ const deleteProvider = (id) => {
 // 保存提供商
 const saveProvider = () => {
   saveProviders()
-  alert('提供商配置已保存')
+  notificationService.success('提供商配置已保存')
 }
 
 // 从上游获取模型列表
 const fetchModels = async () => {
   if (!selectedProvider.value || !selectedProvider.value.api_key) {
-    alert('请输入API密钥');
+    notificationService.warning('请输入API密钥');
     return;
   }
   
@@ -337,7 +338,7 @@ const fetchModels = async () => {
     saveProviders();
   } catch (error) {
     console.error('获取模型列表失败:', error);
-    alert('获取模型列表失败' + ': ' + error.message);
+    notificationService.error('获取模型列表失败: ' + error.message);
     // 恢复原始模型列表
     if (selectedProvider.value) {
       selectedProvider.value.models = originalModels;

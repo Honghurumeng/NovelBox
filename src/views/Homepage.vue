@@ -95,7 +95,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNovelsStore, useUIStore } from '@/stores'
-import { UtilsService } from '@/services'
+import { UtilsService, notificationService } from '@/services'
 import NewNovelModal from '@/components/modals/NewNovelModal.vue'
 import EditNovelModal from '@/components/modals/EditNovelModal.vue'
 
@@ -145,7 +145,7 @@ export default {
         router.push(`/editor/${novel.id}`)
       } catch (error) {
         console.error('创建小说失败:', error)
-        alert('创建小说失败: ' + error.message)
+        notificationService.error('创建小说失败: ' + error.message)
       }
     }
     
@@ -160,7 +160,7 @@ export default {
         uiStore.closeEditNovelModal()
       } catch (error) {
         console.error('更新小说失败:', error)
-        alert('更新小说失败: ' + error.message)
+        notificationService.error('更新小说失败: ' + error.message)
       }
     }
     
@@ -180,7 +180,7 @@ export default {
         await novelsStore.deleteNovel(deletingNovel.value.id)
       } catch (error) {
         console.error('删除小说失败:', error)
-        alert('删除小说失败: ' + error.message)
+        notificationService.error('删除小说失败: ' + error.message)
       } finally {
         closeDeleteModal()
       }
@@ -220,10 +220,10 @@ export default {
         URL.revokeObjectURL(url)
 
         // 显示成功消息
-        uiStore.showSaveMessage('小说导出成功')
+        notificationService.success('小说导出成功')
       } catch (error) {
         console.error('导出小说失败:', error)
-        alert('导出失败：' + error.message)
+        notificationService.error('导出失败：' + error.message)
       }
     }
 

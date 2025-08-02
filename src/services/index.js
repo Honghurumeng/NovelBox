@@ -10,3 +10,4 @@ export {
   GeminiProvider, 
   llmService 
 } from './llm'
+export { notificationService } from './notifications'

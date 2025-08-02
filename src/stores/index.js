@@ -7,3 +7,4 @@ export const pinia = createPinia()
 export { useNovelsStore } from './novels'
 export { useChaptersStore } from './chapters'
 export { useUIStore } from './ui'
+export { useNotificationsStore } from './notifications'

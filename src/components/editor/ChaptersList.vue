@@ -86,7 +86,7 @@
 <script>
 import { ref, nextTick, computed } from 'vue'
 import { useChaptersStore, useUIStore } from '@/stores'
-import { UtilsService } from '@/services'
+import { UtilsService, notificationService } from '@/services'
 
 export default {
   name: 'ChaptersList',
@@ -122,7 +122,7 @@ export default {
           await chaptersStore.openChapter(newChapter.id)
         }
       } catch (error) {
-        alert('添加章节失败: ' + error.message)
+        notificationService.error('添加章节失败: ' + error.message)
       }
     }
 
@@ -155,7 +155,7 @@ export default {
         try {
           await chaptersStore.updateChapterTitle(editingChapterId.value, newTitle)
         } catch (error) {
-          alert('更新章节标题失败: ' + error.message)
+          notificationService.error('更新章节标题失败: ' + error.message)
         }
       }
 
@@ -174,7 +174,7 @@ export default {
 
     const confirmDeleteChapter = async () => {
       if (chapters.value.length <= 1) {
-        alert('至少需要保留一个章节')
+        notificationService.warning('至少需要保留一个章节')
         return
       }
 
@@ -187,7 +187,7 @@ export default {
       try {
         await chaptersStore.deleteChapter(chapterId)
       } catch (error) {
-        alert('删除章节失败: ' + error.message)
+        notificationService.error('删除章节失败: ' + error.message)
       } finally {
         closeDeleteModal()
       }
@@ -208,14 +208,14 @@ export default {
 
     const directDeleteChapter = async (chapterId) => {
       if (chapters.value.length <= 1) {
-        alert('至少需要保留一个章节')
+        notificationService.warning('至少需要保留一个章节')
         return
       }
 
       try {
         await chaptersStore.deleteChapter(chapterId)
       } catch (error) {
-        alert('删除章节失败: ' + error.message)
+        notificationService.error('删除章节失败: ' + error.message)
       }
     }
 
@@ -252,7 +252,7 @@ export default {
       try {
         await chaptersStore.reorderChapters(draggedChapterId, targetChapterId, position)
       } catch (error) {
-        alert('重新排序章节失败: ' + error.message)
+        notificationService.error('重新排序章节失败: ' + error.message)
       } finally {
         chaptersStore.clearDraggedChapter()
       }

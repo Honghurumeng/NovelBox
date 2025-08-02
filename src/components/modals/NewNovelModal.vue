@@ -64,7 +64,7 @@
 <script>
 import { ref, reactive, watch, nextTick } from 'vue'
 import { useNovelsStore, useUIStore } from '@/stores'
-import { UtilsService } from '@/services'
+import { UtilsService, notificationService } from '@/services'
 
 export default {
   name: 'NewNovelModal',
@@ -99,7 +99,7 @@ export default {
       const validation = UtilsService.validateNovelData(formData)
       
       if (!validation.isValid) {
-        alert(validation.errors.join('\n'))
+        notificationService.warning(validation.errors.join('\n'))
         return
       }
 
@@ -109,7 +109,7 @@ export default {
         await novelsStore.createNovel(formData)
         closeModal()
       } catch (error) {
-        alert('创建失败: ' + error.message)
+        notificationService.error('创建失败: ' + error.message)
       } finally {
         submitting.value = false
       }

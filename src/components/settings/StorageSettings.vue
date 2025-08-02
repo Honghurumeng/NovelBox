@@ -21,6 +21,7 @@
 <script>
 import { ref } from 'vue'
 import { useUIStore } from '@/stores'
+import { notificationService } from '@/services'
 
 export default {
   name: 'StorageSettings',
@@ -50,7 +51,7 @@ export default {
         emit('pathChanged', storagePath.value)
       } catch (error) {
         console.error('选择存储目录失败:', error)
-        alert('选择存储目录失败')
+        notificationService.error('选择存储目录失败')
       }
     }
     
@@ -62,7 +63,7 @@ export default {
         emit('pathChanged', storagePath.value)
       } catch (error) {
         console.error('重置存储目录失败:', error)
-        alert('重置存储目录失败')
+        notificationService.error('重置存储目录失败')
       }
     }
     

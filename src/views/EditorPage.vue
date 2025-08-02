@@ -88,6 +88,7 @@
 import { onMounted, onUnmounted, ref, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useNovelsStore, useChaptersStore, useUIStore } from '@/stores'
+import { notificationService } from '@/services'
 import ChaptersList from '@/components/editor/ChaptersList.vue'
 import MainEditor from '@/components/editor/MainEditor.vue'
 import AIPanel from '@/components/editor/AIPanel.vue'
@@ -206,7 +207,7 @@ export default {
         uiStore.showSaveMessage('手动保存成功')
       } catch (error) {
         console.error('手动保存失败:', error)
-        alert('保存失败: ' + error.message)
+        notificationService.error('保存失败: ' + error.message)
       }
     }
 
@@ -232,7 +233,7 @@ export default {
           lastSavedContent = chaptersStore.currentChapter.content
           hasUnsavedChanges.value = false
         } catch (error) {
-          alert('更新标题失败: ' + error.message)
+          notificationService.error('更新标题失败: ' + error.message)
         }
       }
       
