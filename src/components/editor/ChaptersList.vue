@@ -2,28 +2,16 @@
   <div class="chapters-list-container">
     <div class="sidebar-header">
       <span v-if="!uiStore.leftSidebarCollapsed" class="sidebar-title">章节列表</span>
-      <button 
-        class="toggle-sidebar-btn right-btn"
-        @click="uiStore.toggleLeftSidebar()"
-        title="收起侧边栏"
-      >
+      <button class="toggle-sidebar-btn right-btn" @click="uiStore.toggleLeftSidebar()" title="收起侧边栏">
         <span class="toggle-icon">{{ uiStore.leftSidebarCollapsed ? '›' : '‹' }}</span>
       </button>
     </div>
-    
+
     <div v-if="!uiStore.leftSidebarCollapsed" class="chapters-list-wrapper">
-      <div 
-        v-for="chapter in chapters" 
-        :key="chapter.id"
-        class="chapter-item"
-        :class="{ active: currentChapter?.id === chapter.id }"
-        @click="openChapter(chapter.id)"
-        draggable="true"
-        @dragstart="handleDragStart($event, chapter.id)"
-        @dragover="handleDragOver"
-        @drop="handleDrop($event, chapter.id)"
-        @dragend="handleDragEnd"
-      >
+      <div v-for="chapter in chapters" :key="chapter.id" class="chapter-item"
+        :class="{ active: currentChapter?.id === chapter.id }" @click="openChapter(chapter.id)" draggable="true"
+        @dragstart="handleDragStart($event, chapter.id)" @dragover="handleDragOver"
+        @drop="handleDrop($event, chapter.id)" @dragend="handleDragEnd">
         <div class="chapter-info">
           <div class="chapter-title">{{ chapter.title }}</div>
           <div class="chapter-meta">
@@ -31,39 +19,25 @@
           </div>
         </div>
         <div class="chapter-actions" @click.stop>
-          <button 
-            class="action-btn drag-handle" 
-            title="拖拽排序"
-            draggable="true"
-            @dragstart="handleDragStart($event, chapter.id)"
-            @dragover="handleDragOver"
-            @drop="handleDrop($event, chapter.id)"
-            @dragend="handleDragEnd"
-          >
-            🔄
+          <button class="action-btn drag-handle" title="拖拽排序" draggable="true"
+            @dragstart="handleDragStart($event, chapter.id)" @dragover="handleDragOver"
+            @drop="handleDrop($event, chapter.id)" @dragend="handleDragEnd">
+            ⠿
           </button>
-          <button 
-            class="action-btn" 
-            @click="editChapterTitle(chapter.id)" 
-            title="编辑"
-          >
+          <button class="action-btn" @click="editChapterTitle(chapter.id)" title="编辑">
             ✏️
           </button>
-          <button 
-            class="action-btn delete" 
-            @click="handleDeleteClick($event, chapter.id)" 
-            title="删除（ctrl+d）"
-          >
+          <button class="action-btn delete" @click="handleDeleteClick($event, chapter.id)" title="删除（ctrl+d）">
             🗑️
           </button>
         </div>
       </div>
     </div>
-    
+
     <div v-if="!uiStore.leftSidebarCollapsed" class="btn-add-chapter" @click="addNewChapter">
       + 添加新章节
     </div>
-    
+
     <!-- 编辑章节标题模态框 -->
     <div v-if="showEditModal" class="modal-overlay" @click="closeEditModal">
       <div class="modal-content" @click.stop>
@@ -72,14 +46,8 @@
           <button class="close-btn" @click="closeEditModal">&times;</button>
         </div>
         <div class="modal-body">
-          <input 
-            v-model="editingTitle" 
-            type="text" 
-            class="title-input"
-            placeholder="章节标题"
-            @keyup.enter="confirmEditTitle"
-            ref="titleInput"
-          >
+          <input v-model="editingTitle" type="text" class="title-input" placeholder="章节标题"
+            @keyup.enter="confirmEditTitle" ref="titleInput">
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="closeEditModal">
@@ -91,7 +59,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- 删除确认模态框 -->
     <div v-if="showDeleteModal" class="modal-overlay" @click="closeDeleteModal">
       <div class="modal-content" @click.stop>
@@ -125,7 +93,7 @@ export default {
   setup() {
     const chaptersStore = useChaptersStore()
     const uiStore = useUIStore()
-    
+
     // 编辑章节标题相关的状态
     const showEditModal = ref(false)
     const editingChapterId = ref(null)
@@ -166,22 +134,22 @@ export default {
       editingChapterId.value = chapterId
       editingTitle.value = chapter.title
       showEditModal.value = true
-      
+
       // 等待DOM更新后聚焦输入框
       await nextTick()
       titleInput.value?.focus()
       titleInput.value?.select()
     }
-    
+
     const closeEditModal = () => {
       showEditModal.value = false
       editingChapterId.value = null
       editingTitle.value = ''
     }
-    
+
     const confirmEditTitle = async () => {
       if (!editingChapterId.value) return
-      
+
       const newTitle = editingTitle.value.trim()
       if (newTitle && newTitle !== '') {
         try {
@@ -190,7 +158,7 @@ export default {
           alert('更新章节标题失败: ' + error.message)
         }
       }
-      
+
       closeEditModal()
     }
 
@@ -263,7 +231,7 @@ export default {
 
     const handleDrop = async (event, targetChapterId) => {
       event.preventDefault()
-      
+
       const draggedChapterId = chaptersStore.draggedChapterId
       if (!draggedChapterId || draggedChapterId === targetChapterId) {
         chaptersStore.clearDraggedChapter()
@@ -308,7 +276,7 @@ export default {
       handleDragOver,
       handleDrop,
       handleDragEnd,
-      
+
       // 编辑标题相关的返回值
       showEditModal,
       editingTitle,

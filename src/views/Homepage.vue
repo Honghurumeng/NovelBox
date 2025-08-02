@@ -41,7 +41,7 @@
           <button class="btn edit-btn" @click="editNovel(novel)">
             编辑
           </button>
-          <button class="btn delete-btn" @click="deleteNovel(novel)">
+          <button class="btn delete-btn" @click="promptDeleteNovel(novel)">
             删除
           </button>
           <button class="btn export-btn" @click="exportNovel(novel)">
@@ -71,6 +71,23 @@
       @close="uiStore.closeEditNovelModal"
       @update="updateNovel"
     />
+ 
+    <!-- 删除确认模态框 -->
+    <div v-if="showDeleteModal" class="modal-overlay" @click="closeDeleteModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>删除 {{ deletingNovel?.name }}</h3>
+          <button class="close-btn" @click="closeDeleteModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>确定要删除这本小说吗？此操作无法撤销。</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" @click="closeDeleteModal">取消</button>
+          <button class="btn btn-danger" @click="confirmDeleteNovel">删除</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -94,6 +111,10 @@ export default {
     const uiStore = useUIStore()
 
     const searchQuery = ref('')
+
+    // 删除小说相关状态
+    const showDeleteModal = ref(false)
+    const deletingNovel = ref(null)
     
     const filteredNovels = computed(() => {
       if (!searchQuery.value) {
@@ -143,14 +164,25 @@ export default {
       }
     }
     
-    const deleteNovel = async (novel) => {
-      if (confirm(`确定要删除小说 "${novel.name}" 吗？此操作无法撤销。`)) {
-        try {
-          await novelsStore.deleteNovel(novel.id)
-        } catch (error) {
-          console.error('删除小说失败:', error)
-          alert('删除小说失败: ' + error.message)
-        }
+    const promptDeleteNovel = (novel) => {
+      deletingNovel.value = novel
+      showDeleteModal.value = true
+    }
+
+    const closeDeleteModal = () => {
+      showDeleteModal.value = false
+      deletingNovel.value = null
+    }
+
+    const confirmDeleteNovel = async () => {
+      if (!deletingNovel.value) return
+      try {
+        await novelsStore.deleteNovel(deletingNovel.value.id)
+      } catch (error) {
+        console.error('删除小说失败:', error)
+        alert('删除小说失败: ' + error.message)
+      } finally {
+        closeDeleteModal()
       }
     }
     
@@ -216,7 +248,12 @@ export default {
       createNovel,
       editNovel,
       updateNovel,
-      deleteNovel,
+      // 删除相关
+      showDeleteModal,
+      deletingNovel,
+      promptDeleteNovel,
+      closeDeleteModal,
+      confirmDeleteNovel,
       openNovel,
       exportNovel,
       goToSettings
@@ -465,5 +502,92 @@ export default {
   .novels-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* 删除确认模态框样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--modal-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--modal-bg);
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: var(--card-shadow);
+}
+
+.modal-header {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: var(--nav-hover-bg);
+  color: var(--text-primary);
+}
+
+.modal-body {
+  margin-bottom: 24px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+}
+
+.btn-secondary:hover {
+  background: var(--nav-hover-bg);
+}
+
+.btn-danger {
+  background: var(--btn-danger-bg);
+  color: var(--btn-danger-color);
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
 }
 </style>
