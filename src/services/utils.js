@@ -23,10 +23,8 @@ export class UtilsService {
    * 格式化字数
    */
   static formatWordCount(count) {
-    if (count === 0) return '0 字'
-    if (count < 1000) return `${count} 字`
-    if (count < 10000) return `${(count / 1000).toFixed(1)} 千字`
-    return `${(count / 10000).toFixed(1)} 万字`
+    if (!count || count === 0) return '0 字'
+    return `${count} 字`
   }
 
   /**
