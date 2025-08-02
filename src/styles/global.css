@@ -69,32 +69,38 @@
   /* 按钮样式 */
   --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
-  --btn-primary-hover: rgba(139, 157, 195, 0.8);
+  --btn-primary-hover: #6b85a3;
+  --btn-primary-hover-color: #ffffff;
   --btn-primary-border: #8b9dc3;
   
   --btn-secondary-bg: #f8f9fa;
   --btn-secondary-color: #495057;
-  --btn-secondary-hover: rgba(248, 249, 250, 0.8);
+  --btn-secondary-hover: #e9ecef;
+  --btn-secondary-hover-color: #000000;
   --btn-secondary-border: #dee2e6;
   
   --btn-danger-bg: #fff5f5;
   --btn-danger-color: #c53030;
-  --btn-danger-hover: rgba(255, 245, 245, 0.8);
+  --btn-danger-hover: #fed7d7;
+  --btn-danger-hover-color: #742a2a;
   --btn-danger-border: #feb2b2;
   
   --btn-success-bg: #f0fff4;
   --btn-success-color: #2f855a;
-  --btn-success-hover: rgba(240, 255, 244, 0.8);
+  --btn-success-hover: #c6f6d5;
+  --btn-success-hover-color: #22543d;
   --btn-success-border: #9ae6b4;
   
   --btn-warning-bg: #fffaf0;
   --btn-warning-color: #d69e2e;
-  --btn-warning-hover: rgba(255, 250, 240, 0.8);
+  --btn-warning-hover: #feebc8;
+  --btn-warning-hover-color: #975a16;
   --btn-warning-border: #fbd38d;
   
   --btn-info-bg: #f0f9ff;
   --btn-info-color: #2b6cb0;
-  --btn-info-hover: rgba(240, 249, 255, 0.8);
+  --btn-info-hover: #bee3f8;
+  --btn-info-hover-color: #2a4365;
   --btn-info-border: #93c5fd;
   
   /* 模态框 */
@@ -145,32 +151,38 @@
   /* 按钮样式 */
   --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
-  --btn-primary-hover: rgba(139, 157, 195, 0.8);
+  --btn-primary-hover: #6b85a3;
+  --btn-primary-hover-color: #ffffff;
   --btn-primary-border: #8b9dc3;
   
   --btn-secondary-bg: #404040;
   --btn-secondary-color: #e5e5e5;
-  --btn-secondary-hover: rgba(64, 64, 64, 0.8);
+  --btn-secondary-hover: #2d2d2d;
+  --btn-secondary-hover-color: #ffffff;
   --btn-secondary-border: #525252;
   
   --btn-danger-bg: #450a0a;
   --btn-danger-color: #fca5a5;
-  --btn-danger-hover: rgba(69, 10, 10, 0.8);
+  --btn-danger-hover: #7f1d1d;
+  --btn-danger-hover-color: #fecaca;
   --btn-danger-border: #7f1d1d;
   
   --btn-success-bg: #14532d;
   --btn-success-color: #86efac;
-  --btn-success-hover: rgba(20, 83, 45, 0.8);
+  --btn-success-hover: #166534;
+  --btn-success-hover-color: #bbf7d0;
   --btn-success-border: #166534;
   
   --btn-warning-bg: #451a03;
   --btn-warning-color: #fde68a;
-  --btn-warning-hover: rgba(69, 26, 3, 0.8);
+  --btn-warning-hover: #92400e;
+  --btn-warning-hover-color: #fef3c7;
   --btn-warning-border: #92400e;
   
   --btn-info-bg: #0c2340;
   --btn-info-color: #93c5fd;
-  --btn-info-hover: rgba(12, 35, 64, 0.8);
+  --btn-info-hover: #1e40af;
+  --btn-info-hover-color: #bfdbfe;
   --btn-info-border: #1e40af;
   
   /* 模态框 */
@@ -264,7 +276,8 @@ body {
 
 .btn-primary:hover:not(:disabled) {
   background: var(--btn-primary-hover);
-  border-color: var(--btn-primary-border, var(--btn-primary-bg));
+  color: var(--btn-primary-hover-color);
+  border-color: var(--btn-primary-border);
   transform: none;
   box-shadow: none;
 }
@@ -277,6 +290,7 @@ body {
 
 .btn-secondary:hover:not(:disabled) {
   background: var(--btn-secondary-hover);
+  color: var(--btn-secondary-hover-color);
   border-color: var(--btn-secondary-border);
   transform: none;
   box-shadow: none;
@@ -290,6 +304,7 @@ body {
 
 .btn-danger:hover:not(:disabled) {
   background: var(--btn-danger-hover);
+  color: var(--btn-danger-hover-color);
   border-color: var(--btn-danger-border);
   transform: none;
   box-shadow: none;
@@ -303,6 +318,7 @@ body {
 
 .btn-success:hover:not(:disabled) {
   background: var(--btn-success-hover);
+  color: var(--btn-success-hover-color);
   border-color: var(--btn-success-border);
   transform: none;
   box-shadow: none;
@@ -316,6 +332,7 @@ body {
 
 .btn-warning:hover:not(:disabled) {
   background: var(--btn-warning-hover);
+  color: var(--btn-warning-hover-color);
   border-color: var(--btn-warning-border);
   transform: none;
   box-shadow: none;
@@ -329,7 +346,8 @@ body {
 
 .btn-info:hover:not(:disabled) {
   background: var(--btn-info-hover);
-  border-color: var(--btn-info-border, var(--btn-info-color));
+  color: var(--btn-info-hover-color);
+  border-color: var(--btn-info-border);
   transform: none;
   box-shadow: none;
 }
@@ -581,14 +599,34 @@ body {
   --card-hover-shadow: 0 6px 16px rgba(255, 255, 255, 0.05);
   --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
+  --btn-primary-hover: #6b85a3;
+  --btn-primary-hover-color: #ffffff;
+  --btn-primary-border: #8b9dc3;
   --btn-secondary-bg: #1a1a1a;
   --btn-secondary-color: #e9ecef;
+  --btn-secondary-hover: #0d0d0d;
+  --btn-secondary-hover-color: #ffffff;
+  --btn-secondary-border: #404040;
   --btn-danger-bg: #2c0000;
   --btn-danger-color: #ff6b6b;
+  --btn-danger-hover: #7f1d1d;
+  --btn-danger-hover-color: #ff8787;
+  --btn-danger-border: #7f1d1d;
   --btn-success-bg: #001a33;
   --btn-success-color: #6bafff;
+  --btn-success-hover: #166534;
+  --btn-success-hover-color: #8bc4ff;
+  --btn-success-border: #166534;
+  --btn-warning-bg: #332800;
+  --btn-warning-color: #fbbf24;
+  --btn-warning-hover: #92400e;
+  --btn-warning-hover-color: #fcd34d;
+  --btn-warning-border: #92400e;
   --btn-info-bg: #001a33;
   --btn-info-color: #6bafff;
+  --btn-info-hover: #1e40af;
+  --btn-info-hover-color: #8bc4ff;
+  --btn-info-border: #1e40af;
   --modal-bg: #000000;
   --modal-overlay: rgba(255, 255, 255, 0.1);
   --focus-ring: rgba(102, 126, 234, 0.5);
@@ -617,14 +655,38 @@ body {
   --card-hover-shadow: 0 6px 16px rgba(100, 181, 246, 0.2);
   --btn-primary-bg: #64b5f6;
   --btn-primary-color: #ffffff;
+  --btn-primary-hover: #42a5f5;
+  --btn-primary-hover-color: #f8f9fa;
+  --btn-primary-border: #64b5f6;
   --btn-secondary-bg: #bbdefb;
   --btn-secondary-color: #0d47a1;
+  --btn-secondary-hover: #90caf9;
+  --btn-secondary-hover-color: #1565c0;
+  --btn-secondary-border: #90caf9;
+  
   --btn-danger-bg: #ffcdd2;
   --btn-danger-color: #c62828;
+  --btn-danger-hover: #ef5350;
+  --btn-danger-hover-color: #b71c1c;
+  --btn-danger-border: #ef5350;
+  
   --btn-success-bg: #c8e6c9;
   --btn-success-color: #2e7d32;
+  --btn-success-hover: #66bb6a;
+  --btn-success-hover-color: #1b5e20;
+  --btn-success-border: #66bb6a;
+  
+  --btn-warning-bg: #fff8e1;
+  --btn-warning-color: #f57c00;
+  --btn-warning-hover: #ffb74d;
+  --btn-warning-hover-color: #ef6c00;
+  --btn-warning-border: #ffb74d;
+  
   --btn-info-bg: #e3f2fd;
   --btn-info-color: #0d47a1;
+  --btn-info-hover: #42a5f5;
+  --btn-info-hover-color: #1565c0;
+  --btn-info-border: #64b5f6;
   --modal-bg: #ffffff;
   --modal-overlay: rgba(13, 71, 161, 0.4);
   --focus-ring: rgba(33, 150, 243, 0.3);
@@ -653,14 +715,39 @@ body {
   --card-hover-shadow: 0 6px 16px rgba(129, 199, 132, 0.2);
   --btn-primary-bg: #81c784;
   --btn-primary-color: #ffffff;
+  --btn-primary-hover: #66bb6a;
+  --btn-primary-hover-color: #f8f9fa;
+  --btn-primary-border: #81c784;
+  
   --btn-secondary-bg: #c8e6c9;
   --btn-secondary-color: #1b5e20;
+  --btn-secondary-hover: #a5d6a7;
+  --btn-secondary-hover-color: #2e7d32;
+  --btn-secondary-border: #a5d6a7;
+  
   --btn-danger-bg: #ffcdd2;
   --btn-danger-color: #c62828;
+  --btn-danger-hover: #ef5350;
+  --btn-danger-hover-color: #b71c1c;
+  --btn-danger-border: #ef5350;
+  
   --btn-success-bg: #c8e6c9;
   --btn-success-color: #2e7d32;
+  --btn-success-hover: #66bb6a;
+  --btn-success-hover-color: #1b5e20;
+  --btn-success-border: #66bb6a;
+  
+  --btn-warning-bg: #fff8e1;
+  --btn-warning-color: #f57c00;
+  --btn-warning-hover: #ffb74d;
+  --btn-warning-hover-color: #ef6c00;
+  --btn-warning-border: #ffb74d;
+  
   --btn-info-bg: #e8f5e9;
   --btn-info-color: #1b5e20;
+  --btn-info-hover: #81c784;
+  --btn-info-hover-color: #2e7d32;
+  --btn-info-border: #81c784;
   --modal-bg: #ffffff;
   --modal-overlay: rgba(27, 94, 32, 0.4);
   --focus-ring: rgba(76, 175, 80, 0.3);
@@ -689,14 +776,39 @@ body {
   --card-hover-shadow: 0 6px 16px rgba(186, 104, 200, 0.2);
   --btn-primary-bg: #ba68c8;
   --btn-primary-color: #ffffff;
+  --btn-primary-hover: #ab47bc;
+  --btn-primary-hover-color: #f8f9fa;
+  --btn-primary-border: #ba68c8;
+  
   --btn-secondary-bg: #e1bee7;
   --btn-secondary-color: #4a148c;
+  --btn-secondary-hover: #ce93d8;
+  --btn-secondary-hover-color: #6a1b9a;
+  --btn-secondary-border: #ce93d8;
+  
   --btn-danger-bg: #ffcdd2;
   --btn-danger-color: #c62828;
+  --btn-danger-hover: #ef5350;
+  --btn-danger-hover-color: #b71c1c;
+  --btn-danger-border: #ef5350;
+  
   --btn-success-bg: #c8e6c9;
   --btn-success-color: #2e7d32;
+  --btn-success-hover: #66bb6a;
+  --btn-success-hover-color: #1b5e20;
+  --btn-success-border: #66bb6a;
+  
+  --btn-warning-bg: #fff8e1;
+  --btn-warning-color: #f57c00;
+  --btn-warning-hover: #ffb74d;
+  --btn-warning-hover-color: #ef6c00;
+  --btn-warning-border: #ffb74d;
+  
   --btn-info-bg: #f3e5f5;
   --btn-info-color: #4a148c;
+  --btn-info-hover: #ba68c8;
+  --btn-info-hover-color: #6a1b9a;
+  --btn-info-border: #ba68c8;
   --modal-bg: #ffffff;
   --modal-overlay: rgba(74, 20, 140, 0.4);
   --focus-ring: rgba(156, 39, 176, 0.3);
@@ -725,14 +837,39 @@ body {
   --card-hover-shadow: 0 6px 16px rgba(220, 200, 150, 0.2);
   --btn-primary-bg: #dcc896;
   --btn-primary-color: #586e75;
+  --btn-primary-hover: #c4a76b;
+  --btn-primary-hover-color: #657b83;
+  --btn-primary-border: #dcc896;
+  
   --btn-secondary-bg: #eee8d5;
   --btn-secondary-color: #586e75;
+  --btn-secondary-hover: #d1c7a7;
+  --btn-secondary-hover-color: #657b83;
+  --btn-secondary-border: #d1c7a7;
+  
   --btn-danger-bg: #ffdfdf;
   --btn-danger-color: #dc322f;
-  --btn-success-bg: #dff0d8;
-  --btn-success-color: #859900;
+  --btn-danger-hover: #ff969c;
+  --btn-danger-hover-color: #cb4b16;
+  --btn-danger-border: #ff969c;
+  
+  --btn-success-bg: #b5f59c;
+  --btn-success-color: #404a00;
+  --btn-success-hover: #7cff1f;
+  --btn-success-hover-color: #158900;
+  --btn-success-border: #a6e22e;
+  
+  --btn-warning-bg: #fff8dc;
+  --btn-warning-color: #b58900;
+  --btn-warning-hover: #f4bf75;
+  --btn-warning-hover-color: #cb4b16;
+  --btn-warning-border: #f4bf75;
+  
   --btn-info-bg: #d0edf5;
   --btn-info-color: #268bd2;
+  --btn-info-hover: #92eeff;
+  --btn-info-hover-color: #00679a;
+  --btn-info-border: #66d9ef;
   --modal-bg: #ffffff;
   --modal-overlay: rgba(181, 137, 0, 0.4);
   --focus-ring: rgba(181, 137, 0, 0.3);
@@ -761,14 +898,39 @@ body {
   --card-hover-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   --btn-primary-bg: #8b9dc3;
   --btn-primary-color: #ffffff;
+  --btn-primary-hover: #6b85a3;
+  --btn-primary-hover-color: #ffffff;
+  --btn-primary-border: #8b9dc3;
+  
   --btn-secondary-bg: #f8f9fa;
   --btn-secondary-color: #495057;
+  --btn-secondary-hover: #e9ecef;
+  --btn-secondary-hover-color: #000000;
+  --btn-secondary-border: #dee2e6;
+  
   --btn-danger-bg: #fff5f5;
   --btn-danger-color: #c53030;
+  --btn-danger-hover: #fed7d7;
+  --btn-danger-hover-color: #742a2a;
+  --btn-danger-border: #feb2b2;
+  
   --btn-success-bg: #f0fff4;
   --btn-success-color: #2f855a;
+  --btn-success-hover: #c6f6d5;
+  --btn-success-hover-color: #22543d;
+  --btn-success-border: #9ae6b4;
+  
+  --btn-warning-bg: #fffaf0;
+  --btn-warning-color: #d69e2e;
+  --btn-warning-hover: #feebc8;
+  --btn-warning-hover-color: #975a16;
+  --btn-warning-border: #fbd38d;
+  
   --btn-info-bg: #f0f9ff;
   --btn-info-color: #2b6cb0;
+  --btn-info-hover: #bee3f8;
+  --btn-info-hover-color: #2a4365;
+  --btn-info-border: #93c5fd;
   --modal-bg: #ffffff;
   --modal-overlay: rgba(0, 0, 0, 0.4);
   --focus-ring: rgba(102, 126, 234, 0.3);

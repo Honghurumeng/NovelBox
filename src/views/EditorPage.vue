@@ -43,7 +43,7 @@
           {{ uiStore.saveIndicatorMessage }}
         </span>
         <button class="save-btn" @click="manualSave" title="保存">
-          💾 保存
+          保存
         </button>
       </div>
     </div>
@@ -548,6 +548,17 @@ export default {
 
 .left-sidebar.collapsed {
   width: 50px;
+}
+
+.back-btn, .save-btn {
+  border: 1px solid var(--btn-secondary-hover);
+  border-radius: 4px;
+  padding: 8px 8px;
+  background-color: var(--btn-secondary-bg);
+}
+
+.back-btn:hover, .save-btn:hover {
+  background-color: var(--btn-secondary-hover);
 }
 
 /* 右侧边栏样式 */

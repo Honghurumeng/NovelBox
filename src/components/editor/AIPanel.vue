@@ -63,16 +63,13 @@
         <div v-if="!isStreaming && (displayText || hasError)" class="action-buttons">
           <!-- 成功时显示替换和插入按钮 -->
           <button v-if="displayText && !hasError" class="btn btn-success" @click="replaceText">
-            <span class="btn-icon">🔄</span>
             替换
           </button>
           <button v-if="displayText && !hasError" class="btn btn-info" @click="insertText">
-            <span class="btn-icon">➕</span>
             插入
           </button>
           <!-- 错误时或任何时候都显示重试按钮 -->
           <button v-if="hasError" class="btn btn-warning" @click="retryRewrite">
-            <span class="btn-icon">🔄</span>
             重试
           </button>
         </div>
@@ -94,23 +91,18 @@
           <div class="section-label">文本AI功能</div>
           <div class="function-buttons">
             <button class="btn btn-outline btn-primary" @click="handleRewrite('expand')">
-              <span class="btn-icon">📈</span>
               扩写
             </button>
             <button class="btn btn-outline btn-warning" @click="handleRewrite('contract')">
-              <span class="btn-icon">📉</span>
               缩写
             </button>
             <button class="btn btn-outline btn-info" @click="handleRewrite('beautify')">
-              <span class="btn-icon">✨</span>
               美化文笔
             </button>
             <button class="btn btn-outline btn-success" @click="handleRewrite('continue')">
-              <span class="btn-icon">✍️</span>
               续写
             </button>
             <button class="btn btn-outline btn-secondary" @click="handleCustomRewrite">
-              <span class="btn-icon">⚙️</span>
               自定义
             </button>
           </div>
@@ -121,19 +113,15 @@
           <div class="section-label">创作辅助功能</div>
           <div class="function-buttons">
             <button class="btn btn-outline btn-purple" @click="handleStoryBackground">
-              <span class="btn-icon">🌍</span>
               故事背景
             </button>
             <button class="btn btn-outline btn-orange" @click="handleCharacterInfo">
-              <span class="btn-icon">👥</span>
               人物信息
             </button>
             <button class="btn btn-outline btn-teal" @click="handleOutlineGenerate">
-              <span class="btn-icon">📋</span>
               大纲生成
             </button>
             <button class="btn btn-outline btn-indigo" @click="handleChapterList">
-              <span class="btn-icon">📚</span>
               章纲生成
             </button>
           </div>
@@ -738,64 +726,114 @@ export default {
 }
 
 /* 新增按钮颜色样式 */
+.btn {
+  padding: 10px 16px;
+  border: 1px solid;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  background: transparent;
+  min-height: 36px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background: transparent;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--btn-color, var(--accent-color));
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  --btn-color: var(--accent-color);
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.btn-secondary {
+  --btn-color: var(--text-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+.btn-success {
+  --btn-color: #10b981;
+  color: #10b981;
+  border-color: #10b981;
+  /* background: #10b981;
+  color: white; */
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #059669;
+  border-color: #059669;
+  color: #fff;
+}
+
+.btn-info {
+  --btn-color: #3b82f6;
+  color: #3b82f6;
+  border-color: #3b82f6;
+  /* background: #3b82f6;
+  color: white; */
+}
+
+.btn-info:hover:not(:disabled) {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.btn-warning {
+  --btn-color: #f59e0b;
+  color: #f59e0b;
+  border-color: #f59e0b;
+  /* background: #f59e0b;
+  color: white; */
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: #d97706;
+  border-color: #d97706;
+}
+
 .btn-purple {
   --btn-color: #8b5cf6;
-  --btn-hover-color: #7c3aed;
+  color: var(--btn-color);
+  border-color: var(--btn-color);
 }
 
 .btn-orange {
   --btn-color: #f97316;
-  --btn-hover-color: #ea580c;
+  color: var(--btn-color);
+  border-color: var(--btn-color);
 }
 
 .btn-teal {
   --btn-color: #14b8a6;
-  --btn-hover-color: #0d9488;
+  color: var(--btn-color);
+  border-color: var(--btn-color);
 }
 
 .btn-indigo {
   --btn-color: #6366f1;
-  --btn-hover-color: #4f46e5;
-}
-
-.btn-outline.btn-purple {
   color: var(--btn-color);
   border-color: var(--btn-color);
-}
-
-.btn-outline.btn-purple:hover {
-  background: var(--btn-color);
-  color: white;
-}
-
-.btn-outline.btn-orange {
-  color: var(--btn-color);
-  border-color: var(--btn-color);
-}
-
-.btn-outline.btn-orange:hover {
-  background: var(--btn-color);
-  color: white;
-}
-
-.btn-outline.btn-teal {
-  color: var(--btn-color);
-  border-color: var(--btn-color);
-}
-
-.btn-outline.btn-teal:hover {
-  background: var(--btn-color);
-  color: white;
-}
-
-.btn-outline.btn-indigo {
-  color: var(--btn-color);
-  border-color: var(--btn-color);
-}
-
-.btn-outline.btn-indigo:hover {
-  background: var(--btn-color);
-  color: white;
 }
 
 

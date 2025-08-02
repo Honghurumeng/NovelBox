@@ -37,7 +37,6 @@
           @click="handleConfirm"
           :disabled="!prompt.trim()"
         >
-          <span class="btn-icon">🚀</span>
           开始重写
         </button>
       </div>
@@ -235,16 +234,18 @@ export default {
 }
 
 .btn {
-  padding: 8px 16px;
-  border: none;
+  padding: 10px 16px;
+  border: 1px solid;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  min-height: 36px;
+  justify-content: center;
 }
 
 .btn:disabled {
@@ -255,25 +256,24 @@ export default {
 .btn-secondary {
   background: var(--nav-hover-bg);
   color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  border-color: var(--border-color);
 }
 
 .btn-secondary:hover:not(:disabled) {
   background: var(--nav-selected-bg);
+  transform: translateY(-1px);
 }
 
 .btn-primary {
   background: var(--accent-color);
   color: white;
+  border-color: var(--accent-color);
 }
 
 .btn-primary:hover:not(:disabled) {
   background: var(--accent-hover);
   transform: translateY(-1px);
-}
-
-.btn-icon {
-  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* 自定义滚动条 */
